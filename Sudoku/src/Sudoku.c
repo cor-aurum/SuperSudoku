@@ -72,7 +72,7 @@ void speichereFeld() {
 
 int main(void) {
 	feld[3][4] = 1;
-	feld[7][6] = 5;
+	feld[7][6] = 4;
 	printFeld();
 	speichereFeld();
 	return EXIT_SUCCESS;
