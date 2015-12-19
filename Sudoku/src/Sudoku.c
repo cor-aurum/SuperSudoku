@@ -13,10 +13,62 @@
 #define BREITE 9
 #define KACHELHOEHE (int)(sqrt(HOEHE))
 #define KACHELBREITE (int)(sqrt(BREITE))
+#define MAX_ZAHL 9
 
-int feld[HOEHE][BREITE];
-char datei[]="speicherstand.txt";
+/*
+ * Globale Variable für die Speicherung des Sudokus
+ */
+int feld[BREITE][HOEHE];
 
+int kopiereArray(int *quelle, int *ziel){
+	int x,y;
+	for(x = 0; x < BREITE; x++){
+		for(y = 0; y < HOEHE; y++){
+			ziel[x][y] = quelle[x][y];
+		}
+	}
+	return 1; // Erfolg
+}
+
+/*
+ * Prüft, ob Sudoku formal korrekt ist.
+ * Rückgabe:
+ * 1: Sudoku ist korrekt
+ * 0: Sudoku formal inkorrekt
+ * TODO funktioniert noch nicht!
+ */
+int checkSudokuFormal()
+{
+	return 0;
+}
+
+/*
+ * Prüft, ob Sudoku lösbar ist.
+ * Rückgabe:
+ * 1: Sudoku ist korrekt
+ * 0: Sudoku nicht lösbar
+ * TODO funktioniert noch nicht!
+ */
+int checkSudokuLoesbar()
+{
+	return 0;
+}
+
+/*
+ * Prüft, ob Sudoku, lösbar ist und ob Sudoku formal korrekt ist.
+ * Rückgabe:
+ * 1: Sudoku ist korrekt
+ * -1: Sudoku formal inkorrekt
+ * -2: Sudoku nicht lösbar
+ * TODO funktioniert noch nicht!
+ */
+int checkSudoku() {
+	return 0;
+}
+
+/*
+ * Diese Methode gibt einen Wert im Sudoku als Druckbares Zeichen zurück.
+ */
 char asFeld(char c) {
 	if (c == 0) {
 		return ' ';
@@ -24,6 +76,9 @@ char asFeld(char c) {
 	return c + 48;
 }
 
+/*
+ * Diese Methode schreibt in den standartout eine gut lesbare Darstellung des Sudokus
+ */
 void printFeld() {
 	int i, j;
 	for (i = 0; i < HOEHE; i++) {
@@ -46,7 +101,10 @@ void printFeld() {
 	printf("|\n");
 }
 
-void speichereFeld() {
+/*
+ * Diese Methode schreibt ein im RAM gespeichertes Sudoku in die Datei datei[].
+ */
+void speichereFeld(char datei[]) {
 	FILE *fp;
 
 	fp = fopen(datei, "w");
@@ -54,11 +112,11 @@ void speichereFeld() {
 	if (fp == NULL) {
 		printf("Datei konnte nicht geoeffnet werden.\n");
 	} else {
-		int  i,j;
+		int i, j;
 		for (i = 0; i < HOEHE; i++) {
 			for (j = 0; j < BREITE; j++) {
 				if (feld[i][j] == 0) {
-					fputc(' ',fp);
+					fputc(' ', fp);
 				} else {
 					fputc(feld[i][j] + 48, fp);
 				}
@@ -70,11 +128,71 @@ void speichereFeld() {
 	}
 }
 
-int main(void) {
-	feld[3][4] = 1;
-	feld[7][6] = 4;
-	printFeld();
-	speichereFeld();
-	return EXIT_SUCCESS;
+/*
+ * TODO Sascha implementiert hier eine Methode, welche aus einer Datei ein Spielfeld ausliest. Die einzelnen Werte werden mittels setFeld(param) eingespeichert.
+ *  Gibt im erfolgreichen Fall 1 zurück, andernfalls 0.
+ */
+int leseFeldAusDatei(char datei[]) {
+	return 0;
 }
 
+/*
+ * TODO Moritz implementiert hier den Algorithmus für das Lösen des Sudokus. Gibt den Erfolg zurück.
+ */
+int loeseSudoku() {
+	return 0;
+}
+
+/*
+ * TODO Felix implementiert hier die Methode zur Usereingabe in der Konsole
+ * Modi:
+ * 1: Leeres Sudoku wird bearbeitet, Achtung, feld[] wird überschrieben
+ * 2: Ein vorgegebenes Sudoku wird bearbeitet, beachtet Schreiblock nicht
+ * 3: Ein vorgegebenes Sudoku wird ausgefüllt, beachtet Schreiblock, Standard für ein einfaches Spiel
+ */
+void eingabe(int modus) {
+
+}
+
+/*
+ * Fügt den integer eingabe an die Position x,y im Spielfeld hinzu.
+ * Der Wert lock gibt an (Wenn !=0), dass das Feld geändert werden darf.
+ * Gibt folgende Werte zurück:
+ * -1: Eingabe nicht erfolgreich, da Schreiblock vorliegt.
+ * -2: Eingabe nicht erfolgreich, da eingabe zu groß
+ * -3: Eingabe widerspricht Sudokuregeln (TODO)
+ *  1: Eingabe erfolgreich
+ */
+int setFeld(int x, int y, int eingabe, int lock) {
+	static int schutz[BREITE][HOEHE];
+	if (!schutz[x][y]) {
+		if (!(eingabe > 0 && eingabe <= MAX_ZAHL)) {
+			return -2;
+		}
+		schutz[x][y] = lock;
+		feld[x][y] = eingabe;
+		return 1;
+	}
+	return -1;
+}
+
+/*
+ * Gibt den Wert an der Stelle x,y des Sudokus zurück, liegt der x,y außerhalb des Sudokus ist das Ergebnis negativ
+ */
+int getFeld(int x, int y) {
+	if (x < HOEHE && x > 0 && y < BREITE && y > 0) {
+		return feld[x][y];
+	}
+	return -1;
+}
+
+/*
+ * main Methode, die darf jemand anderes kommentieren
+ */
+int main(void) {
+	setFeld(4, 5, 6, 0);
+	setFeld(5, 5, 8, 0);
+	printFeld();
+	speichereFeld("speicherstand.txt");
+	return EXIT_SUCCESS;
+}
