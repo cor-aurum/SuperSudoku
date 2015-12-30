@@ -1,0 +1,20 @@
+Führende Zeile
+98  9  2Man kann hier
+1 4   8 6 3 an der Seite
+ 3 4 7 5 beliebige Zeichen setzen
+  3 2 1 und einfach 
+8  6 9  7
+ 39 4 2 mal
+ 4 3 5 9 
+3 7   4 8 schauen, was passiert...
+41  7  3  Möge die Fehlererkennung
+funktionieren (hoffentlich)
+
+
+Dieses Sudoku stammt von TheGuardian 
+Quelle: http://www.theguardian.com/lifeandstyle/2015/dec/26/sudoku-3316-hard
+Aufgerufen am 27. Dezember 2015
+
+Verwendet wird dieses Sudoku zu Testzwecken.
+In dieser Datei sind ein Paar Formatierungsfehler eingebaut
+(unter anderem dieser Infotext)
