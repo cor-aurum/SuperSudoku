@@ -6,18 +6,15 @@
  ******************************************************************************/
 
 
-
-/* EXTERNE HEADER-DATEIEN *****************************************************/
+/*
 #include<stdio.h>
 #include<stdlib.h>
-
-
-/* PRÄPROZESSORDIREKTIVEN *****************************************************/
 #define HOEHE 9
 #define BREITE 9
 #define KACHELHOEHE 3
 #define KACHELBREITE 3
 #define MAX_ZAHL 9
+*/
 
 
 
@@ -359,17 +356,3 @@ int leseDatei(char *dateipfad)
 	return einleseStatus;
 }
 
-
-
-int main(){
-	printf("Sudoku Reader\n");
-//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 1));
-//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 0));
-//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 1));
-	leseDatei("sudoku.txt");
-	leseDatei("sudoku_err.txt");
-	leseDatei("sudoku_err2.txt");
-	leseDatei("sudoku_err3.txt");
-	printf("Done.\n");
-	return 0;
-}

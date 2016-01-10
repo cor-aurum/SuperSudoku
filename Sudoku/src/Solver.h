@@ -5,18 +5,18 @@
  * Version 1 (2015-12-29) Sascha Scherrer <dhbw.scherrer@gmail.com>          *
  *****************************************************************************/
 
-/* EXTERNE HEADER-DATEIEN ****************************************************/
+/* EXTERNE HEADER-DATEIEN
 #include<stdio.h>
 #include<stdlib.h>
+****************************************************/
 
-
-/* PRÄPROZESSORDIREKTIVEN ***************************************************/
+/* PRÄPROZESSORDIREKTIVEN
 #define HOEHE 9
 #define BREITE 9
 #define KACHELHOEHE 3
 #define KACHELBREITE 3
 #define MAX_ZAHL 9
-
+***************************************************/
 
 // x, y
 /*
@@ -287,14 +287,4 @@ int loeseSudoku(int feld[BREITE][HOEHE])
 
 	return -1;
 
-}
-
-
-int main()
-{
-	printf("SUDOKU ./solver.c \n");
-	ausgabeFeld(feld);
-	loeseSudoku(feld);
-	ausgabeFeld(feld);
-	return 0;
 }

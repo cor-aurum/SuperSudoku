@@ -9,22 +9,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
+/* PRÄPROZESSORDIREKTIVEN *****************************************************/
 #define HOEHE 9
 #define BREITE 9
-#define KACHELHOEHE (int)(sqrt(HOEHE))
-#define KACHELBREITE (int)(sqrt(BREITE))
+#define KACHELHOEHE 3
+#define KACHELBREITE 3
 #define MAX_ZAHL 9
+
+/* HEADERDATEIEN *************************************************************/
+#include "GUI.h"
+#include "Reader.h"
+#include "Solver.h"
 
 /*
  * Globale Variable für die Speicherung des Sudokus
  */
 int feld[BREITE][HOEHE];
 
-int kopiereArray(int *quelle, int *ziel){
-	int x,y;
-	for(x = 0; x < BREITE; x++){
-		for(y = 0; y < HOEHE; y++){
-			ziel[x][y] = quelle[x][y];
+int kopiereArray(int *quelle, int *ziel) {
+	int x, y;
+	for (x = 0; x < BREITE; x++) {
+		for (y = 0; y < HOEHE; y++) {
+			//ziel[x][y] = quelle[x][y];
 		}
 	}
 	return 1; // Erfolg
@@ -37,8 +44,7 @@ int kopiereArray(int *quelle, int *ziel){
  * 0: Sudoku formal inkorrekt
  * TODO funktioniert noch nicht!
  */
-int checkSudokuFormal()
-{
+int checkSudokuFormal() {
 	return 0;
 }
 
@@ -49,8 +55,7 @@ int checkSudokuFormal()
  * 0: Sudoku nicht lösbar
  * TODO funktioniert noch nicht!
  */
-int checkSudokuLoesbar()
-{
+int checkSudokuLoesbar() {
 	return 0;
 }
 
@@ -133,13 +138,26 @@ void speichereFeld(char datei[]) {
  *  Gibt im erfolgreichen Fall 1 zurück, andernfalls 0.
  */
 int leseFeldAusDatei(char datei[]) {
+	printf("Sudoku Reader\n");
+	//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 1));
+	//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 0));
+	//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 1));
+	leseDatei("sudoku.txt");
+	leseDatei("sudoku_err.txt");
+	leseDatei("sudoku_err2.txt");
+	leseDatei("sudoku_err3.txt");
+	printf("Done.\n");
 	return 0;
 }
 
 /*
  * TODO Moritz implementiert hier den Algorithmus für das Lösen des Sudokus. Gibt den Erfolg zurück.
  */
-int loeseSudoku() {
+int loeseSudokuMain() {
+	printf("SUDOKU ./solver.c \n");
+	ausgabeFeld(feld);
+	loeseSudoku(feld);
+	ausgabeFeld(feld);
 	return 0;
 }
 
@@ -190,9 +208,6 @@ int getFeld(int x, int y) {
  * main Methode, die darf jemand anderes kommentieren
  */
 int main(void) {
-	setFeld(4, 5, 6, 0);
-	setFeld(5, 5, 8, 0);
-	printFeld();
-	speichereFeld("speicherstand.txt");
+	loeseSudokuMain();
 	return EXIT_SUCCESS;
 }

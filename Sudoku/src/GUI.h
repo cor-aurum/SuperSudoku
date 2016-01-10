@@ -4,21 +4,26 @@
  * @author Felix Schütze, dhbw@felix-schuetze.de
  ******************************************************************************/
 
-
-
-/* EXTERNE HEADER-DATEIEN *****************************************************/
-#include<stdio.h>
-#include<stdlib.h>
-
-/* PRÄPROZESSORDIREKTIVEN *****************************************************/
-#define HOEHE 9
-#define BREITE 9
-#define KACHELHOEHE 3
-#define KACHELBREITE 3
-#define MAX_ZAHL 9
-
-int main()
+void gotoxy(int x,int y)
 {
-	printf("Steuerung");
-	return 0;
+  printf("%c[%d;%df",0x1B,y,x);
+}
+
+int loop()
+{
+  int x = 0, y = 0;
+  char c = 0;
+  system("clear");
+
+
+  while(1)
+  {
+    x = rand()%50;
+    y = rand()%25;
+    c = rand()%'z' + ' ';
+    gotoxy(x,y);
+    printf("%c", c);
+    fflush(stdout);
+    sleep(1);
+  }
 }
