@@ -169,12 +169,12 @@ int loeseSudokuMain() {
  * 3: Ein vorgegebenes Sudoku wird ausgefüllt, beachtet Schreiblock, Standard für ein einfaches Spiel
  */
 void eingabe(int modus) {
-
+	eingabeLoop();
 }
 
 /*
  * Fügt den integer eingabe an die Position x,y im Spielfeld hinzu.
- * Der Wert lock gibt an (Wenn !=0), dass das Feld geändert werden darf.
+ * Der Wert lock gibt an (Wenn ==0), dass das Feld geändert werden darf.
  * Gibt folgende Werte zurück:
  * -1: Eingabe nicht erfolgreich, da Schreiblock vorliegt.
  * -2: Eingabe nicht erfolgreich, da eingabe zu groß
@@ -209,5 +209,6 @@ int getFeld(int x, int y) {
  */
 int main(void) {
 	loeseSudokuMain();
+	eingabe(2);
 	return EXIT_SUCCESS;
 }
