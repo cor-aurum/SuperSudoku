@@ -3,11 +3,9 @@
  * Steuerung für die Händische Manipulation von Sudokus.
  * @author Felix Schütze, dhbw@felix-schuetze.de
  ******************************************************************************/
+char* clear="clear";
+#if !defined(WIN32)
 #include <termios.h>
-void printFeld();
-int setFeld(int x, int y, int eingabe, int lock);
-int x = 3, y = 2;
-
 /*
  * Erhaelt ein char, ohne, dass man hierfür Enter drücken muss
  */
@@ -24,6 +22,15 @@ int getch() {
 	return ch;
 }
 
+#else
+#include<conio.h>
+clear="cls";
+#endif
+
+void printFeld();
+int setFeld(int x, int y, int eingabe, int lock);
+int x = 3, y = 2;
+
 /*
  * Verschiebt den Cursor nach x,y
  */
@@ -31,9 +38,12 @@ void gotoxy(int x, int y) {
 	printf("%c[%d;%df", 0x1B, y, x);
 }
 
+/*
+ * Gibt eine Nachricht unterhalb des Spielfeldes aus
+ */
 void meldungAusgeben(char* nachricht) {
-	gotoxy(1, HOEHE * 2+2);
-	printf(nachricht);
+	gotoxy(1, HOEHE * 2 + 2);
+	printf("%s",nachricht);
 	gotoxy(x, y);
 }
 
@@ -41,8 +51,7 @@ void meldungAusgeben(char* nachricht) {
  * Empfaengt Tastatureingaben und steuert mit diesen das Spielfeld
  */
 int eingabeLoop() {
-
-	system("clear");
+	system(clear);
 	printFeld();
 	gotoxy(x, y);
 	while (1) {
@@ -67,11 +76,16 @@ int eingabeLoop() {
 		default:
 			if (tmp >= '1' && tmp <= '9') {
 				setFeld((y - 2) / 2, (x - 3) / 5, tmp - '0', 0);
-				system("clear");
+				system(clear);
 				printFeld();
-				if(tmp=='8')
+				if (tmp == '8')
 					meldungAusgeben("Es wurde eine Acht gedrückt");
 				//fflush(stdout);
+			}
+			if (tmp == ' ') {
+				setFeld((y - 2) / 2, (x - 3) / 5, 0, 0);
+				system(clear);
+				printFeld();
 			}
 		}
 		gotoxy(x, y);

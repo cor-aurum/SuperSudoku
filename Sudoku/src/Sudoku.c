@@ -95,8 +95,22 @@ void printFeld() {
 		for (j = 0; j < BREITE; j++) {
 			printf("%s %c  ", (j % KACHELBREITE == 0) ? "|" : " ",
 					asFeld(feld[i][j]));
+
 		}
-		printf("|\n");
+		printf("|     ");
+		switch(i)
+					{
+					case 0:
+						printf("wasd: Cursor bewegen");
+						break;
+					case 1:
+						printf("Leerzeichen: Zahl löschen");
+						break;
+					case 2:
+						printf("1-9: Zahl eintragen");
+						break;
+					}
+		printf("\n");
 
 	}
 	for (j = 0; j < BREITE; j++) {
@@ -184,7 +198,7 @@ void eingabe(int modus) {
 int setFeld(int x, int y, int eingabe, int lock) {
 	static int schutz[BREITE][HOEHE];
 	if (!schutz[x][y]) {
-		if (!(eingabe > 0 && eingabe <= MAX_ZAHL)) {
+		if (!(eingabe >= 0 && eingabe <= MAX_ZAHL)) {
 			return -2;
 		}
 		schutz[x][y] = lock;
