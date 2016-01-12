@@ -20,21 +20,30 @@ int getch() {
 	tcsetattr(fd, TCSANOW, &alt);
 	return ch;
 }
-#define CLEAR "clear"
-#else
-#include<conio.h>
-#define CLEAR "cls"
-#endif
-void printFeld();
-int setFeld(int x, int y, int eingabe, int lock);
-int x = 3, y = 2;
-
 /*
  * Verschiebt den Cursor nach x,y
  */
 void gotoxy(int x, int y) {
 	printf("%c[%d;%df", 0x1B, y, x);
 }
+#define CLEAR "clear"
+#else
+#include <conio.h>
+#include <windows.h>
+/*
+ * Verschiebt den Cursor nach x,y
+ */
+void gotoxy(int x, int y) {
+	//SetCursorPos(x,y);
+	COORD c= {x,y};
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
+}
+
+#define CLEAR "cls"
+#endif
+void printFeld();
+int setFeld(int x, int y, int eingabe, int lock);
+int x = 3, y = 2;
 
 /*
  * Gibt eine Nachricht unterhalb des Spielfeldes aus
@@ -91,9 +100,12 @@ int eingabeLoop() {
 			gotoxy(1, HOEHE * 2 + 3);
 			char string[100];
 			scanf("%99s", &string[0]);
-			leseFeldAusDatei(string);
-			system(CLEAR);
-			printFeld();
+			if (!leseFeldAusDatei(string)) {
+				meldungAusgeben("Laden der Datei fehlgeschlagen");
+			} else {
+				system(CLEAR);
+				printFeld();
+			}
 		}
 			break;
 		default:
@@ -103,7 +115,6 @@ int eingabeLoop() {
 				printFeld();
 				if (tmp == '8')
 					meldungAusgeben("Es wurde eine Acht gedrückt");
-				//fflush(stdout);
 			}
 			if (tmp == ' ') {
 				setFeld((y - 2) / 2, (x - 3) / 5, 0, 0);
