@@ -3,7 +3,6 @@
  * Steuerung für die Händische Manipulation von Sudokus.
  * @author Felix Schütze, dhbw@felix-schuetze.de
  ******************************************************************************/
-char* clear="clear";
 #if !defined(WIN32)
 #include <termios.h>
 /*
@@ -21,12 +20,11 @@ int getch() {
 	tcsetattr(fd, TCSANOW, &alt);
 	return ch;
 }
-
+#define CLEAR "clear"
 #else
 #include<conio.h>
-clear="cls";
+#define CLEAR "cls"
 #endif
-
 void printFeld();
 int setFeld(int x, int y, int eingabe, int lock);
 int x = 3, y = 2;
@@ -43,7 +41,7 @@ void gotoxy(int x, int y) {
  */
 void meldungAusgeben(char* nachricht) {
 	gotoxy(1, HOEHE * 2 + 2);
-	printf("%s",nachricht);
+	printf("%s", nachricht);
 	gotoxy(x, y);
 }
 
@@ -51,7 +49,7 @@ void meldungAusgeben(char* nachricht) {
  * Empfaengt Tastatureingaben und steuert mit diesen das Spielfeld
  */
 int eingabeLoop() {
-	system(clear);
+	system(CLEAR);
 	printFeld();
 	gotoxy(x, y);
 	while (1) {
@@ -73,10 +71,35 @@ int eingabeLoop() {
 			if (x < BREITE * 5 - 2)
 				x += 5;
 			break;
+		case 'q':
+			system(CLEAR);
+			exit(0);
+			break;
+		case 'p': {
+			meldungAusgeben("Speicherort eingeben:");
+			gotoxy(1, HOEHE * 2 + 3);
+			char string[100];
+			scanf("%99s", &string[0]);
+			speichereFeld(string);
+			system(CLEAR);
+			printFeld();
+			meldungAusgeben("Gespeichert");
+		}
+			break;
+		case 'o': {
+			meldungAusgeben("Speicherort eingeben:");
+			gotoxy(1, HOEHE * 2 + 3);
+			char string[100];
+			scanf("%99s", &string[0]);
+			leseFeldAusDatei(string);
+			system(CLEAR);
+			printFeld();
+		}
+			break;
 		default:
 			if (tmp >= '1' && tmp <= '9') {
 				setFeld((y - 2) / 2, (x - 3) / 5, tmp - '0', 0);
-				system(clear);
+				system(CLEAR);
 				printFeld();
 				if (tmp == '8')
 					meldungAusgeben("Es wurde eine Acht gedrückt");
@@ -84,7 +107,7 @@ int eingabeLoop() {
 			}
 			if (tmp == ' ') {
 				setFeld((y - 2) / 2, (x - 3) / 5, 0, 0);
-				system(clear);
+				system(CLEAR);
 				printFeld();
 			}
 		}

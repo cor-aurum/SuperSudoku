@@ -25,7 +25,16 @@
 /*
  * Globale Variable für die Speicherung des Sudokus
  */
-int feld[BREITE][HOEHE];
+int feld[BREITE][HOEHE]= {
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0}
+	};
 
 int kopiereArray(int *quelle, int *ziel) {
 	int x, y;
@@ -88,7 +97,7 @@ void printFeld() {
 	int i, j;
 	for (i = 0; i < HOEHE; i++) {
 		for (j = 0; j < BREITE; j++) {
-			printf("%s%s", (j % 3 == 0 && i != 0) ? "|" : " ",
+			printf("%s%s", (j % 3 == 0 && i != 0) ? "|" :(i % 3 != 0) ? ".": " ",
 					(i % KACHELHOEHE == 0) ? "____" : "    ");
 		}
 		printf("%s\n", (i != 0) ? "|" : "");
@@ -98,18 +107,26 @@ void printFeld() {
 
 		}
 		printf("|     ");
-		switch(i)
-					{
-					case 0:
-						printf("wasd: Cursor bewegen");
-						break;
-					case 1:
-						printf("Leerzeichen: Zahl löschen");
-						break;
-					case 2:
-						printf("1-9: Zahl eintragen");
-						break;
-					}
+		switch (i) {
+		case 0:
+			printf("wasd: Cursor bewegen");
+			break;
+		case 1:
+			printf("Leerzeichen: Zahl löschen");
+			break;
+		case 2:
+			printf("1-9: Zahl eintragen");
+			break;
+		case 3:
+			printf("p: Spiel speichern");
+			break;
+		case 4:
+			printf("o: Spiel laden");
+			break;
+		case 8:
+			printf("q: Programm beenden");
+			break;
+		}
 		printf("\n");
 
 	}
@@ -156,10 +173,11 @@ int leseFeldAusDatei(char datei[]) {
 	//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 1));
 	//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 0));
 	//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 1));
-	leseDatei("sudoku.txt");
-	leseDatei("sudoku_err.txt");
-	leseDatei("sudoku_err2.txt");
-	leseDatei("sudoku_err3.txt");
+	//leseDatei("sudoku.txt");
+	//leseDatei("sudoku_err.txt");
+	//leseDatei("sudoku_err2.txt");
+	//leseDatei("sudoku_err3.txt");
+	leseDatei(datei);
 	printf("Done.\n");
 	return 0;
 }
@@ -222,7 +240,8 @@ int getFeld(int x, int y) {
  * main Methode, die darf jemand anderes kommentieren
  */
 int main(void) {
-	loeseSudokuMain();
+	//loeseSudokuMain();
 	eingabe(2);
+	//printFeld();
 	return EXIT_SUCCESS;
 }

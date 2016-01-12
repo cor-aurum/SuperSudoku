@@ -48,7 +48,7 @@ int feld[9][9] = {
  * Test-Sudoku.
  * Achtung: Schreibweise ist Y von links nach rechts und X von oben nach unten,
  * also anders als gewohnt.
- */
+
 int feld[9][9] = {
 	{2,4,8,0,0,5,0,0,0},
 	{9,3,0,0,0,0,0,2,5},
@@ -60,6 +60,7 @@ int feld[9][9] = {
 	{6,2,0,0,0,0,0,5,7},
 	{0,0,0,6,0,0,9,0,2}
 };
+*/
 
 void ausgabeFeld(int feld[BREITE][HOEHE])
 {
