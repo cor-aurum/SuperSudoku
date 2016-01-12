@@ -28,19 +28,6 @@ int schutz[BREITE][HOEHE];
 #include "Reader.h"
 #include "Solver.h"
 
-/*
- * Globale Variable für die Speicherung des Sudokus
- */
-
-int kopiereArray(int *quelle, int *ziel) {
-	int x, y;
-	for (x = 0; x < BREITE; x++) {
-		for (y = 0; y < HOEHE; y++) {
-			//ziel[x][y] = quelle[x][y];
-		}
-	}
-	return 1; // Erfolg
-}
 
 /*
  * Prüft, ob Sudoku formal korrekt ist.

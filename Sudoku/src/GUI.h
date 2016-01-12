@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
 /******************************************************************************
  * SUDOKU ./reader.c                                                          *
  * Steuerung für die Händische Manipulation von Sudokus.
@@ -34,6 +38,10 @@ void highlight(char c) {
 	printf("\033[32m%c\033[0m", c);
 }
 #define CLEAR "clear"
+#define UP 'A'
+#define DOWN 'B'
+#define RIGHT 'C'
+#define LEFT 'D'
 #else
 #include <conio.h>
 #include <windows.h>
@@ -61,6 +69,10 @@ void highlight(char c)
 }
 
 #define CLEAR "cls"
+#define UP 72
+#define DOWN 80
+#define RIGHT 77
+#define LEFT 75
 #endif
 int setFeld(int x, int y, int eingabe, int lock);
 int x = 3, y = 2;
@@ -69,8 +81,8 @@ int x = 3, y = 2;
  * Gibt eine Nachricht unterhalb des Spielfeldes aus
  */
 void meldungAusgeben(char* nachricht) {
-	system(CLEAR);
-	printFeld();
+	//system(CLEAR);
+	//printFeld();
 	gotoxy(1, HOEHE * 2 + 2);
 	printf("%s", nachricht);
 	gotoxy(x, y);
@@ -135,7 +147,7 @@ void printFeld() {
 		printf("|     ");
 		switch (i) {
 		case 0:
-			printf("wasd: Cursor bewegen");
+			printf("Pfeiltasten: Cursor bewegen");
 			break;
 		case 1:
 			printf("Leerzeichen: Zahl löschen");
@@ -144,7 +156,7 @@ void printFeld() {
 			printf("1-9: Zahl eintragen");
 			break;
 		case 3:
-			printf("p: Spiel speichern");
+			printf("s: Spiel speichern");
 			break;
 		case 4:
 			printf("o: Spiel laden");
@@ -179,19 +191,19 @@ int eingabeLoop() {
 	while (1) {
 		char tmp = getch();
 		switch (tmp) {
-		case 'w':
+		case UP:
 			if (y >= 4)
 				y -= 2;
 			break;
-		case 'a':
+		case LEFT:
 			if (x >= 7)
 				x -= 5;
 			break;
-		case 's':
+		case DOWN:
 			if (y < HOEHE * 2)
 				y += 2;
 			break;
-		case 'd':
+		case RIGHT:
 			if (x < BREITE * 5 - 2)
 				x += 5;
 			break;
@@ -199,7 +211,9 @@ int eingabeLoop() {
 			system(CLEAR);
 			exit(0);
 			break;
-		case 'p': {
+		case 's': {
+			system(CLEAR);
+			printFeld();
 			meldungAusgeben("Speicherort eingeben:");
 			gotoxy(1, HOEHE * 2 + 3);
 			char string[100];
@@ -209,6 +223,8 @@ int eingabeLoop() {
 		}
 			break;
 		case 'o': {
+			system(CLEAR);
+			printFeld();
 			meldungAusgeben("Speicherort eingeben:");
 			gotoxy(1, HOEHE * 2 + 3);
 			char string[100];
@@ -222,20 +238,24 @@ int eingabeLoop() {
 		}
 			break;
 		case 'l':
+			system(CLEAR);
+			printFeld();
 			meldungAusgeben("Bitte warten, Sudoku wird gelöst");
 			loeseSudokuMain();
 			system(CLEAR);
 			printFeld();
 			break;
 		case 'k':
-			if (checkSudokuFormal()) {
+			gotoxy(1, HOEHE * 2 + 3);
+			if (!checkSudokuFormal()) {
 				meldungAusgeben("Sudoku ist korrekt");
 			} else {
-				meldungAusgeben("Sudoku nicht ist korrekt");
+				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
 			break;
-		case 'j':
-
+		case 'w':
+			system(CLEAR);
+			printFeld();
 			meldungAusgeben(getJoke());
 			break;
 		default:

@@ -42,7 +42,8 @@ int rh_frageJaNein(char *frage, int vorgabe) {
  */
 int rh_fehlerZaehler(int typ, int anzahlNeueFehler) {
 	static int anzahlFehler[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-	if (typ >= 0 && typ < 8) {
+	//printf("Fehlerzaehler Typ=%d, Inkrement=%d \n", typ, anzahlNeueFehler);
+	if (typ >= 0 && typ <= 8) {
 		anzahlFehler[typ] += anzahlNeueFehler;
 		return anzahlFehler[typ];
 	}
@@ -204,6 +205,12 @@ int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
 int testSudokuFormal(int feld[BREITE][HOEHE]) {
 	/* Aufbau von feld: feld[x][y], x sind spalten, y sind zeilen*/
 
+	/* Fehlerzähler zurücksetzen*/
+	rh_fehlerZaehler(6, -rh_fehlerZaehler(6, 0));
+	rh_fehlerZaehler(7, -rh_fehlerZaehler(7, 0));
+	rh_fehlerZaehler(8, -rh_fehlerZaehler(8, 0));
+	//printf("Fehlerzaehler zurückgesetzt.\n");
+
 	/* Variablen (akt = aktuelle oder aktiv) */
 	int zaehler[MAX_ZAHL + 1];
 	int aktZeile = 0, aktSpalte = 0, aktWert = 0, kachelFeld = 0, kachelX = 0,
@@ -219,9 +226,12 @@ int testSudokuFormal(int feld[BREITE][HOEHE]) {
 		for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
 			if (zaehler[aktWert] > 1) {
 				rh_fehlerZaehler(6, 1);
+#ifdef NO
 				printf(
-						"Validator: Wert %d kommt in Zeile %d mal vor. (%d mal zuviel).\n",
-						aktWert, zaehler[aktWert], zaehler[aktWert] - 1);
+						"Validator: Wert %d kommt in Zeile %d %d mal vor. (%d mal zuviel).\n",
+						aktWert, aktZeile + 1, zaehler[aktWert],
+						zaehler[aktWert] - 1);
+#endif
 			}
 	}
 
@@ -233,9 +243,12 @@ int testSudokuFormal(int feld[BREITE][HOEHE]) {
 		for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
 			if (zaehler[aktWert] > 1) {
 				rh_fehlerZaehler(7, 1);
+#ifdef NO
 				printf(
-						"Validator: Wert %d kommt in der Spalte %d mal vor (%d mal zuviel).\n",
-						aktWert, zaehler[aktWert], zaehler[aktWert] - 1);
+						"Validator: Wert %d kommt in der Spalte %d %d mal vor (%d mal zuviel).\n",
+						aktWert, aktZeile + 1, zaehler[aktWert],
+						zaehler[aktWert] - 1);
+#endif
 			}
 	}
 
@@ -253,17 +266,19 @@ int testSudokuFormal(int feld[BREITE][HOEHE]) {
 			for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
 				if (zaehler[aktWert] > 1) {
 					rh_fehlerZaehler(8, 1);
+#ifdef NO
 					printf(
 							"Validator: Wert %d kommt in Teilfeld zwischen Zeile %d Spalte %d \n"
-									"           und Zeile %d Spalte %d %d mal vor (%d mal zuviel).\n",
+							"           und Zeile %d Spalte %d %d mal vor (%d mal zuviel).\n",
 							aktWert, kachelY * KACHELHOEHE,
 							kachelX * KACHELBREITE,
 							(kachelY + 1) * KACHELHOEHE - 1,
 							(kachelX + 1) * KACHELHOEHE - 1, zaehler[aktWert],
 							zaehler[aktWert - 1]);
+#endif
 				}
 		}
-
+	//printf("Fehlerzaehler=%d\n", rh_fehlerZaehler(6,0)+rh_fehlerZaehler(7,0)+ rh_fehlerZaehler(8,0));
 	return rh_fehlerZaehler(6, 0) + rh_fehlerZaehler(7, 0)
 			+ rh_fehlerZaehler(8, 0);
 }
@@ -312,8 +327,7 @@ int leseDatei(char *dateipfad) {
 				"Das Sudoku beinhaltet formale Fehler. Dennoch fortfahren? (y/n) ");
 		printf("y\n");
 	}
-	if(einleseStatus!=0)
-	{
+	if (einleseStatus != 0) {
 		return einleseStatus;
 	}
 
@@ -322,13 +336,13 @@ int leseDatei(char *dateipfad) {
 	// Array übertragen (echte Kopie, nicht über Pointer)
 	int i, j;
 	for (i = 0; i < BREITE; i++) {
-			for (j = 0; j < HOEHE; j++) {
-				schutz[i][j]=0;
-			}
+		for (j = 0; j < HOEHE; j++) {
+			schutz[i][j] = 0;
 		}
+	}
 	for (i = 0; i < BREITE; i++) {
 		for (j = 0; j < HOEHE; j++) {
-			setFeld(i,j,einleseFeld[j][i],einleseFeld[j][i]);
+			setFeld(i, j, einleseFeld[j][i], einleseFeld[j][i]);
 		}
 	}
 	return einleseStatus;
