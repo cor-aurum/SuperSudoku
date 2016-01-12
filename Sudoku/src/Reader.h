@@ -5,18 +5,15 @@
  * Version 1 (2015-12-28) Sascha Scherrer <dhbw.scherrer@gmail.com>           *
  ******************************************************************************/
 
-
 /*
-#include<stdio.h>
-#include<stdlib.h>
-#define HOEHE 9
-#define BREITE 9
-#define KACHELHOEHE 3
-#define KACHELBREITE 3
-#define MAX_ZAHL 9
-*/
-
-
+ #include<stdio.h>
+ #include<stdlib.h>
+ #define HOEHE 9
+ #define BREITE 9
+ #define KACHELHOEHE 3
+ #define KACHELBREITE 3
+ #define MAX_ZAHL 9
+ */
 
 /* HILFSFUNKTIONEN (Präfix 'rh_' für reader heĺper) ***************************/
 
@@ -27,16 +24,15 @@
  * und wird ausgewählt, wenn kein Zeichen eingegeben wird.
  * TODO: Funktioniert bisher, ist aber nicht schön (produziert ungewollte Zeilenumbrüche)
  */
-int rh_frageJaNein(char *frage, int vorgabe)
-{
+int rh_frageJaNein(char *frage, int vorgabe) {
 	char antwort = 0;
 	printf("Frage: %s (%s) ", frage, vorgabe ? "JA/nein" : "ja/NEIN");
 	antwort = getc(stdin);
-	while(getc(stdin) != '\n');
-	return (antwort == 'y' || antwort == 'j' || antwort == 'Y' || antwort == 'J') ? 1 : vorgabe != 0;
+	while (getc(stdin) != '\n')
+		;
+	return (antwort == 'y' || antwort == 'j' || antwort == 'Y' || antwort == 'J') ?
+			1 : vorgabe != 0;
 }
-
-
 
 /*
  * Hilfsfunktion rh_fehlerZaehler(int typ, anzahlNeueFehler)
@@ -44,31 +40,24 @@ int rh_frageJaNein(char *frage, int vorgabe)
  * return -1 - wenn der Typ nicht im zugelassenen Wertebereich ist.
  * return n - die aktuelle anzahl an Fehlern des angegebenen Typ
  */
-int rh_fehlerZaehler(int typ, int anzahlNeueFehler)
-{
-	static int anzahlFehler[] = {0, 0, 0, 0, 0, 0, 0, 0};
-	if(typ >= 0 && typ < 8)
-	{
+int rh_fehlerZaehler(int typ, int anzahlNeueFehler) {
+	static int anzahlFehler[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+	if (typ >= 0 && typ < 8) {
 		anzahlFehler[typ] += anzahlNeueFehler;
 		return anzahlFehler[typ];
 	}
 	return -1;
 }
 
-
-
 /*
  * Hilfsfunktion rh_fehlerZaehlerReset()
  * Setzt den fehlerZaehler zurück.
  * Siehe rh_fehlerZaehler. 
  */
-void rh_fehlerZaehlerReset()
-{
-	for(int typ = 0; typ < 8; typ++)
+void rh_fehlerZaehlerReset() {
+	for (int typ = 0; typ < 8; typ++)
 		rh_fehlerZaehler(typ, -rh_fehlerZaehler(typ, 0));
 }
-
-
 
 /*
  * Hilfsfunktion rh_zaehlerReset(int[] array, int laenge, int wert)
@@ -77,25 +66,19 @@ void rh_fehlerZaehlerReset()
  * laenge - die anzahl der Elemente in dem Array
  * wert - der Wert, auf den jedes Feld gesetzt wird
  */
-void rh_resetArray1D(int array[], int laenge, int wert)
-{
+void rh_resetArray1D(int array[], int laenge, int wert) {
 	int i = 0;
-	for(i = 0; i < laenge; i++)
+	for (i = 0; i < laenge; i++)
 		array[i] = wert;
 }
-
-
 
 /*
  * Hilfsfunktion rh_resetZaehler(int zaehler[]);
  * Setzt alle Werte von zaehler (muss übergeben werden) auf 0.
  */
-void rh_resetZaehler(int zaehler[])
-{
-	rh_resetArray1D(zaehler, MAX_ZAHL+1, 0);
+void rh_resetZaehler(int zaehler[]) {
+	rh_resetArray1D(zaehler, MAX_ZAHL + 1, 0);
 }
-
-
 
 /*
  * Hilfsfunktion rh_inkrementZaehler(int[] zaehler, int wert)
@@ -106,19 +89,15 @@ void rh_resetZaehler(int zaehler[])
  * return 0 - wenn etwas schief gegangen ist
  * return n - die neue Anzahl (n) des betreffenden Wertes (wert)
  */
-int rh_inkrementZaehler(int zaehler[], int wert)
-{
-	if(wert >= 0 && wert <= MAX_ZAHL)
+int rh_inkrementZaehler(int zaehler[], int wert) {
+	if (wert >= 0 && wert <= MAX_ZAHL)
 		return ++zaehler[wert];
-	else
-	{
+	else {
 		/* Unerwartetes Zeichen */
-		rh_fehlerZaehler(6,1);
+		rh_fehlerZaehler(6, 1);
 		return 0;
 	}
 }
-
-
 
 /*
  * Hilfsfunktion rh_dateipfadTesten(char *dateipfad)
@@ -127,12 +106,9 @@ int rh_inkrementZaehler(int zaehler[], int wert)
  * returns  0 - wenn der Dateipfad in Ordnung ist.
  * returns -1 - wenn etwas nicht stimmt.
  */
-int rh_dateipfadTester(char *dateipfad)
-{
+int rh_dateipfadTester(char *dateipfad) {
 	return 0;
 }
-
-
 
 /*
  * Hilfsfunktion  rh_leseDateiZeichenweise(int feld[][], FILE ptr_file)
@@ -156,49 +132,42 @@ int rh_dateipfadTester(char *dateipfad)
  * returns 0 - wenn keine Fehler aufgetreten sind
  * returns n - Anzahl der Fehler, die gefunden und korrigiert wurden.
  */
-int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file)
-{
+int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
 	char zeichen = 0;
-	int posX = 0, posY = 0, anzahlZeichen = 0, erwarteteZeichenzahl = HOEHE * BREITE + HOEHE;
+	int posX = 0, posY = 0, anzahlZeichen = 0, erwarteteZeichenzahl = HOEHE
+			* BREITE + HOEHE;
 
-	while((zeichen = fgetc(ptr_file)) != EOF)
-	{
+	while ((zeichen = fgetc(ptr_file)) != EOF) {
 		anzahlZeichen++;
 
-		if(posX < BREITE && posY < HOEHE)
-		{
+		if (posX < BREITE && posY < HOEHE) {
 			/* Zeichen aus Datei in feld übersetzen */
-			if(zeichen == ' ')
-				 feld[posX++][posY] = 0;
-			else
-			if(zeichen >= '0' && zeichen <= '9')
+			if (zeichen == ' ')
+				feld[posX++][posY] = 0;
+			else if (zeichen >= '0' && zeichen <= '9')
 				feld[posX++][posY] = zeichen - '0';
-		}
-		else
-		if(zeichen == '\n')
-		{
+		} else if (zeichen == '\n') {
 			/* Zeilenumbrüche behandeln */
-			if(posX < 1)
-			{
+			if (posX < 1) {
 				/* Zeile wird als irrelevant betrachtet, da sie keine gültigen Zeichen enthält */
 				/* TODO: Sollen wir die Berücksichtigung von Leerzeichen hier herausnehmen?    */
-				rh_fehlerZaehler(1,1); // corrigierteFehler++
-				rh_fehlerZaehler(2,1); // irrelevanteZeilen++
-				printf("Datei: Zeile %d enthällt keine gültigen Zeichen und wird ignoriert.\n", posY);
-			}
-			else
-			{
-				if(posX != BREITE)
-				{
-					printf("Datei: Zeile %d enthällt nicht die erwartete Zahl an Zeichen."
-							"Zeichen werden ausgelassen oder ergänzt.\n", posY);
-					rh_fehlerZaehler(1,1); // corrigierteFehler++
-					rh_fehlerZaehler(3,1); // unpassendeZeichenzahl++
+				rh_fehlerZaehler(1, 1); // corrigierteFehler++
+				rh_fehlerZaehler(2, 1); // irrelevanteZeilen++
+				printf(
+						"Datei: Zeile %d enthällt keine gültigen Zeichen und wird ignoriert.\n",
+						posY);
+			} else {
+				if (posX != BREITE) {
+					printf(
+							"Datei: Zeile %d enthällt nicht die erwartete Zahl an Zeichen."
+									"Zeichen werden ausgelassen oder ergänzt.\n",
+							posY);
+					rh_fehlerZaehler(1, 1); // corrigierteFehler++
+					rh_fehlerZaehler(3, 1); // unpassendeZeichenzahl++
 					/* Falsche Anzahl an zeichen korrigieren */
-					while(posX < BREITE && posY < HOEHE)
-					{
+					while (posX < BREITE && posY < HOEHE) {
 						feld[posX++][posY] = 0;
-						rh_fehlerZaehler(4,1); // ersetzteZeichen++
+						rh_fehlerZaehler(4, 1); // ersetzteZeichen++
 					}
 				}
 
@@ -206,22 +175,18 @@ int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file)
 				posY++;
 				posX = 0;
 			}
-		}
-		else
-		{
-			rh_fehlerZaehler(1,1); // corrigierteFehler++
-			rh_fehlerZaehler(5,1); // ignorierteZeichen++
+		} else {
+			rh_fehlerZaehler(1, 1); // corrigierteFehler++
+			rh_fehlerZaehler(5, 1); // ignorierteZeichen++
 		}
 	}
 
-	printf("Datei: %d von erwarteten %d Zeichen eingelesen.\n", anzahlZeichen, erwarteteZeichenzahl);
+	printf("Datei: %d von erwarteten %d Zeichen eingelesen.\n", anzahlZeichen,
+			erwarteteZeichenzahl);
 
-	return rh_fehlerZaehler(1,0);
+	return rh_fehlerZaehler(1, 0);
 
-	
 }
-
-
 
 /* HAUPTFUNKTIONEN ************************************************************/
 
@@ -236,73 +201,72 @@ int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file)
  * returns 0 - wenn das feld formal korrekt ist
  * returns n - die Anzahl der Fehler, die gefunden wurden. 
  */
-int testSudokuFormal(int feld[BREITE][HOEHE])
-{
+int testSudokuFormal(int feld[BREITE][HOEHE]) {
 	/* Aufbau von feld: feld[x][y], x sind spalten, y sind zeilen*/
-	
-	/* Variablen (akt = aktuelle oder aktiv) */
-	int zaehler[MAX_ZAHL+1];
-	int aktZeile = 0, aktSpalte = 0, aktWert = 0, kachelFeld = 0, kachelX = 0, kachelY = 0;
 
+	/* Variablen (akt = aktuelle oder aktiv) */
+	int zaehler[MAX_ZAHL + 1];
+	int aktZeile = 0, aktSpalte = 0, aktWert = 0, kachelFeld = 0, kachelX = 0,
+			kachelY = 0;
 
 	/* Prüfe die Anzahl an gleichen Werten je Zeile (von oben nach unten) */
-	for(aktZeile = 0; aktZeile < HOEHE; aktZeile++)
-	{
+	for (aktZeile = 0; aktZeile < HOEHE; aktZeile++) {
 		rh_resetZaehler(zaehler);
-		for(aktSpalte = 0; aktSpalte < BREITE; aktSpalte++)
-			if(!rh_inkrementZaehler(zaehler, feld[aktSpalte][aktZeile]))
-				printf("Validator: Unerwartes Zeichen in Zeile %d Spalte %d.\n", aktZeile, aktSpalte);
-		for(aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
-			if(zaehler[aktWert] > 1)
-			{
-				rh_fehlerZaehler(6,1);
-				printf("Validator: Wert %d kommt in Zeile %d mal vor. (%d mal zuviel).\n", 
-						aktWert, zaehler[aktWert], zaehler[aktWert]-1);
+		for (aktSpalte = 0; aktSpalte < BREITE; aktSpalte++)
+			if (!rh_inkrementZaehler(zaehler, feld[aktSpalte][aktZeile]))
+				printf("Validator: Unerwartes Zeichen in Zeile %d Spalte %d.\n",
+						aktZeile, aktSpalte);
+		for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
+			if (zaehler[aktWert] > 1) {
+				rh_fehlerZaehler(6, 1);
+				printf(
+						"Validator: Wert %d kommt in Zeile %d mal vor. (%d mal zuviel).\n",
+						aktWert, zaehler[aktWert], zaehler[aktWert] - 1);
 			}
 	}
 
 	/* Prüfe die Anzahl an gleichen Werten je Spalte (von links nach rechts) */
-	for(aktSpalte = 0; aktSpalte < BREITE; aktSpalte++)
-	{
+	for (aktSpalte = 0; aktSpalte < BREITE; aktSpalte++) {
 		rh_resetZaehler(zaehler);
-		for(aktZeile = 0; aktZeile < HOEHE; aktZeile++)
+		for (aktZeile = 0; aktZeile < HOEHE; aktZeile++)
 			rh_inkrementZaehler(zaehler, feld[aktSpalte][aktZeile]);
-		for(aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
-			if(zaehler[aktWert] > 1)
-			{
-				rh_fehlerZaehler(7,1);
-				printf("Validator: Wert %d kommt in der Spalte %d mal vor (%d mal zuviel).\n",
-						aktWert, zaehler[aktWert], zaehler[aktWert]-1);
+		for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
+			if (zaehler[aktWert] > 1) {
+				rh_fehlerZaehler(7, 1);
+				printf(
+						"Validator: Wert %d kommt in der Spalte %d mal vor (%d mal zuviel).\n",
+						aktWert, zaehler[aktWert], zaehler[aktWert] - 1);
 			}
 	}
 
 	/* Prüfe die Anzahl an gleichen Werten je Kachel (links nach rechts und oben nach unten) */
-	for(kachelY = 0; kachelY < KACHELHOEHE; kachelY++)
-		for(kachelX = 0; kachelX < KACHELBREITE; kachelX++)
-		{
+	for (kachelY = 0; kachelY < KACHELHOEHE; kachelY++)
+		for (kachelX = 0; kachelX < KACHELBREITE; kachelX++) {
 			rh_resetZaehler(zaehler);
-			for(kachelFeld = 0; kachelFeld < KACHELBREITE * KACHELHOEHE; kachelFeld++)
-			{
-				aktWert = feld[kachelFeld % KACHELBREITE + kachelX * KACHELBREITE] \
-						[kachelFeld / KACHELHOEHE + kachelY * KACHELHOEHE];
-				rh_inkrementZaehler(zaehler, aktWert);	
+			for (kachelFeld = 0; kachelFeld < KACHELBREITE * KACHELHOEHE;
+					kachelFeld++) {
+				aktWert = feld[kachelFeld % KACHELBREITE
+						+ kachelX * KACHELBREITE][kachelFeld / KACHELHOEHE
+						+ kachelY * KACHELHOEHE];
+				rh_inkrementZaehler(zaehler, aktWert);
 			}
-			for(aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
-				if(zaehler[aktWert] > 1)
-				{
-					rh_fehlerZaehler(8,1);
-					printf( "Validator: Wert %d kommt in Teilfeld zwischen Zeile %d Spalte %d \n"
-						"           und Zeile %d Spalte %d %d mal vor (%d mal zuviel).\n",
-						aktWert, kachelY * KACHELHOEHE, kachelX * KACHELBREITE,
-						(kachelY + 1) * KACHELHOEHE -1, (kachelX + 1) * KACHELHOEHE -1,
-						zaehler[aktWert], zaehler[aktWert-1]);
+			for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
+				if (zaehler[aktWert] > 1) {
+					rh_fehlerZaehler(8, 1);
+					printf(
+							"Validator: Wert %d kommt in Teilfeld zwischen Zeile %d Spalte %d \n"
+									"           und Zeile %d Spalte %d %d mal vor (%d mal zuviel).\n",
+							aktWert, kachelY * KACHELHOEHE,
+							kachelX * KACHELBREITE,
+							(kachelY + 1) * KACHELHOEHE - 1,
+							(kachelX + 1) * KACHELHOEHE - 1, zaehler[aktWert],
+							zaehler[aktWert - 1]);
 				}
 		}
 
-	return rh_fehlerZaehler(6,0) + rh_fehlerZaehler(7,0) + rh_fehlerZaehler(8,0);
+	return rh_fehlerZaehler(6, 0) + rh_fehlerZaehler(7, 0)
+			+ rh_fehlerZaehler(8, 0);
 }
-
-
 
 /* 
  * readFile(char *pfad)
@@ -320,39 +284,44 @@ int testSudokuFormal(int feld[BREITE][HOEHE])
  * returns -4 - Wenn der Dateihandle nicht geöffnet werden konnte.
  * returns  n - Anzahl der Fehler (n), die korrigiert wurden.
  */
-int leseDatei(char *dateipfad)
-{
+int leseDatei(char *dateipfad) {
 	/* Dateipfad prüfen */
-	if(rh_dateipfadTester(dateipfad))
+	if (rh_dateipfadTester(dateipfad))
 		return -2;
-	
+
 	/* Dateihandle öffnen */
 	FILE *ptr_datei;
 	ptr_datei = fopen(dateipfad, "r");
-	if(!ptr_datei)
+	if (!ptr_datei)
 		return -4;
 
 	/* Datei in array einlesen */
 	int einleseFeld[BREITE][HOEHE];
 	int einleseStatus = rh_leseDateiZeichenweise(einleseFeld, ptr_datei);
 	fclose(ptr_datei);
-	if(einleseStatus)
-	{
-		printf("Es traten Fehler beim einlesen der Datei auf. Fortfahren? (y/n) ");
+	if (einleseStatus) {
+		printf(
+				"Es traten Fehler beim einlesen der Datei auf. Fortfahren? (y/n) ");
 		printf("y\n");
 	}
 
 	/* Eingabe validieren */
 	int validierungsStatus = testSudokuFormal(einleseFeld);
-	if(validierungsStatus)
-	{
-		printf("Das Sudoku beinhaltet formale Fehler. Dennoch fortfahren? (y/n) ");
+	if (validierungsStatus) {
+		printf(
+				"Das Sudoku beinhaltet formale Fehler. Dennoch fortfahren? (y/n) ");
 		printf("y\n");
-	}	
-	
+	}
+
 	/* Feld übertragen */
 	// Fragen, ob das ok ist, wenn Fehler korrigiert wurden
 	// Array übertragen (echte Kopie, nicht über Pointer)
+	int i, j;
+	for (i = 0; i < BREITE; i++) {
+		for (j = 0; j < HOEHE; j++) {
+			setFeld(i,j,einleseFeld[i][j],0);
+		}
+	}
 	return einleseStatus;
 }
 
