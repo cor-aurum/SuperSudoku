@@ -26,6 +26,13 @@ int getch() {
 void gotoxy(int x, int y) {
 	printf("%c[%d;%df", 0x1B, y, x);
 }
+
+/*
+ * Printet ein char farbig
+ */
+void highlight(char c) {
+	printf("\033[32m%c\033[0m", c);
+}
 #define CLEAR "clear"
 #else
 #include <conio.h>
@@ -39,9 +46,22 @@ void gotoxy(int x, int y) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
 }
 
+/*
+ * Printet ein char farbig
+ */
+void highlight(char c)
+{
+	CONSOLE_SCREEN_BUFFER_INFO csbiScreen;
+	WORD wOldColAttr;
+	GetConsoleScreenBufferInfo(STD_OUTPUT_HANDLE, &csbiScreen);
+	wOldColAttr = csbiScreen.wAttributes;
+	SetConsoleTextAttribute(STD_OUTPUT_HANDLE, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	printf("%c",c);
+	SetConsoleTextAttribute(STD_OUTPUT_HANDLE, wOldColAttr);
+}
+
 #define CLEAR "cls"
 #endif
-void printFeld();
 int setFeld(int x, int y, int eingabe, int lock);
 int x = 3, y = 2;
 
@@ -52,6 +72,74 @@ void meldungAusgeben(char* nachricht) {
 	gotoxy(1, HOEHE * 2 + 2);
 	printf("%s", nachricht);
 	gotoxy(x, y);
+}
+
+/*
+ * Diese Methode gibt einen Wert im Sudoku als Druckbares Zeichen zurück.
+ */
+char asFeld(char c) {
+	if (c == 0) {
+		return ' ';
+	}
+	return c + 48;
+}
+
+/*
+ * Diese Methode schreibt in den standartout eine gut lesbare Darstellung des Sudokus
+ */
+void printFeld() {
+	int i, j;
+	for (i = 0; i < HOEHE; i++) {
+		for (j = 0; j < BREITE; j++) {
+			printf("%s%s",
+					(j % 3 == 0 && i != 0) ? "|" : (i % 3 != 0) ? "." : " ",
+					(i % KACHELHOEHE == 0) ? "____" : "    ");
+		}
+		printf("%s\n", (i != 0) ? "|" : "");
+		for (j = 0; j < BREITE; j++) {
+			printf("%s ", (j % KACHELBREITE == 0) ? "|" : " ");
+			if (!schutz[i][j]) {
+				printf("%c  ", asFeld(feld[i][j]));
+			} else {
+				highlight(asFeld(feld[i][j]));
+				printf("  ");
+			}
+		}
+		printf("|     ");
+		switch (i) {
+		case 0:
+			printf("wasd: Cursor bewegen");
+			break;
+		case 1:
+			printf("Leerzeichen: Zahl löschen");
+			break;
+		case 2:
+			printf("1-9: Zahl eintragen");
+			break;
+		case 3:
+			printf("p: Spiel speichern");
+			break;
+		case 4:
+			printf("o: Spiel laden");
+			break;
+		case 5:
+			printf("l: Spiel lösen");
+			break;
+		case 6:
+			printf("k: Spiel prüfen");
+			break;
+		case 8:
+			printf("q: Programm beenden");
+			break;
+		}
+		printf("\n");
+
+	}
+	for (j = 0; j < BREITE; j++) {
+		printf("%s%s", (j % 3 == 0 && i != 0) ? "|" : " ",
+				(i % KACHELHOEHE == 0) ? "____" : "    ");
+	}
+	printf("|\n");
 }
 
 /*
@@ -107,6 +195,19 @@ int eingabeLoop() {
 				printFeld();
 			}
 		}
+			break;
+		case 'l':
+			meldungAusgeben("Bitte warten, Sudoku wird gelöst");
+			loeseSudokuMain();
+			system(CLEAR);
+			printFeld();
+			break;
+		case 'k':
+			if (checkSudokuFormal()) {
+				meldungAusgeben("Sudoku ist korrekt");
+			} else {
+				meldungAusgeben("Sudoku nicht ist korrekt");
+			}
 			break;
 		default:
 			if (tmp >= '1' && tmp <= '9') {

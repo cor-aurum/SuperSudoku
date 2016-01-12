@@ -17,6 +17,12 @@
 #define KACHELBREITE 3
 #define MAX_ZAHL 9
 
+int feld[BREITE][HOEHE] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0,
+		0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0,
+				0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+int schutz[BREITE][HOEHE];
+
 /* HEADERDATEIEN *************************************************************/
 #include "GUI.h"
 #include "Reader.h"
@@ -25,16 +31,6 @@
 /*
  * Globale Variable für die Speicherung des Sudokus
  */
-int feld[BREITE][HOEHE]= {
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0}
-	};
 
 int kopiereArray(int *quelle, int *ziel) {
 	int x, y;
@@ -54,7 +50,7 @@ int kopiereArray(int *quelle, int *ziel) {
  * TODO funktioniert noch nicht!
  */
 int checkSudokuFormal() {
-	return 0;
+	return testSudokuFormal(feld);
 }
 
 /*
@@ -78,63 +74,6 @@ int checkSudokuLoesbar() {
  */
 int checkSudoku() {
 	return 0;
-}
-
-/*
- * Diese Methode gibt einen Wert im Sudoku als Druckbares Zeichen zurück.
- */
-char asFeld(char c) {
-	if (c == 0) {
-		return ' ';
-	}
-	return c + 48;
-}
-
-/*
- * Diese Methode schreibt in den standartout eine gut lesbare Darstellung des Sudokus
- */
-void printFeld() {
-	int i, j;
-	for (i = 0; i < HOEHE; i++) {
-		for (j = 0; j < BREITE; j++) {
-			printf("%s%s", (j % 3 == 0 && i != 0) ? "|" :(i % 3 != 0) ? ".": " ",
-					(i % KACHELHOEHE == 0) ? "____" : "    ");
-		}
-		printf("%s\n", (i != 0) ? "|" : "");
-		for (j = 0; j < BREITE; j++) {
-			printf("%s %c  ", (j % KACHELBREITE == 0) ? "|" : " ",
-					asFeld(feld[i][j]));
-
-		}
-		printf("|     ");
-		switch (i) {
-		case 0:
-			printf("wasd: Cursor bewegen");
-			break;
-		case 1:
-			printf("Leerzeichen: Zahl löschen");
-			break;
-		case 2:
-			printf("1-9: Zahl eintragen");
-			break;
-		case 3:
-			printf("p: Spiel speichern");
-			break;
-		case 4:
-			printf("o: Spiel laden");
-			break;
-		case 8:
-			printf("q: Programm beenden");
-			break;
-		}
-		printf("\n");
-
-	}
-	for (j = 0; j < BREITE; j++) {
-		printf("%s%s", (j % 3 == 0 && i != 0) ? "|" : " ",
-				(i % KACHELHOEHE == 0) ? "____" : "    ");
-	}
-	printf("|\n");
 }
 
 /*
@@ -177,9 +116,8 @@ int leseFeldAusDatei(char datei[]) {
 	//leseDatei("sudoku_err.txt");
 	//leseDatei("sudoku_err2.txt");
 	//leseDatei("sudoku_err3.txt");
-	leseDatei(datei);
+	return !leseDatei(datei);
 	//printf("Done.\n");
-	return 1;
 }
 
 /*
@@ -214,7 +152,6 @@ void eingabe(int modus) {
  *  1: Eingabe erfolgreich
  */
 int setFeld(int x, int y, int eingabe, int lock) {
-	static int schutz[BREITE][HOEHE];
 	if (!schutz[x][y]) {
 		if (!(eingabe >= 0 && eingabe <= MAX_ZAHL)) {
 			return -2;

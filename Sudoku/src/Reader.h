@@ -312,6 +312,10 @@ int leseDatei(char *dateipfad) {
 				"Das Sudoku beinhaltet formale Fehler. Dennoch fortfahren? (y/n) ");
 		printf("y\n");
 	}
+	if(einleseStatus!=0)
+	{
+		return einleseStatus;
+	}
 
 	/* Feld übertragen */
 	// Fragen, ob das ok ist, wenn Fehler korrigiert wurden
@@ -319,7 +323,7 @@ int leseDatei(char *dateipfad) {
 	int i, j;
 	for (i = 0; i < BREITE; i++) {
 		for (j = 0; j < HOEHE; j++) {
-			setFeld(i,j,einleseFeld[j][i],0);
+			setFeld(i,j,einleseFeld[j][i],einleseFeld[j][i]);
 		}
 	}
 	return einleseStatus;
