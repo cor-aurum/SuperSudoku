@@ -34,8 +34,12 @@ void gotoxy(int x, int y) {
 /*
  * Printet ein char farbig
  */
-void highlight(char c) {
+void highlightGrun(char c) {
 	printf("\033[32m%c\033[0m", c);
+}
+
+void highlightRot(char c) {
+	printf("\033[31m%c\033[0m", c);
 }
 #define CLEAR "clear"
 #define UP 'A'
@@ -57,15 +61,25 @@ void gotoxy(int x, int y) {
 /*
  * Printet ein char farbig
  */
-void highlight(char c)
+void highlight(char c, int farbe)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbiScreen;
 	WORD wOldColAttr;
 	GetConsoleScreenBufferInfo(STD_OUTPUT_HANDLE, &csbiScreen);
 	wOldColAttr = csbiScreen.wAttributes;
-	SetConsoleTextAttribute(STD_OUTPUT_HANDLE, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	SetConsoleTextAttribute(STD_OUTPUT_HANDLE, farbe);
 	printf("%c",c);
 	SetConsoleTextAttribute(STD_OUTPUT_HANDLE, wOldColAttr);
+}
+
+void highlightGrun(char c)
+{
+	highlight(c,FOREGROUND_GREEN);
+}
+
+void highlightRot(char c)
+{
+	highlight(c,FOREGROUND_RED);
 }
 
 #define CLEAR "cls"
@@ -138,9 +152,14 @@ void printFeld() {
 		for (j = 0; j < BREITE; j++) {
 			printf("%s ", (j % KACHELBREITE == 0) ? "|" : " ");
 			if (!schutz[i][j]) {
-				printf("%c  ", asFeld(feld[i][j]));
+				if (!fehler[i][j]) {
+					printf("%c  ", asFeld(feld[i][j]));
+				} else {
+					highlightRot(asFeld(feld[i][j]));
+					printf("  ");
+				}
 			} else {
-				highlight(asFeld(feld[i][j]));
+				highlightGrun(asFeld(feld[i][j]));
 				printf("  ");
 			}
 		}

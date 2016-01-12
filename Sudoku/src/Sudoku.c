@@ -21,6 +21,10 @@ int feld[BREITE][HOEHE] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0,
 		0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0,
 				0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+int fehler[BREITE][HOEHE] = { { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0,
+		0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0,
+				0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 int schutz[BREITE][HOEHE];
 
 /* HEADERDATEIEN *************************************************************/
@@ -34,7 +38,6 @@ int schutz[BREITE][HOEHE];
  * Rückgabe:
  * 1: Sudoku ist korrekt
  * 0: Sudoku formal inkorrekt
- * TODO funktioniert noch nicht!
  */
 int checkSudokuFormal() {
 	return testSudokuFormal(feld);
