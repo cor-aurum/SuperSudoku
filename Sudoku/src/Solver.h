@@ -5,82 +5,6 @@
  * Version 1 (2015-12-29) Sascha Scherrer <dhbw.scherrer@gmail.com>          *
  *****************************************************************************/
 
-/* EXTERNE HEADER-DATEIEN
-#include<stdio.h>
-#include<stdlib.h>
-****************************************************/
-
-/* PRÄPROZESSORDIREKTIVEN
-#define HOEHE 9
-#define BREITE 9
-#define KACHELHOEHE 3
-#define KACHELBREITE 3
-#define MAX_ZAHL 9
-***************************************************/
-
-// x, y
-/*
-int feld[9][9] = {
-	{0,8,0,0,9,0,0,2,0},
-	{1,0,4,0,0,0,8,0,6},
-	{0,3,0,4,0,7,0,5,0},
-	{0,0,3,0,2,0,1,0,0},
-	{8,0,0,6,0,9,0,0,7},
-	{0,0,9,0,4,0,2,0,0},
-	{3,0,7,0,0,0,4,0,8},
-	{0,1,0,0,7,0,0,3,0}
-};
-
-int feld[9][9] = {
-	{0,0,0,2,0,4,8,1,0},
-	{0,4,0,0,0,8,2,6,3},
-	{3,0,0,1,6,0,0,0,4},
-	{1,0,0,0,4,0,5,8,0},
-	{6,3,5,8,2,0,0,0,7},
-	{2,0,0,5,9,0,1,0,0},
-	{9,1,0,7,0,0,0,4,0},
-	{0,0,0,6,8,0,7,0,1},
-	{8,0,0,4,0,3,0,5,0}
-};
-*/
-
-/*
- * Test-Sudoku.
- * Achtung: Schreibweise ist Y von links nach rechts und X von oben nach unten,
- * also anders als gewohnt.
-
-int feld[9][9] = {
-	{2,4,8,0,0,5,0,0,0},
-	{9,3,0,0,0,0,0,2,5},
-	{5,1,6,7,0,0,0,0,4},
-	{7,8,0,0,3,0,5,6,0},
-	{0,6,0,5,8,1,0,0,0},
-	{0,5,0,0,7,6,0,0,8},
-	{8,0,0,0,0,7,1,3,6},
-	{6,2,0,0,0,0,0,5,7},
-	{0,0,0,6,0,0,9,0,2}
-};
-*/
-
-void ausgabeFeld(int feld[BREITE][HOEHE])
-{
-	int x, y;
-	printf("+-------+-------+-------+\n");
-	for(y = 0; y < HOEHE; y++)
-	{
-		printf("| ");
-		for(x = 0; x < BREITE; x++)
-		{
-			printf("%c ", feld[x][y] ? feld[x][y] + '0' : ' ');
-			if((x % KACHELBREITE) == KACHELBREITE - 1)
-				printf("| ");
-		}
-		printf("\n");
-		if((y % KACHELHOEHE) == KACHELHOEHE - 1)
-			printf("+-------+-------+-------+\n");
-	}
-}
-
 /*
  * feldOptionen(feld, kannEnthalten, posX, posY)
  * Ermittelt die Ausfülloptionen für das durch posX und posY 
@@ -220,7 +144,7 @@ int loeseSudoku(int feld[BREITE][HOEHE])
 	int kannEnthalten[BREITE][HOEHE][MAX_ZAHL+1], x = 0, y = 0, z = 0, weitermachen = 0;
 
 	/*
-	 * Schritt 1: Eindeutige ersetzungen vornehmen.
+	 * Schritt 1: Eindeutige Ersetzungen vornehmen.
 	 * Eindeutig ist eine ersetzung, wenn es für ein Feld genau einen 
 	 * Kandidaten gibt, der eingesetzt werden kann. Hier wird für jedes
 	 * Feld geprüft, wie viele Kandidaten es gibt. Gibt es nur einen

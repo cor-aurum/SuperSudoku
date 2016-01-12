@@ -69,9 +69,36 @@ int x = 3, y = 2;
  * Gibt eine Nachricht unterhalb des Spielfeldes aus
  */
 void meldungAusgeben(char* nachricht) {
+	system(CLEAR);
+	printFeld();
 	gotoxy(1, HOEHE * 2 + 2);
 	printf("%s", nachricht);
 	gotoxy(x, y);
+}
+
+/*
+ * Diese Methode macht gar nichts spezielles, einfach ignorieren!
+ */
+char* getJoke() {
+	time_t t;
+	time(&t);
+	srand((unsigned int) t);
+	switch (rand() % 7) {
+	case 0:
+		return "Welches Tier kann addieren? -- Ein Oktoplus.";
+	case 1:
+		return "Um Rekursion zu verstehen, muss man zunächst Rekursion verstehen.";
+	case 2:
+		return "w.z.b.w. := was zu bezweifeln wäre";
+	case 3:
+		return "Die meisten Menschen haben überdurchschnittlich viele Beine!";
+	case 4:
+		return "Was hat Windows mit einem U-Boot gemeinsam? Kaum macht man ein Fenster auf, fangen die Probleme an.";
+	case 5:
+		return "Wieviele Programmierer braucht man, um eine Glühbirne zu wechseln? Keinen, ist ein Hardware-Problem!";
+	default:
+		return "Wie nennt man ein Rind mit Root-Rechten? Sudo ku";
+	}
 }
 
 /*
@@ -178,8 +205,6 @@ int eingabeLoop() {
 			char string[100];
 			scanf("%99s", &string[0]);
 			speichereFeld(string);
-			system(CLEAR);
-			printFeld();
 			meldungAusgeben("Gespeichert");
 		}
 			break;
@@ -209,13 +234,15 @@ int eingabeLoop() {
 				meldungAusgeben("Sudoku nicht ist korrekt");
 			}
 			break;
+		case 'j':
+
+			meldungAusgeben(getJoke());
+			break;
 		default:
 			if (tmp >= '1' && tmp <= '9') {
 				setFeld((y - 2) / 2, (x - 3) / 5, tmp - '0', 0);
 				system(CLEAR);
 				printFeld();
-				if (tmp == '8')
-					meldungAusgeben("Es wurde eine Acht gedrückt");
 			}
 			if (tmp == ' ') {
 				setFeld((y - 2) / 2, (x - 3) / 5, 0, 0);

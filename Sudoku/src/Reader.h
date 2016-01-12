@@ -322,6 +322,11 @@ int leseDatei(char *dateipfad) {
 	// Array übertragen (echte Kopie, nicht über Pointer)
 	int i, j;
 	for (i = 0; i < BREITE; i++) {
+			for (j = 0; j < HOEHE; j++) {
+				schutz[i][j]=0;
+			}
+		}
+	for (i = 0; i < BREITE; i++) {
 		for (j = 0; j < HOEHE; j++) {
 			setFeld(i,j,einleseFeld[j][i],einleseFeld[j][i]);
 		}

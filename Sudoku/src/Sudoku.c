@@ -124,11 +124,8 @@ int leseFeldAusDatei(char datei[]) {
  * TODO Moritz implementiert hier den Algorithmus für das Lösen des Sudokus. Gibt den Erfolg zurück.
  */
 int loeseSudokuMain() {
-	printf("SUDOKU ./solver.c \n");
-	ausgabeFeld(feld);
 	loeseSudoku(feld);
-	ausgabeFeld(feld);
-	return 0;
+	return 1;
 }
 
 /*
