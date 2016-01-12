@@ -319,7 +319,7 @@ int leseDatei(char *dateipfad) {
 	int i, j;
 	for (i = 0; i < BREITE; i++) {
 		for (j = 0; j < HOEHE; j++) {
-			setFeld(i,j,einleseFeld[i][j],0);
+			setFeld(i,j,einleseFeld[j][i],0);
 		}
 	}
 	return einleseStatus;
