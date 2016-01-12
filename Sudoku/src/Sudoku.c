@@ -44,17 +44,6 @@ int checkSudokuFormal() {
 }
 
 /*
- * Prüft, ob Sudoku lösbar ist.
- * Rückgabe:
- * 1: Sudoku ist korrekt
- * 0: Sudoku nicht lösbar
- * TODO funktioniert noch nicht!
- */
-int checkSudokuLoesbar() {
-	return 0;
-}
-
-/*
  * Prüft, ob Sudoku, lösbar ist und ob Sudoku formal korrekt ist.
  * Rückgabe:
  * 1: Sudoku ist korrekt

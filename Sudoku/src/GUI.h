@@ -175,7 +175,7 @@ void printFeld() {
 			printf("1-9: Zahl eintragen");
 			break;
 		case 3:
-			printf("s: Spiel speichern");
+			printf("p: Spiel speichern");
 			break;
 		case 4:
 			printf("o: Spiel laden");
@@ -210,18 +210,22 @@ int eingabeLoop() {
 	while (1) {
 		char tmp = getch();
 		switch (tmp) {
+		case 'w':
 		case UP:
 			if (y >= 4)
 				y -= 2;
 			break;
+		case 'a':
 		case LEFT:
 			if (x >= 7)
 				x -= 5;
 			break;
+		case 's':
 		case DOWN:
 			if (y < HOEHE * 2)
 				y += 2;
 			break;
+		case 'd':
 		case RIGHT:
 			if (x < BREITE * 5 - 2)
 				x += 5;
@@ -230,7 +234,7 @@ int eingabeLoop() {
 			system(CLEAR);
 			exit(0);
 			break;
-		case 's': {
+		case 'p': {
 			system(CLEAR);
 			printFeld();
 			meldungAusgeben("Speicherort eingeben:");
@@ -272,7 +276,7 @@ int eingabeLoop() {
 				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
 			break;
-		case 'w':
+		case 'j':
 			system(CLEAR);
 			printFeld();
 			meldungAusgeben(getJoke());
