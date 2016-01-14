@@ -133,7 +133,7 @@ void printFeld() {
 		for (j = 0; j < BREITE; j++) {
 			printf("%s%s",
 					j == 0 ? i == 0 ? "╔" : i % KACHELHOEHE != 0 ? "╟" : "╠" :
-					(j % 3 == 0 && i != 0) ? i % KACHELHOEHE == 0 ? "╬" : "╫"
+					(j % KACHELBREITE == 0 && i != 0) ? i % KACHELHOEHE == 0 ? "╬" : "╫"
 					:
 					(i % KACHELHOEHE != 0) ? "┼" :
 					i != 0 ? "╪" : j%KACHELBREITE!=0?"┯":"╦", (i % KACHELHOEHE == 0) ? "═══" : "───");
