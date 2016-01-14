@@ -61,25 +61,12 @@ void gotoxy(int x, int y) {
 /*
  * Printet ein char farbig
  */
-void highlight(char c, int farbe)
-{
-	CONSOLE_SCREEN_BUFFER_INFO csbiScreen;
-	WORD wOldColAttr;
-	GetConsoleScreenBufferInfo(STD_OUTPUT_HANDLE, &csbiScreen);
-	wOldColAttr = csbiScreen.wAttributes;
-	SetConsoleTextAttribute(STD_OUTPUT_HANDLE, farbe);
-	printf("%c",c);
-	SetConsoleTextAttribute(STD_OUTPUT_HANDLE, wOldColAttr);
+void highlightGrun(char c) {
+	printf("\033[32m%c\033[0m", c);
 }
 
-void highlightGrun(char c)
-{
-	highlight(c,FOREGROUND_GREEN);
-}
-
-void highlightRot(char c)
-{
-	highlight(c,FOREGROUND_RED);
+void highlightRot(char c) {
+	printf("\033[31m%c\033[0m", c);
 }
 
 #define CLEAR "cls"
@@ -145,25 +132,28 @@ void printFeld() {
 	for (i = 0; i < HOEHE; i++) {
 		for (j = 0; j < BREITE; j++) {
 			printf("%s%s",
-					(j % 3 == 0 && i != 0) ? "|" : (i % 3 != 0) ? "." : " ",
-					(i % KACHELHOEHE == 0) ? "____" : "    ");
+					j == 0 ? i == 0 ? "╔" : i % KACHELHOEHE != 0 ? "╟" : "╠" :
+					(j % 3 == 0 && i != 0) ? i % KACHELHOEHE == 0 ? "╬" : "╫"
+					:
+					(i % KACHELHOEHE != 0) ? "┼" :
+					i != 0 ? "╪" : j%KACHELBREITE!=0?"┯":"╦", (i % KACHELHOEHE == 0) ? "═══" : "───");
 		}
-		printf("%s\n", (i != 0) ? "|" : "");
+		printf("%s\n", (i != 0) ? i % KACHELHOEHE != 0 ? "┨" : "╣" : "╗");
 		for (j = 0; j < BREITE; j++) {
-			printf("%s ", (j % KACHELBREITE == 0) ? "|" : " ");
+			printf("%s ", (j % KACHELBREITE == 0) ? "║" : "│");
 			if (!schutz[i][j]) {
 				if (!fehler[i][j]) {
-					printf("%c  ", asFeld(feld[i][j]));
+					printf("%c ", asFeld(feld[i][j]));
 				} else {
 					highlightRot(asFeld(feld[i][j]));
-					printf("  ");
+					printf(" ");
 				}
 			} else {
 				highlightGrun(asFeld(feld[i][j]));
-				printf("  ");
+				printf(" ");
 			}
 		}
-		printf("|     ");
+		printf("║     ");
 		switch (i) {
 		case 0:
 			printf("Pfeiltasten: Cursor bewegen");
@@ -194,10 +184,10 @@ void printFeld() {
 
 	}
 	for (j = 0; j < BREITE; j++) {
-		printf("%s%s", (j % 3 == 0 && i != 0) ? "|" : " ",
-				(i % KACHELHOEHE == 0) ? "____" : "    ");
+		printf("%s%s", j == 0 ? "╚" : j % KACHELBREITE != 0 ? "╧" : "╩",
+				(i % KACHELHOEHE == 0) ? "═══" : "   ");
 	}
-	printf("|\n");
+	printf("╝\n");
 }
 
 /*
@@ -218,7 +208,7 @@ int eingabeLoop() {
 		case 'a':
 		case LEFT:
 			if (x >= 7)
-				x -= 5;
+				x -= 4;
 			break;
 		case 's':
 		case DOWN:
@@ -227,8 +217,8 @@ int eingabeLoop() {
 			break;
 		case 'd':
 		case RIGHT:
-			if (x < BREITE * 5 - 2)
-				x += 5;
+			if (x < BREITE * 4 - 2)
+				x += 4;
 			break;
 		case 'q':
 			system(CLEAR);
@@ -283,12 +273,12 @@ int eingabeLoop() {
 			break;
 		default:
 			if (tmp >= '1' && tmp <= '9') {
-				setFeld((y - 2) / 2, (x - 3) / 5, tmp - '0', 0);
+				setFeld((y - 2) / 2, (x - 3) / 4, tmp - '0', 0);
 				system(CLEAR);
 				printFeld();
 			}
 			if (tmp == ' ') {
-				setFeld((y - 2) / 2, (x - 3) / 5, 0, 0);
+				setFeld((y - 2) / 2, (x - 3) / 4, 0, 0);
 				system(CLEAR);
 				printFeld();
 			}
