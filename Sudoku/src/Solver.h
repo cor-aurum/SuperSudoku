@@ -21,30 +21,29 @@
  * returns -1 - Wenn das Feld unveränderlich ist (da es in
  *              in der Eingabe bereits vorgegeben ist)
  */
-int feldOptionen(int feld[BREITE][HOEHE], int kannEnthalten[BREITE][HOEHE][MAX_ZAHL+1], int posX, int posY)
-{
-	int aktWert = 0, aktFeld = 0, aktX = posX, aktY = posY, akzeptierteWerte = 0;
+int feldOptionen(int feld[BREITE][HOEHE],
+		int kannEnthalten[BREITE][HOEHE][MAX_ZAHL + 1], int posX, int posY) {
+	int aktWert = 0, aktFeld = 0, aktX = posX, aktY = posY,
+			akzeptierteWerte = 0;
 
 //	printf("\n     posX = %d,   posY = %d \n", posX, posY);
-	
-	if(!feld[posX][posY])
-	{
+
+	if (!feld[posX][posY]) {
 		/* Feld darf erstmal jeden Wert annehmen */
-		for(aktWert = 1; aktWert <= MAX_ZAHL; aktWert++) kannEnthalten[posX][posY][aktWert] = 1;
-		
+		for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
+			kannEnthalten[posX][posY][aktWert] = 1;
+
 		/* Alle Werte, die schon in der Zeile stehen, dürfen nicht angenommen werden */
-		for(aktX = 0; aktX < BREITE; aktX++) 
-			if(feld[aktX][posY] >= 1 && feld[aktX][posY] <= MAX_ZAHL)
-			{
+		for (aktX = 0; aktX < BREITE; aktX++)
+			if (feld[aktX][posY] >= 1 && feld[aktX][posY] <= MAX_ZAHL) {
 				kannEnthalten[posX][posY][feld[aktX][posY]] = 0;
 //				printf("feldOptionen: Zeilentest: (%d|%d) = %d (wird gestrichen)\n",
 //						aktX, posY, feld[aktX][posY]);
 			}
 
 		/* Alle Werte, die schon in der Spalte stehen, dürfen nicht angenommen werden */
-		for(aktY = 0; aktY < HOEHE; aktY++)
-			if(feld[posX][aktY] >= 1 && feld[posX][aktY] <= MAX_ZAHL)
-			{
+		for (aktY = 0; aktY < HOEHE; aktY++)
+			if (feld[posX][aktY] >= 1 && feld[posX][aktY] <= MAX_ZAHL) {
 				kannEnthalten[posX][posY][feld[posX][aktY]] = 0;
 //				printf("feldOptionen: Spaltentest: (%d|%d) = %d (wird gestrichen)\n",
 //					posX, aktY, feld[posX][aktY]);
@@ -53,27 +52,26 @@ int feldOptionen(int feld[BREITE][HOEHE], int kannEnthalten[BREITE][HOEHE][MAX_Z
 		/* Alle Werte, die schon in der Kachel stehen, dürfen nicht angenommen werden */
 		int kX = posX;
 		int kY = posY;
-		while(kX % KACHELBREITE) kX--;
-		while(kY % KACHELHOEHE) kY--;
+		while (kX % KACHELBREITE)
+			kX--;
+		while (kY % KACHELHOEHE)
+			kY--;
 
-		for(aktFeld = 0; aktFeld < KACHELBREITE * KACHELHOEHE; aktFeld++)
-		{
+		for (aktFeld = 0; aktFeld < KACHELBREITE * KACHELHOEHE; aktFeld++) {
 			aktX = aktFeld % KACHELBREITE + kX;
-			aktY = aktFeld / KACHELHOEHE  + kY;
+			aktY = aktFeld / KACHELHOEHE + kY;
 
-			if(feld[aktX][aktY] >= 1 && feld[aktX][aktY] <= MAX_ZAHL)
-			{
-				kannEnthalten[posX][posY][feld[aktX][aktY]] = 0;	
+			if (feld[aktX][aktY] >= 1 && feld[aktX][aktY] <= MAX_ZAHL) {
+				kannEnthalten[posX][posY][feld[aktX][aktY]] = 0;
 //				printf("feldOptionen: Kacheltest: (%d|%d) = %d (wird gestrichen)\n",
 //						aktX, aktY, feld[aktX][aktY]);
 			}
 		}
 
 		/* Wie viele Werte sind für dieses Feld möglich */
-		for(aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
-			if(kannEnthalten[posX][posY][aktWert])
+		for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
+			if (kannEnthalten[posX][posY][aktWert])
 				akzeptierteWerte++;
-	
 
 		/* Gib das ganze zur Kontrolle mal aus: */
 //		printf("feldOptionen: Feld (%d|%d) in Kachel (%d|%d) kann %d Werte enthalten: ",
@@ -82,19 +80,14 @@ int feldOptionen(int feld[BREITE][HOEHE], int kannEnthalten[BREITE][HOEHE][MAX_Z
 //			if(kannEnthalten[posX][posY][aktWert])
 //				printf("%d ", aktWert);
 //		printf("\n");
-
 		kannEnthalten[posX][posY][0] = akzeptierteWerte;
 		return akzeptierteWerte;
-	}
-	else
-	{
+	} else {
 //		printf("feldOptionen: Feld (%d|%d) ist unveränderbar.\n", posX, posY);
 		kannEnthalten[posX][posY][0] = 1;
 		return -1;
 	}
 }
-
-
 
 /*
  * testeGeloest(feld)
@@ -106,24 +99,21 @@ int feldOptionen(int feld[BREITE][HOEHE], int kannEnthalten[BREITE][HOEHE][MAX_Z
  * returns 1 - Sudoku ist gelöst.
  * returns 0 - Sudoku ist nicht gelöst.
  */
-int testeGeloest(int feld[BREITE][HOEHE])
-{
+int testeGeloest(int feld[BREITE][HOEHE]) {
 	int i;
-	for(i = 0; i < BREITE * HOEHE; i++)
-		if(feld[i % BREITE][i / HOEHE])
+	for (i = 0; i < BREITE * HOEHE; i++)
+		if (feld[i % BREITE][i / HOEHE])
 			return 0;
 	return 1;
 }
-
-
 
 /*
  * findeGleicheMoeglichkeiten(feld, kannEnthalten, gleicheMoeglichkeiten)
  * Findet Felder in einer Zeile, Spalte oder Kachel, bei denen die gleichen
  * Möglichkeiten zum Einsetzen einer Zahl gegeben sind.
  */
-int findeGleicheMoeglichkeiten(int feld[BREITE][HOEHE], int kannEnthalten[BREITE][HOEHE][MAX_ZAHL+1])
-{
+int findeGleicheMoeglichkeiten(int feld[BREITE][HOEHE],
+		int kannEnthalten[BREITE][HOEHE][MAX_ZAHL + 1]) {
 	// gleichesPaarFeld[paarId][feldNr][0/1] = koordinate;
 	// gleichesPaarElemente[paarId][wertNr] = wert;
 	return 0;
@@ -139,9 +129,12 @@ int findeGleicheMoeglichkeiten(int feld[BREITE][HOEHE], int kannEnthalten[BREITE
  * returns n - Wenn es n Lösungen gibt.
  */
 // Nach J. F. Crook, siehe http://www.ams.org/journals/notices/200904/rtx090400460p.pdf
-int loeseSudoku(int feld[BREITE][HOEHE])
-{
-	int kannEnthalten[BREITE][HOEHE][MAX_ZAHL+1], x = 0, y = 0, z = 0, weitermachen = 0;
+int loeseSudoku(int feld[BREITE][HOEHE]) {
+	if (testSudokuFormal(feld))
+		return 0;
+	meldungAusgeben("Bitte warten, Sudoku wird gelöst");
+	int kannEnthalten[BREITE][HOEHE][MAX_ZAHL + 1], x = 0, y = 0, z = 0,
+			weitermachen = 0;
 
 	/*
 	 * Schritt 1: Eindeutige Ersetzungen vornehmen.
@@ -159,41 +152,39 @@ int loeseSudoku(int feld[BREITE][HOEHE])
 	 * festgestellt wurde, dass es nicht lösbar ist, dann es lösbar, aber
 	 * nicht eindeutig lösbar.
 	 */
-	do
-	{
+	do {
 		weitermachen = 0;
-		for(x = 0;  x < BREITE; x++)
-			for(y = 0; y < HOEHE; y++)
+		for (x = 0; x < BREITE; x++)
+			for (y = 0; y < HOEHE; y++)
 				/* Alle Felder durchgehen: Wie viele Lösungen gibt es? */
-				switch(feldOptionen(feld, kannEnthalten, x, y)){
-					case -1:
-						/* Dieses Feld ist unveränderlich. */
-						break;
-					case 0:
-						/* Es gibt ein Feld ohne mögliche Lösung:  *
-						 * Das Sudoku ist nicht lösbar             */
-						printf("loeasungsSucher: Sudoku ist nicht lösbar.\n");
-						return 0;
-						break;
-					case 1:
-						/* Für das Feld gibt nur eine Möglichkeit: *
-						 * Lösung für das Feld ins Feld einsetzen  */
-						for(z = 1; z <= MAX_ZAHL; z++)
-							if(kannEnthalten[x][y][z])
-								feld[x][y] = z;
-						printf("louesungsSucher: Feld (%d|%d) wird"
-								" auf %d gesetzt.\n",
-								 x,y, feld[x][y]);
-						weitermachen++;
-						break;
+				switch (feldOptionen(feld, kannEnthalten, x, y)) {
+				case -1:
+					/* Dieses Feld ist unveränderlich. */
+					break;
+				case 0:
+					/* Es gibt ein Feld ohne mögliche Lösung:  *
+					 * Das Sudoku ist nicht lösbar             */
+					//printf("loeasungsSucher: Sudoku ist nicht lösbar.\n");
+					return 0;
+					break;
+				case 1:
+					/* Für das Feld gibt nur eine Möglichkeit: *
+					 * Lösung für das Feld ins Feld einsetzen  */
+					for (z = 1; z <= MAX_ZAHL; z++)
+						if (kannEnthalten[x][y][z])
+							feld[x][y] = z;
+					/*
+					 printf("louesungsSucher: Feld (%d|%d) wird"
+					 " auf %d gesetzt.\n",
+					 x,y, feld[x][y]);*/
+					weitermachen++;
+					break;
 					/* Für alle anderen Fälle ist nichts zu tun. */
 				}
 		/* Felddurchgang zu Ende */
 
-		printf("weitermachen = %d \n", weitermachen);
-	
-	}
-	while(weitermachen);
+		//printf("weitermachen = %d \n", weitermachen);
+	} while (weitermachen);
 
 	/*
 	 * Schritt 2: Prüfen, ob das Sudoku jetzt gelöst ist.
@@ -202,8 +193,8 @@ int loeseSudoku(int feld[BREITE][HOEHE])
 	 * etwas umständlicherem Weg zur Lösung kommen, siehe Schritt 3.
 	 * Wenn es keine Lösung gibt, ist zu diesem Zeitpunkt bereits 0 von der
 	 * Funktion zurückgegeben worden.
-	 */	
-	if(testeGeloest(feld))
+	 */
+	if (testeGeloest(feld))
 		return 1; /* Sudoku ist gelöst, andernfalls weitermachen (Schritt 3) */
 
 	/*

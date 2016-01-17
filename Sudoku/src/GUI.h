@@ -279,9 +279,8 @@ int eingabeLoop() {
 			break;
 		case 'l':
 			printFeld();
-			meldungAusgeben("Bitte warten, Sudoku wird gelöst");
+			//
 			loeseSudokuMain();
-			system(CLEAR);
 			printFeld();
 			break;
 		case 'k':
