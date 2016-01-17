@@ -76,7 +76,7 @@ void highlightRot(char c) {
 #define RIGHT 77
 #define LEFT 75
 #endif
-#define LEGENDE 9
+#define LEGENDE 12
 int setFeld(int x, int y, int eingabe, int lock);
 int x = 3, y = 2, legende = 0;
 
@@ -148,10 +148,10 @@ void printFeld() {
 		for (j = 0; j < BREITE; j++) {
 			printf("%s ", (j % KACHELBREITE == 0) ? "║" : "│");
 			if (!schutz[i][j]) {
-				if (!fehler[i][j]) {
+				if (feld[i][j] >= 0) {
 					printf("%c ", asFeld(feld[i][j]));
 				} else {
-					highlightRot(asFeld(feld[i][j]));
+					highlightRot(asFeld(feld[i][j] * -1));
 					printf(" ");
 				}
 			} else {
@@ -163,7 +163,9 @@ void printFeld() {
 		char *hilfe[LEGENDE] = { "n/m: Hilfe navigieren",
 				"Pfeiltasten/wasd: Cursor bewegen", "Leerzeichen: Zahl löschen",
 				"1-9: Zahl eintragen", "p: Spiel speichern", "o: Spiel laden",
-				"l: Spiel lösen", "k: Spiel prüfen", "q: Programm beenden" };
+				"l: Spiel lösen", "k: Spiel prüfen",
+				"x: Schreibschutz aufheben", "c: Spiel leeren", "u: Über:",
+				"q: Programm beenden" };
 		int nummer = legende * HOEHE + i;
 		if (nummer < LEGENDE) {
 			printf("%s", hilfe[nummer]);
@@ -180,9 +182,48 @@ void printFeld() {
 }
 
 /*
+ * Zeigt eine Infoseite auf dem Bildschirm an
+ */
+void printUber() {
+	static int offen = 0;
+	if (offen) {
+		offen = 0;
+		printFeld();
+	} else {
+		offen=1;
+		system(CLEAR);
+		printf(" _______           _______  _______  _______ \n");
+		printf("(  ____ \\|\\     /|(  ____ )(  ____ \\(  ____ )\n");
+		printf("| (    \\/| )   ( || (    )|| (    \\/| (    )|\n");
+		printf("| (_____ | |   | || (____)|| (__    | (____)|\n");
+		printf("(_____  )| |   | ||  _____)|  __)   |     __)\n");
+		printf("      ) || |   | || (      | (      | (\\ (   \n");
+		printf("/\\____) || (___) || )      | (____/\\| ) \\ \\__\n");
+		printf("\\_______)(_______)|/       (_______/|/   \\__/\n\n");
+		printf(" _______           ______   _______  _                \n");
+		printf(
+				"(  ____ \\|\\     /|(  __  \\ (  ___  )| \\    /\\|\\     /|\n");
+		printf("| (    \\/| )   ( || (  \\  )| (   ) ||  \\  / /| )   ( |\n");
+		printf("| (_____ | |   | || |   ) || |   | ||  (_/ / | |   | |\n");
+		printf("(_____  )| |   | || |   | || |   | ||   _ (  | |   | |\n");
+		printf("      ) || |   | || |   ) || |   | ||  ( \\ \\ | |   | |\n");
+		printf("/\\____) || (___) || (__/  )| (___) ||  /  \\ \\| (___) |\n");
+		printf(
+				"\\_______)(_______)(______/ (_______)|_/    \\/(_______)\n\n\n");
+		printf("Entwickelt von:\n");
+		printf("Koch, Moritz\n");
+		printf("Scherrer, Sascha\n");
+		printf("Schütze, Felix\n\n\n");
+		printf("u: Zurück");
+	}
+
+}
+
+/*
  * Empfaengt Tastatureingaben und steuert mit diesen das Spielfeld
  */
 int eingabeLoop() {
+	int i, j;
 	printFeld();
 	gotoxy(x, y);
 	while (1) {
@@ -261,6 +302,25 @@ int eingabeLoop() {
 			if (legende < (LEGENDE / HOEHE))
 				legende++;
 			printFeld();
+			break;
+		case 'c':
+			for (i = 0; i < BREITE; i++) {
+				for (j = 0; j < HOEHE; j++) {
+					feld[i][j] = 0;
+				}
+			}
+			printFeld();
+			break;
+		case 'x':
+			for (i = 0; i < BREITE; i++) {
+				for (j = 0; j < HOEHE; j++) {
+					schutz[i][j] = 0;
+				}
+			}
+			printFeld();
+			break;
+		case 'u':
+			printUber();
 			break;
 		case 'j':
 			printFeld();
