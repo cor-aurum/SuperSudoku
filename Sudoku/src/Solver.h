@@ -120,6 +120,55 @@ int findeGleicheMoeglichkeiten(int feld[BREITE][HOEHE],
 }
 
 /*
+ * löst offensichtliche Zahlen im Sudoku. Gibt 0 bei einem Fehler zurück
+ */
+int loeseSimple(int feld[BREITE][HOEHE]) {
+	int kannEnthalten[BREITE][HOEHE][MAX_ZAHL + 1], x = 0, y = 0, z = 0,
+			weitermachen = 0;
+	do {
+		weitermachen = 0;
+		for (x = 0; x < BREITE; x++)
+			for (y = 0; y < HOEHE; y++) {
+				/* Alle Felder durchgehen: Wie viele Lösungen gibt es? */
+				int tmp = feldOptionen(feld, kannEnthalten, x, y);
+				if (tmp == 0)
+					return 0;
+				if (tmp == 1) {
+					/* Für das Feld gibt nur eine Möglichkeit: *
+					 * Lösung für das Feld ins Feld einsetzen  */
+					for (z = 1; z <= MAX_ZAHL; z++)
+						if (kannEnthalten[x][y][z])
+							feld[x][y] = z;
+					/* Felddurchgang zu Ende */
+					weitermachen++;
+				}
+			}
+	} while (weitermachen);
+	return 1;
+}
+
+void backtracking(int feld[BREITE][HOEHE],
+		int kannEnthalten[BREITE][HOEHE][MAX_ZAHL + 1]) {
+	int x = 0, y = 0, z = 0;
+	for (x = 0; x < BREITE; x++)
+		for (y = 0; y < HOEHE; y++) {
+			/* Alle Felder durchgehen: Wie viele Lösungen gibt es? */
+			int tmp = feldOptionen(feld, kannEnthalten, x, y);
+			if (tmp >= 1) {
+				for (z = 1; z <= MAX_ZAHL; z++) {
+					if (kannEnthalten[x][y][z])
+						feld[x][y] = z;
+					if (!loeseSimple(feld)) {
+						kannEnthalten[x][y][z] = 0;
+						feld[x][y] = 0;
+					}
+				}
+
+			}
+		}
+}
+
+/*
  * loeseSudoku(feld)
  * Sucht nach einer Lösung für das durch "feld" gegebene Sudoku, indem "feld"
  * ausgefüllt wird.
@@ -132,10 +181,15 @@ int findeGleicheMoeglichkeiten(int feld[BREITE][HOEHE],
 int loeseSudoku(int feld[BREITE][HOEHE]) {
 	if (testSudokuFormal(feld))
 		return 0;
-	meldungAusgeben("Bitte warten, Sudoku wird gelöst");
-	int kannEnthalten[BREITE][HOEHE][MAX_ZAHL + 1], x = 0, y = 0, z = 0,
-			weitermachen = 0;
+	//meldungAusgeben("Bitte warten, Sudoku wird gelöst");
 
+	int kannEnthalten[BREITE][HOEHE][MAX_ZAHL + 1], copyfeld[BREITE][HOEHE], i,
+			j;
+	for (i = 0; i < BREITE; i++) {
+		for (j = 0; j < HOEHE; j++) {
+			copyfeld[i][j] = feld[i][j];
+		}
+	}
 	/*
 	 * Schritt 1: Eindeutige Ersetzungen vornehmen.
 	 * Eindeutig ist eine ersetzung, wenn es für ein Feld genau einen 
@@ -152,39 +206,8 @@ int loeseSudoku(int feld[BREITE][HOEHE]) {
 	 * festgestellt wurde, dass es nicht lösbar ist, dann es lösbar, aber
 	 * nicht eindeutig lösbar.
 	 */
-	do {
-		weitermachen = 0;
-		for (x = 0; x < BREITE; x++)
-			for (y = 0; y < HOEHE; y++)
-				/* Alle Felder durchgehen: Wie viele Lösungen gibt es? */
-				switch (feldOptionen(feld, kannEnthalten, x, y)) {
-				case -1:
-					/* Dieses Feld ist unveränderlich. */
-					break;
-				case 0:
-					/* Es gibt ein Feld ohne mögliche Lösung:  *
-					 * Das Sudoku ist nicht lösbar             */
-					//printf("loeasungsSucher: Sudoku ist nicht lösbar.\n");
-					return 0;
-					break;
-				case 1:
-					/* Für das Feld gibt nur eine Möglichkeit: *
-					 * Lösung für das Feld ins Feld einsetzen  */
-					for (z = 1; z <= MAX_ZAHL; z++)
-						if (kannEnthalten[x][y][z])
-							feld[x][y] = z;
-					/*
-					 printf("louesungsSucher: Feld (%d|%d) wird"
-					 " auf %d gesetzt.\n",
-					 x,y, feld[x][y]);*/
-					weitermachen++;
-					break;
-					/* Für alle anderen Fälle ist nichts zu tun. */
-				}
-		/* Felddurchgang zu Ende */
-
-		//printf("weitermachen = %d \n", weitermachen);
-	} while (weitermachen);
+	if (!loeseSimple(feld))
+		return 0;
 
 	/*
 	 * Schritt 2: Prüfen, ob das Sudoku jetzt gelöst ist.
@@ -194,12 +217,15 @@ int loeseSudoku(int feld[BREITE][HOEHE]) {
 	 * Wenn es keine Lösung gibt, ist zu diesem Zeitpunkt bereits 0 von der
 	 * Funktion zurückgegeben worden.
 	 */
+
 	if (testeGeloest(feld))
 		return 1; /* Sudoku ist gelöst, andernfalls weitermachen (Schritt 3) */
 
 	/*
 	 * Schritt 3: Eine Lösung finden und ermitteln, wie viele Lösungen es gibt.
 	 */
+
+	backtracking(copyfeld, kannEnthalten);
 
 	return -1;
 
