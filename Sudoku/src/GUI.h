@@ -190,7 +190,7 @@ void printUber() {
 		offen = 0;
 		printFeld();
 	} else {
-		offen=1;
+		offen = 1;
 		system(CLEAR);
 		printf(" _______           _______  _______  _______ \n");
 		printf("(  ____ \\|\\     /|(  ____ )(  ____ \\(  ____ )\n");
@@ -260,6 +260,7 @@ int eingabeLoop() {
 			char string[100];
 			scanf("%99s", &string[0]);
 			speichereFeld(string);
+			printFeld();
 			meldungAusgeben("Gespeichert");
 		}
 			break;
@@ -270,6 +271,7 @@ int eingabeLoop() {
 			char string[100];
 			scanf("%99s", &string[0]);
 			if (!leseFeldAusDatei(string)) {
+				printFeld();
 				meldungAusgeben("Laden der Datei fehlgeschlagen");
 			} else {
 				system(CLEAR);
@@ -306,6 +308,7 @@ int eingabeLoop() {
 			for (i = 0; i < BREITE; i++) {
 				for (j = 0; j < HOEHE; j++) {
 					feld[i][j] = 0;
+					schutz[i][j] = 0;
 				}
 			}
 			printFeld();
