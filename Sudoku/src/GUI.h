@@ -128,15 +128,19 @@ char asFeld(char c) {
  * Diese Methode schreibt in den standartout eine gut lesbare Darstellung des Sudokus
  */
 void printFeld() {
+	system(CLEAR);
 	int i, j;
 	for (i = 0; i < HOEHE; i++) {
 		for (j = 0; j < BREITE; j++) {
 			printf("%s%s",
-					j == 0 ? i == 0 ? "╔" : i % KACHELHOEHE != 0 ? "╟" : "╠" :
-					(j % KACHELBREITE == 0 && i != 0) ? i % KACHELHOEHE == 0 ? "╬" : "╫"
+					j == 0 ? i == 0 ? "╔" : i % KACHELHOEHE != 0 ? "╟" : "╠"
+					:
+					(j % KACHELBREITE == 0 && i != 0) ?
+							i % KACHELHOEHE == 0 ? "╬" : "╫"
 					:
 					(i % KACHELHOEHE != 0) ? "┼" :
-					i != 0 ? "╪" : j%KACHELBREITE!=0?"┯":"╦", (i % KACHELHOEHE == 0) ? "═══" : "───");
+					i != 0 ? "╪" : j % KACHELBREITE != 0 ? "┯" : "╦",
+					(i % KACHELHOEHE == 0) ? "═══" : "───");
 		}
 		printf("%s\n", (i != 0) ? i % KACHELHOEHE != 0 ? "┨" : "╣" : "╗");
 		for (j = 0; j < BREITE; j++) {
@@ -194,7 +198,6 @@ void printFeld() {
  * Empfaengt Tastatureingaben und steuert mit diesen das Spielfeld
  */
 int eingabeLoop() {
-	system(CLEAR);
 	printFeld();
 	gotoxy(x, y);
 	while (1) {
@@ -225,7 +228,6 @@ int eingabeLoop() {
 			exit(0);
 			break;
 		case 'p': {
-			system(CLEAR);
 			printFeld();
 			meldungAusgeben("Speicherort eingeben:");
 			gotoxy(1, HOEHE * 2 + 3);
@@ -236,7 +238,6 @@ int eingabeLoop() {
 		}
 			break;
 		case 'o': {
-			system(CLEAR);
 			printFeld();
 			meldungAusgeben("Speicherort eingeben:");
 			gotoxy(1, HOEHE * 2 + 3);
@@ -251,7 +252,6 @@ int eingabeLoop() {
 		}
 			break;
 		case 'l':
-			system(CLEAR);
 			printFeld();
 			meldungAusgeben("Bitte warten, Sudoku wird gelöst");
 			loeseSudokuMain();
@@ -259,6 +259,7 @@ int eingabeLoop() {
 			printFeld();
 			break;
 		case 'k':
+			printFeld();
 			gotoxy(1, HOEHE * 2 + 3);
 			if (!checkSudokuFormal()) {
 				meldungAusgeben("Sudoku ist korrekt");
@@ -267,7 +268,6 @@ int eingabeLoop() {
 			}
 			break;
 		case 'j':
-			system(CLEAR);
 			printFeld();
 			meldungAusgeben(getJoke());
 			break;
