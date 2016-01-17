@@ -41,6 +41,7 @@ void highlightGrun(char c) {
 void highlightRot(char c) {
 	printf("\033[31m%c\033[0m", c);
 }
+
 #define CLEAR "clear"
 #define UP 'A'
 #define DOWN 'B'
@@ -75,8 +76,9 @@ void highlightRot(char c) {
 #define RIGHT 77
 #define LEFT 75
 #endif
+#define LEGENDE 9
 int setFeld(int x, int y, int eingabe, int lock);
-int x = 3, y = 2;
+int x = 3, y = 2, legende = 0;
 
 /*
  * Gibt eine Nachricht unterhalb des Spielfeldes aus
@@ -158,32 +160,15 @@ void printFeld() {
 			}
 		}
 		printf("║     ");
-		switch (i) {
-		case 0:
-			printf("Pfeiltasten: Cursor bewegen");
-			break;
-		case 1:
-			printf("Leerzeichen: Zahl löschen");
-			break;
-		case 2:
-			printf("1-9: Zahl eintragen");
-			break;
-		case 3:
-			printf("p: Spiel speichern");
-			break;
-		case 4:
-			printf("o: Spiel laden");
-			break;
-		case 5:
-			printf("l: Spiel lösen");
-			break;
-		case 6:
-			printf("k: Spiel prüfen");
-			break;
-		case 8:
-			printf("q: Programm beenden");
-			break;
+		char *hilfe[LEGENDE] = { "n/m: Hilfe navigieren",
+				"Pfeiltasten/wasd: Cursor bewegen", "Leerzeichen: Zahl löschen",
+				"1-9: Zahl eintragen", "p: Spiel speichern", "o: Spiel laden",
+				"l: Spiel lösen", "k: Spiel prüfen", "q: Programm beenden" };
+		int nummer = legende * HOEHE + i;
+		if (nummer < LEGENDE) {
+			printf("%s", hilfe[nummer]);
 		}
+
 		printf("\n");
 
 	}
@@ -266,6 +251,16 @@ int eingabeLoop() {
 			} else {
 				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
+			break;
+		case 'n':
+			if (legende > 0)
+				legende--;
+			printFeld();
+			break;
+		case 'm':
+			if (legende < (LEGENDE / HOEHE))
+				legende++;
+			printFeld();
 			break;
 		case 'j':
 			printFeld();
