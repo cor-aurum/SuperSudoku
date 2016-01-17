@@ -17,25 +17,25 @@ int pruefe(int feld[BREITE][HOEHE], int breite, int hoehe, int zaehler) {
 	return 1;
 }
 
-int loese(int feld[BREITE][HOEHE], int x, int y) {
+int loese(int feld[BREITE][HOEHE], int breite, int hoehe) {
 	int test;
-	if (feld[x][y] != 0) {
-		return (y + 1) < HOEHE ? loese(feld, x, y + 1) :
-				((x + 1) < BREITE) ? loese(feld, x + 1, 0) : 1;
+	if (feld[breite][hoehe] != 0) {
+		return (hoehe + 1) < HOEHE ? loese(feld, breite, hoehe + 1) :
+				((breite + 1) < BREITE) ? loese(feld, breite + 1, 0) : 1;
 	} else {
 		for (test = 0; test < MAX_ZAHL; ++test) {
-			if (pruefe(feld, x, y, test + 1)) {
-				feld[x][y] = test + 1;
-				if ((y + 1) < HOEHE) {
-					if (loese(feld, x, y + 1))
+			if (pruefe(feld, breite, hoehe, test + 1)) {
+				feld[breite][hoehe] = test + 1;
+				if ((hoehe + 1) < HOEHE) {
+					if (loese(feld, breite, hoehe + 1))
 						return 1;
 					else
-						feld[x][y] = 0;
-				} else if ((x + 1) < BREITE) {
-					if (loese(feld, y + 1, 0))
+						feld[breite][hoehe] = 0;
+				} else if ((breite + 1) < BREITE) {
+					if (loese(feld, breite + 1, 0))
 						return 1;
 					else
-						feld[x][y] = 0;
+						feld[breite][hoehe] = 0;
 				} else
 					return 1;
 			}
