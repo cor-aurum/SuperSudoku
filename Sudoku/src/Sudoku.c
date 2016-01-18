@@ -145,6 +145,7 @@ int getFeld(int x, int y) {
  * main Methode, die darf jemand anderes kommentieren
  */
 int main(int argc, char* argv[]) {
+#if !defined(WIN32)
 	if (argc == 0) {
 		eingabe(2);
 	}
@@ -191,7 +192,14 @@ int main(int argc, char* argv[]) {
 		printf("Ungültige Operation %s. -h liefert weitere Informationen.\n",
 				argv[1]);
 	}
-
+#else
+	if(SetConsoleOutputC(65001))
+	{
+		printf("Fehler\n");
+		return 0;
+	}
+	eingabe(2);
+#endif
 	//printFeld();
 	return EXIT_SUCCESS;
 }
