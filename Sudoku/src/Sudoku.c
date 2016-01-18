@@ -25,7 +25,6 @@ int schutz[BREITE][HOEHE];
 #include "Reader.h"
 #include "Solver.h"
 
-
 /*
  * Prüft, ob Sudoku formal korrekt ist.
  * Rückgabe:
@@ -145,9 +144,54 @@ int getFeld(int x, int y) {
 /*
  * main Methode, die darf jemand anderes kommentieren
  */
-int main(void) {
-	//loeseSudokuMain();
-	eingabe(2);
+int main(int argc, char* argv[]) {
+	if (argc == 0) {
+		eingabe(2);
+	}
+	if (argv[1][0] == '-') {
+		switch (argv[1][1]) {
+		case 'l':
+			switch (argc) {
+			case 2:
+				printf("Fehlender Operand Dateiname\n");
+				break;
+			case 3:
+				printf("Zieldatei fehlt\n");
+				break;
+			default:
+				leseFeldAusDatei(argv[2]);
+				loeseSudokuMain();
+				speichereFeld(argv[3]);
+			}
+			break;
+		case 'o':
+			if (argc > 1) {
+				leseFeldAusDatei(argv[2]);
+				eingabe(2);
+			} else {
+				printf("Quelldatei fehlt\n");
+			}
+			break;
+		case 'u':
+			printUber(0);
+			break;
+		case 'h':
+		case '?':
+		default:
+			printf("\t-u Zeigt eine About-Page\n");
+			printf(
+					"\t-o [Quelle] Lädt das Spiel direkt mit voreingestelltem Sudoku\n");
+			printf(
+					"\t-l [Quelle][Ziel] lädt ein Sudoku aus der Quelle und speichert es gelöst in das Ziel\n");
+			printf("\t-h\n\t-? Zeigt diese Hilfeliste\n");
+			break;
+
+		}
+	} else {
+		printf("Ungültige Operation %s. -h liefert weitere Informationen.\n",
+				argv[1]);
+	}
+
 	//printFeld();
 	return EXIT_SUCCESS;
 }

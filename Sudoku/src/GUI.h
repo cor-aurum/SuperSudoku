@@ -161,10 +161,10 @@ void printFeld() {
 		}
 		printf("║     ");
 		char *hilfe[LEGENDE] = { "Pfeiltasten/wasd: Cursor bewegen",
-				"1-9: Zahl eintragen","Leerzeichen: Zahl löschen",
-				"l: Spiel lösen", "k: Spiel prüfen","p: Spiel speichern",
-				"o: Spiel laden", "c: Spiel leeren", "n/m: Seite vor/zurück", "x: Schreibschutz aufheben", "u: Über",
-				"q: Programm beenden" };
+				"1-9: Zahl eintragen", "Leerzeichen: Zahl löschen",
+				"l: Spiel lösen", "k: Spiel prüfen", "p: Spiel speichern",
+				"o: Spiel laden", "c: Spiel leeren", "n/m: Seite vor/zurück",
+				"x: Schreibschutz aufheben", "u: Über", "q: Programm beenden" };
 		int nummer = legende * HOEHE + i;
 		if (nummer < LEGENDE) {
 			printf("%s", hilfe[nummer]);
@@ -183,7 +183,7 @@ void printFeld() {
 /*
  * Zeigt eine Infoseite auf dem Bildschirm an
  */
-void printUber() {
+void printUber(int y) {
 	static int offen = 0;
 	if (offen) {
 		offen = 0;
@@ -213,7 +213,8 @@ void printUber() {
 		printf("Koch, Moritz\n");
 		printf("Scherrer, Sascha\n");
 		printf("Schütze, Felix\n\n\n");
-		printf("u: Zurück");
+		if (y)
+			printf("u: Zurück");
 	}
 
 }
@@ -321,7 +322,7 @@ int eingabeLoop() {
 			printFeld();
 			break;
 		case 'u':
-			printUber();
+			printUber(1);
 			break;
 		case 'j':
 			printFeld();
