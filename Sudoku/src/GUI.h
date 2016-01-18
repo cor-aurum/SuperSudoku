@@ -161,10 +161,10 @@ void printFeld() {
 		}
 		printf("║     ");
 		char *hilfe[LEGENDE] = { "Pfeiltasten/wasd: Cursor bewegen",
-				"1-9: Zahl eintragen", "Leerzeichen: Zahl löschen",
-				"l: Spiel lösen", "k: Spiel prüfen", "p: Spiel speichern",
-				"o: Spiel laden", "c: Spiel leeren", "n/m: Seite vor/zurück",
-				"x: Schreibschutz aufheben", "u: Über", "q: Programm beenden" };
+								"1-9: Zahl eintragen","Leerzeichen: Zahl löschen",
+								"k: Spiel prüfen", "l: Spiel lösen", "p: Spiel speichern",
+								"o: Spiel laden", "c: Spiel leeren", "m: Seite weiter", "x: Schreibschutz aufheben", "u: Über",
+								"q: Programm beenden", "n: Seite zurück" };
 		int nummer = legende * HOEHE + i;
 		if (nummer < LEGENDE) {
 			printf("%s", hilfe[nummer]);

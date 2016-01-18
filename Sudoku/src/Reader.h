@@ -56,7 +56,8 @@ int rh_fehlerZaehler(int typ, int anzahlNeueFehler) {
  * Siehe rh_fehlerZaehler. 
  */
 void rh_fehlerZaehlerReset() {
-	for (int typ = 0; typ < 8; typ++)
+	int typ;
+	for (typ = 0; typ < 8; typ++)
 		rh_fehlerZaehler(typ, -rh_fehlerZaehler(typ, 0));
 }
 
