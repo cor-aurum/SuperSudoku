@@ -332,7 +332,11 @@ int eingabeLoop() {
 			break;
 		default:
 			if (tmp >= '1' && tmp <= '9') {
+#if !defined(WIN32)
 				setFeld((y - 2) / 2, (x - 3) / 4, tmp - '0', 0);
+#else
+				setFeld((y - 1) / 2, (x - 2) / 4, tmp - '0', 0);
+#endif
 				system(CLEAR);
 				printFeld();
 			}
