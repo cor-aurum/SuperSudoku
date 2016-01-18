@@ -8,6 +8,7 @@
  * @author Felix Schütze, dhbw@felix-schuetze.de
  ******************************************************************************/
 #if !defined(WIN32)
+int x = 3, y = 2;
 #include <termios.h>
 /*
  * Erhaelt ein char, ohne, dass man hierfür Enter drücken muss
@@ -50,6 +51,7 @@ void highlightRot(char c) {
 #else
 #include <conio.h>
 #include <windows.h>
+int x = 2, y = 1;
 /*
  * Verschiebt den Cursor nach x,y
  */
@@ -78,7 +80,7 @@ void highlightRot(char c) {
 #endif
 #define LEGENDE 12
 int setFeld(int x, int y, int eingabe, int lock);
-int x = 3, y = 2, legende = 0;
+int legende = 0;
 
 /*
  * Gibt eine Nachricht unterhalb des Spielfeldes aus

@@ -193,7 +193,7 @@ int main(int argc, char* argv[]) {
 				argv[1]);
 	}
 #else
-	if(SetConsoleOutputC(65001))
+	if(!SetConsoleOutputCP(65001))
 	{
 		printf("Fehler\n");
 		return 0;
