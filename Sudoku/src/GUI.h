@@ -149,11 +149,11 @@ void printFeld() {
 		printf("%s\n", (i != 0) ? i % KACHELHOEHE != 0 ? "┨" : "╣" : "╗");
 		for (j = 0; j < BREITE; j++) {
 			printf("%s ", (j % KACHELBREITE == 0) ? "║" : "│");
-			if (!schutz[i][j]) {
-				if (feld[i][j] >= 0) {
+			if (schutz[i][j]<=0) {
+				if (schutz[i][j] >= 0) {
 					printf("%c ", asFeld(feld[i][j]));
 				} else {
-					highlightRot(asFeld(feld[i][j] * -1));
+					highlightRot(asFeld(feld[i][j]));
 					printf(" ");
 				}
 			} else {
@@ -288,11 +288,13 @@ int eingabeLoop() {
 			printFeld();
 			break;
 		case 'k':
-			printFeld();
-			gotoxy(1, HOEHE * 2 + 3);
+			//printFeld();
+			//gotoxy(1, HOEHE * 2 + 3);
 			if (!checkSudokuFormal()) {
+				printFeld();
 				meldungAusgeben("Sudoku ist korrekt");
 			} else {
+				printFeld();
 				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
 			break;
@@ -332,6 +334,9 @@ int eingabeLoop() {
 			break;
 		default:
 			if (tmp >= '1' && tmp <= '9') {
+				/*
+				 * Die Zählung der Position beginnt bei Windows anders
+				 */
 #if !defined(WIN32)
 				setFeld((y - 2) / 2, (x - 3) / 4, tmp - '0', 0);
 #else

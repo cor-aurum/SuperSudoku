@@ -120,7 +120,7 @@ void eingabe(int modus) {
  *  1: Eingabe erfolgreich
  */
 int setFeld(int x, int y, int eingabe, int lock) {
-	if (!schutz[x][y]) {
+	if (schutz[x][y]<=0) {
 		if (!(eingabe >= 0 && eingabe <= MAX_ZAHL)) {
 			return -2;
 		}

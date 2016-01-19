@@ -41,7 +41,7 @@ int rh_frageJaNein(char *frage, int vorgabe) {
  * return n - die aktuelle anzahl an Fehlern des angegebenen Typ
  */
 int rh_fehlerZaehler(int typ, int anzahlNeueFehler) {
-	static int anzahlFehler[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+	static int anzahlFehler[] = { 0, 0, 0, 0, 0, 0, 0, 0 ,0};
 	//printf("Fehlerzaehler Typ=%d, Inkrement=%d \n", typ, anzahlNeueFehler);
 	if (typ >= 0 && typ <= 8) {
 		anzahlFehler[typ] += anzahlNeueFehler;
@@ -220,37 +220,48 @@ int testSudokuFormal(int feld[BREITE][HOEHE]) {
 	/* Prüfe die Anzahl an gleichen Werten je Zeile (von oben nach unten) */
 	for (aktZeile = 0; aktZeile < HOEHE; aktZeile++) {
 		rh_resetZaehler(zaehler);
-		for (aktSpalte = 0; aktSpalte < BREITE; aktSpalte++)
-			if (!rh_inkrementZaehler(zaehler, feld[aktSpalte][aktZeile]))
+		for (aktSpalte = 0; aktSpalte < BREITE; aktSpalte++) {
+			if (!rh_inkrementZaehler(zaehler, feld[aktSpalte][aktZeile])) {
 				printf("Validator: Unerwartes Zeichen in Zeile %d Spalte %d.\n",
 						aktZeile, aktSpalte);
-		for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
-			if (zaehler[aktWert] > 1) {
-				rh_fehlerZaehler(6, 1);
-#ifdef NO
-				printf(
-						"Validator: Wert %d kommt in Zeile %d %d mal vor. (%d mal zuviel).\n",
-						aktWert, aktZeile + 1, zaehler[aktWert],
-						zaehler[aktWert] - 1);
-#endif
 			}
+			for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
+				if (zaehler[aktWert] > 1) {
+					rh_fehlerZaehler(6, 1);
+					if (!schutz[aktSpalte][aktZeile]) {
+						schutz[aktSpalte][aktZeile] -= 1;
+					}
+				}
+
+#ifdef NO
+			printf(
+					"Validator: Wert %d kommt in Zeile %d %d mal vor. (%d mal zuviel).\n",
+					aktWert, aktZeile + 1, zaehler[aktWert],
+					zaehler[aktWert] - 1);
+#endif
+		}
 	}
 
 	/* Prüfe die Anzahl an gleichen Werten je Spalte (von links nach rechts) */
 	for (aktSpalte = 0; aktSpalte < BREITE; aktSpalte++) {
 		rh_resetZaehler(zaehler);
-		for (aktZeile = 0; aktZeile < HOEHE; aktZeile++)
+		for (aktZeile = 0; aktZeile < HOEHE; aktZeile++) {
 			rh_inkrementZaehler(zaehler, feld[aktSpalte][aktZeile]);
-		for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
-			if (zaehler[aktWert] > 1) {
-				rh_fehlerZaehler(7, 1);
-#ifdef NO
-				printf(
-						"Validator: Wert %d kommt in der Spalte %d %d mal vor (%d mal zuviel).\n",
-						aktWert, aktZeile + 1, zaehler[aktWert],
-						zaehler[aktWert] - 1);
-#endif
+			for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++) {
+				if (zaehler[aktWert] > 1) {
+					rh_fehlerZaehler(7, 1);
+					if (!schutz[aktSpalte][aktZeile]) {
+						schutz[aktSpalte][aktZeile] -= 1;
+					}
+				}
 			}
+#ifdef NO
+			printf(
+					"Validator: Wert %d kommt in der Spalte %d %d mal vor (%d mal zuviel).\n",
+					aktWert, aktZeile + 1, zaehler[aktWert],
+					zaehler[aktWert] - 1);
+#endif
+		}
 	}
 
 	/* Prüfe die Anzahl an gleichen Werten je Kachel (links nach rechts und oben nach unten) */
