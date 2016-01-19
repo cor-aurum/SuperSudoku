@@ -10,6 +10,7 @@
 #if !defined(WIN32)
 int x = 3, y = 2;
 #include <termios.h>
+#include <sys/ioctl.h>
 /*
  * Erhaelt ein char, ohne, dass man hierfür Enter drücken muss
  */
@@ -25,6 +26,16 @@ int getch() {
 	tcsetattr(fd, TCSANOW, &alt);
 	return ch;
 }
+
+/*
+ * Prüft, wie viele Konsolenspalten zur Verfügung stehen
+ */
+int getSpalten() {
+	struct winsize max;
+	ioctl(0, TIOCGWINSZ, &max);
+	return max.ws_col;
+}
+
 /*
  * Verschiebt den Cursor nach x,y
  */
@@ -65,11 +76,21 @@ void gotoxy(int x, int y) {
  * Printet ein char farbig
  */
 void highlightGrun(char c) {
-	printf("\033[32m%c\033[0m", c);
+	wprintf("\033[32m%c\033[0m", c);
 }
 
 void highlightRot(char c) {
-	printf("\033[31m%c\033[0m", c);
+	wprintf("\033[31m%c\033[0m", c);
+}
+
+/*
+ * Prüft, wie viele Konsolenspalten zur Verfügung stehen
+ */
+int getSpalten() {
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+	return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+
 }
 
 #define CLEAR "cls"
@@ -78,7 +99,7 @@ void highlightRot(char c) {
 #define RIGHT 77
 #define LEFT 75
 #endif
-#define LEGENDE 12
+#define LEGENDE 13
 int setFeld(int x, int y, int eingabe, int lock);
 int legende = 0;
 
@@ -133,6 +154,10 @@ char asFeld(char c) {
  */
 void printFeld() {
 	system(CLEAR);
+	if (getSpalten() < BREITE * 4 + 1) {
+		printf("Nicht genug Platz vorhanden, das ist ein Fehler!");
+		return;
+	}
 	int i, j;
 	for (i = 0; i < HOEHE; i++) {
 		for (j = 0; j < BREITE; j++) {
@@ -143,13 +168,13 @@ void printFeld() {
 							i % KACHELHOEHE == 0 ? "╬" : "╫"
 					:
 					(i % KACHELHOEHE != 0) ? "┼" :
-					i != 0 ? "╪" : j % KACHELBREITE != 0 ? "┯" : "╦",
+					i != 0 ? "╪" : j % KACHELBREITE != 0 ? "\u2564" : "╦",
 					(i % KACHELHOEHE == 0) ? "═══" : "───");
 		}
-		printf("%s\n", (i != 0) ? i % KACHELHOEHE != 0 ? "┨" : "╣" : "╗");
+		printf("%s\n", (i != 0) ? i % KACHELHOEHE != 0 ? "\u2562" : "╣" : "╗");
 		for (j = 0; j < BREITE; j++) {
 			printf("%s ", (j % KACHELBREITE == 0) ? "║" : "│");
-			if (schutz[i][j]<=0) {
+			if (schutz[i][j] <= 0) {
 				if (schutz[i][j] >= 0) {
 					printf("%c ", asFeld(feld[i][j]));
 				} else {
@@ -163,12 +188,13 @@ void printFeld() {
 		}
 		printf("║     ");
 		char *hilfe[LEGENDE] = { "Pfeiltasten/wasd: Cursor bewegen",
-								"1-9: Zahl eintragen","Leerzeichen: Zahl löschen",
-								"k: Spiel prüfen", "l: Spiel lösen", "p: Spiel speichern",
-								"o: Spiel laden", "c: Spiel leeren", "m: Seite weiter", "x: Schreibschutz aufheben", "u: Über",
-								"q: Programm beenden", "n: Seite zurück" };
+				"1-9: Zahl eintragen", "Leerzeichen: Zahl löschen",
+				"k: Spiel prüfen", "l: Spiel lösen", "p: Spiel speichern",
+				"o: Spiel laden", "c: Spiel leeren", "m: Seite weiter",
+				"x: Schreibschutz aufheben", "g: Sudoku generieren", "u: Über",
+				"q: Programm beenden", "n: Seite zurück" };
 		int nummer = legende * HOEHE + i;
-		if (nummer < LEGENDE) {
+		if (nummer < LEGENDE && getSpalten() > BREITE * 4 + 40) {
 			printf("%s", hilfe[nummer]);
 		}
 
@@ -285,6 +311,10 @@ int eingabeLoop() {
 			printFeld();
 			//
 			loeseSudokuMain();
+			printFeld();
+			break;
+		case 'g':
+			generiereSudoku(feld);
 			printFeld();
 			break;
 		case 'k':

@@ -12,9 +12,9 @@ int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler) {
 	int i;
 	for (i = 0; i < MAX_ZAHL; ++i) {
 		if (feld[x][i] == zaehler || feld[i][y] == zaehler
-				|| feld[(x / KACHELBREITE) * KACHELBREITE
-						+ (i % KACHELBREITE)][(y / KACHELHOEHE)
-						* KACHELHOEHE + (i / KACHELHOEHE)] == zaehler)
+				|| feld[(x / KACHELBREITE) * KACHELBREITE + (i % KACHELBREITE)][(y
+						/ KACHELHOEHE) * KACHELHOEHE + (i / KACHELHOEHE)]
+						== zaehler)
 			return 0;
 	}
 	return 1;
@@ -23,7 +23,7 @@ int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler) {
 int loese(int feld[BREITE][HOEHE], int x, int y) {
 	int test;
 	if (feld[x][y] != 0) {
-		return (y+ 1) < HOEHE ? loese(feld, x, y + 1) :
+		return (y + 1) < HOEHE ? loese(feld, x, y + 1) :
 				((x + 1) < BREITE) ? loese(feld, x + 1, 0) : 1;
 	} else {
 		for (test = 0; test < MAX_ZAHL; ++test) {
@@ -57,9 +57,6 @@ int loese(int feld[BREITE][HOEHE], int x, int y) {
  */
 // Nach J. F. Crook, siehe http://www.ams.org/journals/notices/200904/rtx090400460p.pdf
 int loeseSudoku(int feld[BREITE][HOEHE]) {
-	if (loese(feld, 0, 0)) {
-		return 1;
-	} else
-		return 0;
+	return loese(feld, 0, 0);
 }
 

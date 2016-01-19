@@ -15,6 +15,9 @@
  #define MAX_ZAHL 9
  */
 
+int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler);
+
+
 /* HILFSFUNKTIONEN (Präfix 'rh_' für reader heĺper) ***************************/
 
 /*
@@ -203,7 +206,33 @@ int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
  * returns 0 - wenn das feld formal korrekt ist
  * returns n - die Anzahl der Fehler, die gefunden wurden. 
  */
-int testSudokuFormal(int feld[BREITE][HOEHE]) {
+int testSudokuFormal(int feld[BREITE][HOEHE])
+{	//TODO: Geht noch nicht!
+	int x=0, y=0;
+	int istFalsch[BREITE][HOEHE];
+
+	// Fehlerspeicher zurücksetzen
+	for(y=0; y<HOEHE; y++){
+		for(x=0; x<BREITE; x++){
+			if(schutz[x][y] < 0) schutz[x][y] = 0;
+		}
+	}
+
+	// Fehler finden
+	for(y=0; y<HOEHE; y++){
+		for(x=0; x<BREITE; x++){
+			if(!pruefe(feld[BREITE][HOEHE],x,y,feld[x][y])){
+				istFalsch[x][y] = feld[x][y];
+			}
+		}
+	}
+
+	// Schauen, was markiert und was freigegeben werden muss.
+
+	return NULL;
+}
+
+int testSudokuFormalALT(int feld[BREITE][HOEHE]) {
 	/* Aufbau von feld: feld[x][y], x sind spalten, y sind zeilen*/
 
 	/* Fehlerzähler zurücksetzen*/
@@ -294,6 +323,8 @@ int testSudokuFormal(int feld[BREITE][HOEHE]) {
 	return rh_fehlerZaehler(6, 0) + rh_fehlerZaehler(7, 0)
 			+ rh_fehlerZaehler(8, 0);
 }
+
+
 
 /* 
  * readFile(char *pfad)

@@ -24,6 +24,7 @@ int schutz[BREITE][HOEHE];
 #include "GUI.h"
 #include "Reader.h"
 #include "Solver.h"
+#include "Generator.h"
 
 /*
  * Prüft, ob Sudoku formal korrekt ist.
