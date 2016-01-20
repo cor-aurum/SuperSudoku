@@ -10,7 +10,7 @@
  */
 int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler) {
 	int i;
-	for (i = 0; i < MAX_ZAHL; ++i) {
+	for (i = 0; i < MAX_ZAHL; i++) {
 		if (feld[x][i] == zaehler || feld[i][y] == zaehler
 				|| feld[(x / KACHELBREITE) * KACHELBREITE + (i % KACHELBREITE)][(y
 						/ KACHELHOEHE) * KACHELHOEHE + (i / KACHELHOEHE)]
@@ -22,25 +22,19 @@ int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler) {
 
 int loese(int feld[BREITE][HOEHE], int x, int y) {
 	int test;
-	if (feld[x][y] != 0) {
+	if (feld[x][y]) {
 		return (y + 1) < HOEHE ? loese(feld, x, y + 1) :
 				((x + 1) < BREITE) ? loese(feld, x + 1, 0) : 1;
 	} else {
-		for (test = 0; test < MAX_ZAHL; ++test) {
-			if (pruefe(feld, x, y, test + 1)) {
-				feld[x][y] = test + 1;
-				if ((y + 1) < HOEHE) {
-					if (loese(feld, x, y + 1))
-						return 1;
-					else
-						feld[x][y] = 0;
-				} else if ((x + 1) < BREITE) {
-					if (loese(feld, x + 1, 0))
-						return 1;
-					else
-						feld[x][y] = 0;
-				} else
+		for (test = 1; test <= MAX_ZAHL; test++) {
+			if (pruefe(feld, x, y, test)) {
+				feld[x][y] = test;
+
+				if (loese(feld, x, y))
 					return 1;
+				else
+					feld[x][y] = 0;
+
 			}
 		}
 	}
