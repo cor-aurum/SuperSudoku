@@ -308,8 +308,14 @@ int eingabeLoop() {
 		}
 			break;
 		case 'l': // Sudoku lösen
-			printFeld();
-			//
+			printFeld();/*
+			if(!testSudokuFormal(feld)){
+				loeseSudokuMain();
+				printFeld();
+			}else{
+				printFeld();
+				meldungAusgeben("Sudoku hat formale Fehler und kann daher nicht gelöst werden.");
+			}*/
 			loeseSudokuMain();
 			printFeld();
 			break;

@@ -219,7 +219,7 @@ int testSudokuFormal(int feld[BREITE][HOEHE])
 {
 	int x=0, y=0, f=0;
 	int istFalsch[BREITE][HOEHE];
-
+	int fehlerJeWert[MAX_ZAHL+1];
 
 	// Fehlerspeicher zurücksetzen (Schutz > 0 ist gelockt, Schutz < 0 ist Fehler)
 	for(y=0; y<HOEHE; y++){
@@ -228,6 +228,7 @@ int testSudokuFormal(int feld[BREITE][HOEHE])
 				schutz[x][y] = 0;
 		}
 	}
+	rh_resetArray1D(fehlerJeWert, MAX_ZAHL+1, 0);
 
 	// Fehler finden
 	for(y=0; y<HOEHE; y++){
@@ -235,13 +236,44 @@ int testSudokuFormal(int feld[BREITE][HOEHE])
 			if(feld[x][y] > 0 && pruefePos(feld,x,y,feld[x][y])){
 				// Fehler zaehlen
 				f++;
-				// Gelockte Felder mit negativem Vorzeichen speichern
+				fehlerJeWert[(feld[x][y] > MAX_ZAHL ? 0 : feld[x][y])]++;
+				// Gelockte Felder mit negativem VorzeichMn speichern
 				istFalsch[x][y] = schutz[x][y] > 0 ? -feld[x][y] : feld[x][y];
 			}
 		}
 	}
 
 	// Schauen, was markiert und was freigegeben werden muss.
+	int gelockte, wert;
+	for(wert = 1; wert <= MAX_ZAHL; wert++)
+		if(fehlerJeWert[wert]){
+			// Für alle Werte bei denen es fehler gab:
+
+			// Wie viele geblockte gibt es?
+			gelockte = 0;
+			for(x=0; x < BREITE; x++)
+				for(y=0; y < HOEHE; y++)
+					if(istFalsch[x][y] == -wert)
+						gelockte++;
+
+			// TODO: Hier sollte man noch prüfen, ob es Probleme innerhalb der gelockten Felder gibt.
+			// Wenn es weniger gelockte Felder als Fehler gab: Alle nicht gelockten als falsch markieren
+			if(gelockte < fehlerJeWert[wert]){
+				for(x=0; x < BREITE; x++)
+					for(y=0; y < HOEHE; y++)
+						if(istFalsch[x][y] == wert)
+							schutz[x][y] = -wert;
+			}else{
+			// Andernfalls: Auch gelockte Felder als falsch markieren und deren lock aufheben.
+				for(x=0; x < BREITE; x++)
+					for(y=0; y < HOEHE; y++)
+						if(istFalsch[x][y] == wert || istFalsch[x][y] == -wert)
+							schutz[x][y] = wert > 0 ? -wert : wert;
+			}
+		}
+
+
+
 	return f;
 }
 
