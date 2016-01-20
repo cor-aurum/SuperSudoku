@@ -1,8 +1,8 @@
 /*****************************************************************************
- * SUDOKU ./solver.c                                                         *
+ * SUDOKU ./Solver.h                                                         *
  * Implementierung eines Algorithmus zum Lösen eines vorgegebenen Sudokus    *
  *                                                                           *
- * Version 2 (2016-12-17) Felix Schütze, Sascha Scherrer, Moritz Koch        *
+ * Version 2 (2016-12-17) Felix Schütze dhbw@felix-schuetze.de               *
  *****************************************************************************/
 
 /*
@@ -14,7 +14,7 @@ int pruefe(int feld[BREITE][HOEHE], int x, int y, int wert) {
 	int i;
 
 	// Gegen Sudoku-Regeln verstoßen ist nicht erlaubt:
-	// TODO: MAX_ZAHL ist hier fehl am Platz! Wenn HOEHE oder BREITE ungleich MAX_ZAHL sind, bekommen wir brobleme mit feld[x][y]!
+	// TODO: MAX_ZAHL ist hier fehl am Platz! Wenn HOEHE oder BREITE ungleich MAX_ZAHL sind, bekommen wir Probleme mit feld[x][y]!
 	// Siehe Reader.h pruefePos als alternative.
 	for (i = 0; i < MAX_ZAHL; i++) {
 		if (feld[x][i] == wert || feld[i][y] == wert
