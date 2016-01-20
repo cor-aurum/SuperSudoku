@@ -42,7 +42,7 @@ void fuelleZufall(int feld[BREITE][HOEHE]) {
 }
 
 int pruefeMehrdeutigkeit() {
-
+	return -1;
 }
 
 void generiereSudoku(int feld[BREITE][HOEHE]) {

@@ -176,21 +176,47 @@ int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
 
 }
 
+
+/*
+ * Prüft für die durch x und y gegebene Position, ob der wert hier eingesetzt werden darf
+ * returns 0 - Wert darf eingesetzt werden
+ * returns n - Wert anzahl an Fehlern, die ein einsetzen des Wertes verursachen würde.
+ */
+int pruefePos(int feld[BREITE][HOEHE], int x, int y, int wert)
+{
+	int fehler = 0, aktX, aktY;
+
+	// In Zeile
+	for(aktX = 0; aktX < BREITE; aktX++)
+		if(feld[aktX][y] == wert && aktX != x)
+			fehler++;
+
+	// In Spalte
+	for(aktY = 0; aktY < BREITE; aktY++)
+		if(feld[x][aktY] == wert && aktY != y)
+			fehler++;
+
+	// In Kachel
+	for(aktX = (x % KACHELBREITE) * KACHELBREITE; aktX < (x % KACHELBREITE +1 ) * KACHELBREITE; aktX++)
+		for(aktY = (y % KACHELHOEHE) * KACHELHOEHE; aktY < (y % KACHELHOEHE +1 ) * KACHELHOEHE; aktY++)
+			if(feld[aktX, aktY] == wert && aktX != x && aktY != y)
+				fehler++;
+
+	return fehler;
+}
+
+
+
 /* HAUPTFUNKTIONEN ************************************************************/
 
 /*
  * testSudokuFormal(int feld[][])
- * Prüft das Sudoku auf Formale korrektheit:
- * - Eine Zahl darf in einer Zeile nur einmal vorkommen.
- * - Eine Zahl darf in einer Spalte nur einmal corkommen.
- * - Eine Zahl darf in jeder Kachel (normalerweise 3x3 Felder) 
- *   nur einmal vorkommen.
- * int feld[][] enthällt die Werte der einzelnen Zellen.
+ * Prüft das Sudoku auf Formale korrektheit und setzt fehlermarkierungen in schutz.
  * returns 0 - wenn das feld formal korrekt ist
  * returns n - die Anzahl der Fehler, die gefunden wurden. 
  */
 int testSudokuFormal(int feld[BREITE][HOEHE])
-{	//TODO: Geht noch nicht!
+{
 	int x=0, y=0, f=0;
 	int istFalsch[BREITE][HOEHE];
 
@@ -206,7 +232,7 @@ int testSudokuFormal(int feld[BREITE][HOEHE])
 	// Fehler finden
 	for(y=0; y<HOEHE; y++){
 		for(x=0; x<BREITE; x++){
-			if(!pruefe(feld,x,y,feld[x][y])){
+			if(feld[x][y] > 0 && pruefePos(feld,x,y,feld[x][y])){
 				// Fehler zaehlen
 				f++;
 				// Gelockte Felder mit negativem Vorzeichen speichern

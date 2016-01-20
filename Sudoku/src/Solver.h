@@ -13,11 +13,9 @@
 int pruefe(int feld[BREITE][HOEHE], int x, int y, int wert) {
 	int i;
 
-	// Ein Feld leeren ist erlaubt:
-	if(wert == 0)
-		return 1;
-
 	// Gegen Sudoku-Regeln verstoßen ist nicht erlaubt:
+	// TODO: MAX_ZAHL ist hier fehl am Platz! Wenn HOEHE oder BREITE ungleich MAX_ZAHL sind, bekommen wir brobleme mit feld[x][y]!
+	// Siehe Reader.h pruefePos als alternative.
 	for (i = 0; i < MAX_ZAHL; i++) {
 		if (feld[x][i] == wert || feld[i][y] == wert
 				|| feld[(x / KACHELBREITE) * KACHELBREITE + (i % KACHELBREITE)][(y
