@@ -257,31 +257,31 @@ int eingabeLoop() {
 	while (1) {
 		char tmp = getch();
 		switch (tmp) {
-		case 'w':
+		case 'w': // Kästchen hoch
 		case UP:
 			if (y >= 4)
 				y -= 2;
 			break;
-		case 'a':
+		case 'a': // Kästchen nach links
 		case LEFT:
 			if (x >= 7)
 				x -= 4;
 			break;
-		case 's':
+		case 's': // Kästchen nach unten
 		case DOWN:
 			if (y < HOEHE * 2)
 				y += 2;
 			break;
-		case 'd':
+		case 'd': // Kästchen nach rechts
 		case RIGHT:
 			if (x < BREITE * 4 - 2)
 				x += 4;
 			break;
-		case 'q':
+		case 'q': // Beenden
 			system(CLEAR);
 			exit(0);
 			break;
-		case 'p': {
+		case 'p': { // Speichern
 			printFeld();
 			meldungAusgeben("Speicherort eingeben:");
 			gotoxy(1, HOEHE * 2 + 3);
@@ -292,7 +292,7 @@ int eingabeLoop() {
 			meldungAusgeben("Gespeichert");
 		}
 			break;
-		case 'o': {
+		case 'o': { // Öffnen
 			printFeld();
 			meldungAusgeben("Speicherort eingeben:");
 			gotoxy(1, HOEHE * 2 + 3);
@@ -307,17 +307,17 @@ int eingabeLoop() {
 			}
 		}
 			break;
-		case 'l':
+		case 'l': // Sudoku lösen
 			printFeld();
 			//
 			loeseSudokuMain();
 			printFeld();
 			break;
-		case 'g':
+		case 'g': // Sudoku generieren
 			generiereSudoku(feld);
 			printFeld();
 			break;
-		case 'k':
+		case 'k': // Sudoku überprüfen (Ist es formal korrekt?)
 			//printFeld();
 			//gotoxy(1, HOEHE * 2 + 3);
 			if (!checkSudokuFormal()) {
@@ -328,17 +328,17 @@ int eingabeLoop() {
 				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
 			break;
-		case 'n':
+		case 'n': // Anzeige der Befehlsoptionen: Vor
 			if (legende > 0)
 				legende--;
 			printFeld();
 			break;
-		case 'm':
+		case 'm': // Anzeige der Befehlsoptionen: Zurück
 			if (legende < (LEGENDE / HOEHE))
 				legende++;
 			printFeld();
 			break;
-		case 'c':
+		case 'c': // Sudoku leeren (Setzt Feld und Schutz zurück)
 			for (i = 0; i < BREITE; i++) {
 				for (j = 0; j < HOEHE; j++) {
 					feld[i][j] = 0;
@@ -347,18 +347,20 @@ int eingabeLoop() {
 			}
 			printFeld();
 			break;
-		case 'x':
+		case 'x': // Schutz aufheben
 			for (i = 0; i < BREITE; i++) {
 				for (j = 0; j < HOEHE; j++) {
-					schutz[i][j] = 0;
+					/* schutz > 0 ist lock, schutz < 0 ist fehler */
+					if(schutz[i][j] > 0)
+						schutz[i][j] = 0;
 				}
 			}
 			printFeld();
 			break;
-		case 'u':
+		case 'u': // Über: Zeigt eine Info über das Programm an
 			printUber(1);
 			break;
-		case 'j':
+		case 'j': // Macht nichts besonderese :)
 			printFeld();
 			meldungAusgeben(getJoke());
 			break;

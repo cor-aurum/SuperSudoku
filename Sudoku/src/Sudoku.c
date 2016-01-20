@@ -80,16 +80,7 @@ void speichereFeld(char datei[]) {
  *  Gibt im erfolgreichen Fall 1 zurück, andernfalls 0.
  */
 int leseFeldAusDatei(char datei[]) {
-	//printf("Sudoku Reader\n");
-	//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 1));
-	//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 0));
-	//	printf("Antwort: %d \n", rh_frageJaNein("Frage", 1));
-	//leseDatei("sudoku.txt");
-	//leseDatei("sudoku_err.txt");
-	//leseDatei("sudoku_err2.txt");
-	//leseDatei("sudoku_err3.txt");
 	return !leseDatei(datei);
-	//printf("Done.\n");
 }
 
 /*

@@ -6,20 +6,34 @@
  *****************************************************************************/
 
 /*
- * Prüft, ob zaehler an Punkt x/y eingesetzt werden kann
+ * Prüft, ob wert an Punkt x/y eingesetzt werden kann
+ * returns 1 - Wert darf eingesetzt werden
+ * returns 0 - Wert ist hier nicht zulässig
  */
-int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler) {
+int pruefe(int feld[BREITE][HOEHE], int x, int y, int wert) {
 	int i;
+
+	// Ein Feld leeren ist erlaubt:
+	if(wert == 0)
+		return 1;
+
+	// Gegen Sudoku-Regeln verstoßen ist nicht erlaubt:
 	for (i = 0; i < MAX_ZAHL; i++) {
-		if (feld[x][i] == zaehler || feld[i][y] == zaehler
+		if (feld[x][i] == wert || feld[i][y] == wert
 				|| feld[(x / KACHELBREITE) * KACHELBREITE + (i % KACHELBREITE)][(y
 						/ KACHELHOEHE) * KACHELHOEHE + (i / KACHELHOEHE)]
-						== zaehler)
+						== wert)
 			return 0;
 	}
+
+	// Wenn kein Verstoß vorliegt, ist der Wert zulässig:
 	return 1;
 }
 
+/*
+ * Rekursive Methode zum Lösen des Sudokus, wählt die erste gefundene Lösung aus.
+ * TODO: Probleme treten auf, wenn das Sudoku nicht lösbar ist.
+ */
 int loese(int feld[BREITE][HOEHE], int x, int y) {
 	int test;
 	if (feld[x][y]) {
@@ -49,7 +63,6 @@ int loese(int feld[BREITE][HOEHE], int x, int y) {
  * returns 0 - Wenn es keine Lösung gibt.
  * returns 1 - Wenn es eine Lösung gibt.
  */
-// Nach J. F. Crook, siehe http://www.ams.org/journals/notices/200904/rtx090400460p.pdf
 int loeseSudoku(int feld[BREITE][HOEHE]) {
 	return loese(feld, 0, 0);
 }

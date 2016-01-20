@@ -21,23 +21,6 @@ int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler);
 /* HILFSFUNKTIONEN (Präfix 'rh_' für reader heĺper) ***************************/
 
 /*
- * Hilfsfunktion rh_frageJaNein(char *frage, int vorgabe)
- * Stellt eine ja/nein Frage auf der Kommandozeile. Dabei werden y,Y,j,J als ja
- * und alle anderen Zeichen als nein gewertet. Die Vorauswahl ist groß geschrieben
- * und wird ausgewählt, wenn kein Zeichen eingegeben wird.
- * TODO: Funktioniert bisher, ist aber nicht schön (produziert ungewollte Zeilenumbrüche)
- */
-int rh_frageJaNein(char *frage, int vorgabe) {
-	char antwort = 0;
-	printf("Frage: %s (%s) ", frage, vorgabe ? "JA/nein" : "ja/NEIN");
-	antwort = getc(stdin);
-	while (getc(stdin) != '\n')
-		;
-	return (antwort == 'y' || antwort == 'j' || antwort == 'Y' || antwort == 'J') ?
-			1 : vorgabe != 0;
-}
-
-/*
  * Hilfsfunktion rh_fehlerZaehler(int typ, anzahlNeueFehler)
  * Zählt die Anzahl an Fehlern, die während des Einlesens gefunden werden.
  * return -1 - wenn der Typ nicht im zugelassenen Wertebereich ist.
@@ -208,28 +191,32 @@ int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
  */
 int testSudokuFormal(int feld[BREITE][HOEHE])
 {	//TODO: Geht noch nicht!
-	int x=0, y=0;
+	int x=0, y=0, f=0;
 	int istFalsch[BREITE][HOEHE];
 
-	// Fehlerspeicher zurücksetzen
+
+	// Fehlerspeicher zurücksetzen (Schutz > 0 ist gelockt, Schutz < 0 ist Fehler)
 	for(y=0; y<HOEHE; y++){
 		for(x=0; x<BREITE; x++){
-			if(schutz[x][y] < 0) schutz[x][y] = 0;
+			if(schutz[x][y] < 0)
+				schutz[x][y] = 0;
 		}
 	}
 
 	// Fehler finden
 	for(y=0; y<HOEHE; y++){
 		for(x=0; x<BREITE; x++){
-			if(!pruefe(feld[BREITE][HOEHE],x,y,feld[x][y])){
-				istFalsch[x][y] = feld[x][y];
+			if(!pruefe(feld,x,y,feld[x][y])){
+				// Fehler zaehlen
+				f++;
+				// Gelockte Felder mit negativem Vorzeichen speichern
+				istFalsch[x][y] = schutz[x][y] > 0 ? -feld[x][y] : feld[x][y];
 			}
 		}
 	}
 
 	// Schauen, was markiert und was freigegeben werden muss.
-
-	return NULL;
+	return f;
 }
 
 int testSudokuFormalALT(int feld[BREITE][HOEHE]) {
