@@ -269,7 +269,7 @@ int eingabeLoop() {
 			break;
 		case 's': // Kästchen nach unten
 		case DOWN:
-			if (y < HOEHE * 2)
+			if (y < HOEHE * 2-2)
 				y += 2;
 			break;
 		case 'd': // Kästchen nach rechts
