@@ -8,6 +8,7 @@
 int zahlen[MAX_ZAHL] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 void initZufall(int *array) {
+	/*
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	int usec = tv.tv_usec;
@@ -19,6 +20,7 @@ void initZufall(int *array) {
 		array[j] = array[i];
 		array[i] = t;
 	}
+	*/
 }
 
 void fuelleZufall(int feld[BREITE][HOEHE]) {

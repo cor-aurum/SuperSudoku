@@ -259,12 +259,12 @@ int eingabeLoop() {
 		switch (tmp) {
 		case 'w': // Kästchen hoch
 		case UP:
-			if (y >= 4)
+			if (y >= 2)
 				y -= 2;
 			break;
 		case 'a': // Kästchen nach links
 		case LEFT:
-			if (x >= 7)
+			if (x >= 4)
 				x -= 4;
 			break;
 		case 's': // Kästchen nach unten
