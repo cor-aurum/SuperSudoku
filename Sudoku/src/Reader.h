@@ -2,21 +2,10 @@
  * SUDOKU ./reader.c                                                          *
  * Einlesefunktion für Textdateien mit Sudoku Rätzeln gemäß der Vorgaben      *
  * Ungetestet nicht  produktionsreif, Fehlerkorrektur noch verbessbar         *
- * Version 1 (2015-12-28) Sascha Scherrer <dhbw.scherrer@gmail.com>           *
+ * Version 2 (2016-01-29) Sascha Scherrer <dhbw.scherrer@gmail.com>           *
  ******************************************************************************/
 
-/*
- #include<stdio.h>
- #include<stdlib.h>
- #define HOEHE 9
- #define BREITE 9
- #define KACHELHOEHE 3
- #define KACHELBREITE 3
- #define MAX_ZAHL 9
- */
-
 int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler);
-
 
 /* HILFSFUNKTIONEN (Präfix 'rh_' für reader heĺper) ***************************/
 
@@ -27,7 +16,7 @@ int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler);
  * return n - die aktuelle anzahl an Fehlern des angegebenen Typ
  */
 int rh_fehlerZaehler(int typ, int anzahlNeueFehler) {
-	static int anzahlFehler[] = { 0, 0, 0, 0, 0, 0, 0, 0 ,0};
+	static int anzahlFehler[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	//printf("Fehlerzaehler Typ=%d, Inkrement=%d \n", typ, anzahlNeueFehler);
 	if (typ >= 0 && typ <= 8) {
 		anzahlFehler[typ] += anzahlNeueFehler;
@@ -88,17 +77,6 @@ int rh_inkrementZaehler(int zaehler[], int wert) {
 }
 
 /*
- * Hilfsfunktion rh_dateipfadTesten(char *dateipfad)
- * Testet, ob der Dateipfad existiert
- * TODO: Test implementieren
- * returns  0 - wenn der Dateipfad in Ordnung ist.
- * returns -1 - wenn etwas nicht stimmt.
- */
-int rh_dateipfadTester(char *dateipfad) {
-	return 0;
-}
-
-/*
  * Hilfsfunktion  rh_leseDateiZeichenweise(int feld[][], FILE ptr_file)
  * Liest eine Datei Zeichen für zeichen ein, und versucht daraus ein Sudoku
  * zu erstellen.
@@ -115,7 +93,7 @@ int rh_dateipfadTester(char *dateipfad) {
  * - Alle Zeichen, die über die erwartete Zeilenlänge hinausgehen werden ignoriert.
  * - Alle Zeilen, die nach der erwarteten Zeilenzahl folgen, werden ignoriert.
  * - Unerwartete Zeichen im Sudoku werden als unbekannte Ziffer (0 oder Leerzeichen) behandelt.
- * - Leerzeilen werden ignoriert (TODO: Bekommen wir das besser hin?)
+ * - TODO: Leerzeilen werden ignoriert
  *   Das bedeutet, dass alle Zeilen, die weniger als zwei gültige Zeichen enthalten ignoriert werden.
  * returns 0 - wenn keine Fehler aufgetreten sind
  * returns n - Anzahl der Fehler, die gefunden und korrigiert wurden.
@@ -138,19 +116,11 @@ int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
 			/* Zeilenumbrüche behandeln */
 			if (posX < 1) {
 				/* Zeile wird als irrelevant betrachtet, da sie keine gültigen Zeichen enthält */
-				/* TODO: Sollen wir die Berücksichtigung von Leerzeichen hier herausnehmen?    */
-				rh_fehlerZaehler(1, 1); // corrigierteFehler++
+				rh_fehlerZaehler(1, 1); // korrigierteFehler++
 				rh_fehlerZaehler(2, 1); // irrelevanteZeilen++
-				printf(
-						"Datei: Zeile %d enthällt keine gültigen Zeichen und wird ignoriert.\n",
-						posY);
 			} else {
 				if (posX != BREITE) {
-					printf(
-							"Datei: Zeile %d enthällt nicht die erwartete Zahl an Zeichen."
-									"Zeichen werden ausgelassen oder ergänzt.\n",
-							posY);
-					rh_fehlerZaehler(1, 1); // corrigierteFehler++
+					rh_fehlerZaehler(1, 1); // korrigierteFehler++
 					rh_fehlerZaehler(3, 1); // unpassendeZeichenzahl++
 					/* Falsche Anzahl an zeichen korrigieren */
 					while (posX < BREITE && posY < HOEHE) {
@@ -164,7 +134,7 @@ int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
 				posX = 0;
 			}
 		} else {
-			rh_fehlerZaehler(1, 1); // corrigierteFehler++
+			rh_fehlerZaehler(1, 1); // korrigierteFehler++
 			rh_fehlerZaehler(5, 1); // ignorierteZeichen++
 		}
 	}
@@ -173,39 +143,84 @@ int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
 			erwarteteZeichenzahl);
 
 	return rh_fehlerZaehler(1, 0);
-
 }
-
 
 /*
  * Prüft für die durch x und y gegebene Position, ob der wert hier eingesetzt werden darf
  * returns 0 - Wert darf eingesetzt werden
  * returns n - Wert anzahl an Fehlern, die ein einsetzen des Wertes verursachen würde.
  */
-int pruefePos(int feld[BREITE][HOEHE], int x, int y, int wert)
-{
+int pruefePos(int feld[BREITE][HOEHE], int x, int y, int wert) {
 	int fehler = 0, aktX, aktY;
 
+	if (wert == 0)
+		return 0; // 0 darf immer eingesetzt werden.
+
 	// In Zeile
-	for(aktX = 0; aktX < BREITE; aktX++)
-		if(feld[aktX][y] == wert && aktX != x)
+	for (aktX = 0; aktX < BREITE; aktX++)
+		if (feld[aktX][y] == wert && aktX != x) {
 			fehler++;
-
+			fprintf(stderr,
+					"   Wert %d in X|Y=%d|%d kommt in Spalte %d mehrmals vor.\n",
+					wert, x, y, aktX);
+		}
 	// In Spalte
-	for(aktY = 0; aktY < BREITE; aktY++)
-		if(feld[x][aktY] == wert && aktY != y)
+	for (aktY = 0; aktY < BREITE; aktY++)
+		if (feld[x][aktY] == wert && aktY != y) {
+			fprintf(stderr,
+					"   Wert %d in X|Y=%d|%d kommt in Zeile %d mehrmals vor.\n",
+					wert, x, y, aktY);
 			fehler++;
+		}
 
+	// TODO: Kachelprüfung ist fehlerhaft.
 	// In Kachel
-	for(aktX = (x % KACHELBREITE) * KACHELBREITE; aktX < (x % KACHELBREITE +1 ) * KACHELBREITE; aktX++)
-		for(aktY = (y % KACHELHOEHE) * KACHELHOEHE; aktY < (y % KACHELHOEHE +1 ) * KACHELHOEHE; aktY++)
-			if(feld[aktX, aktY] == wert && aktX != x && aktY != y)
+	for (aktX = (x / KACHELBREITE) * KACHELBREITE;
+			aktX < (x / KACHELBREITE + 1) * KACHELBREITE; aktX++)
+		for (aktY = (y / KACHELHOEHE) * KACHELHOEHE;
+				aktY < (y / KACHELHOEHE + 1) * KACHELHOEHE; aktY++)
+			if (feld[aktX][aktY] == wert && aktX != x && aktY != y) {
 				fehler++;
+				fprintf(stderr,
+						"   Wert %d in X|Y=%d|%d kommt in Kachel mehrmals vor.\n",
+						wert, x, y);
+			}
 
 	return fehler;
 }
 
+int fehlerMarkieren(int feld[BREITE][HOEHE], int schutz[BREITE][HOEHE], int x,
+		int y, int ignSchutz) {
+	int aktX = 0, aktY = 0, wert = feld[x][y], markiert = 0;
 
+	// Fehler in gleicher Zeile markieren
+	for (aktX = 0; aktX < BREITE; aktX++) {
+		if (feld[aktX][y] == wert && (ignSchutz || schutz[aktX][y] <= 0)) {
+			schutz[aktX][y] = -wert;
+			markiert++;
+		}
+	}
+
+	// Fehler in gleicher Spalte markeiren
+	for (aktY = 0; aktY < HOEHE; aktY++) {
+		if (feld[x][aktY] == wert && (ignSchutz || schutz[x][aktY] <= 0)) {
+			schutz[x][aktY] = -wert;
+			markiert++;
+		}
+	}
+
+	// Fehler in gleicher Kachel markieren
+	for (aktX = (x / KACHELBREITE) * KACHELBREITE;
+			aktX < (x / KACHELBREITE + 1) * KACHELBREITE; aktX++)
+		for (aktY = (y / KACHELHOEHE) * KACHELHOEHE;
+				aktY < (y / KACHELHOEHE + 1) * KACHELHOEHE; aktY++)
+			if (feld[aktX][aktY] == wert
+					&& (ignSchutz || schutz[aktX][aktY] <= 0)) {
+				schutz[aktX][aktY] = -wert;
+			}
+
+	return markiert;
+}
 
 /* HAUPTFUNKTIONEN ************************************************************/
 
@@ -215,64 +230,48 @@ int pruefePos(int feld[BREITE][HOEHE], int x, int y, int wert)
  * returns 0 - wenn das feld formal korrekt ist
  * returns n - die Anzahl der Fehler, die gefunden wurden. 
  */
-int testSudokuFormal(int feld[BREITE][HOEHE])
-{
-	int x=0, y=0, f=0;
-	int istFalsch[BREITE][HOEHE];
-	int fehlerJeWert[MAX_ZAHL+1];
+int testSudokuFormal(int feld[BREITE][HOEHE]) {
+	int x = 0, y = 0, f = 0;
 
 	// Fehlerspeicher zurücksetzen (Schutz > 0 ist gelockt, Schutz < 0 ist Fehler)
-	for(y=0; y<HOEHE; y++){
-		for(x=0; x<BREITE; x++){
-			if(schutz[x][y] < 0)
+	for (y = 0; y < HOEHE; y++) {
+		for (x = 0; x < BREITE; x++) {
+			if (schutz[x][y] < 0)
 				schutz[x][y] = 0;
 		}
 	}
-	rh_resetArray1D(fehlerJeWert, MAX_ZAHL+1, 0);
 
-	// Fehler finden
-	for(y=0; y<HOEHE; y++){
-		for(x=0; x<BREITE; x++){
-			if(feld[x][y] > 0 && pruefePos(feld,x,y,feld[x][y])){
-				// Fehler zaehlen
+	// Alle gelockten Felder prüfen:
+	for (x = 0; x < BREITE; x++) {
+		for (y = 0; y < HOEHE; y++) {
+			if (schutz[x][y] > 0 && feld[x][y] > 0
+					&& pruefePos(feld, x, y, feld[x][y])) {
+				// Fehler gefunden:
+				// Alle anderen Vorkommen in Reihe, Spalte und Kachel markieren
 				f++;
-				fehlerJeWert[(feld[x][y] > MAX_ZAHL ? 0 : feld[x][y])]++;
-				// Gelockte Felder mit negativem VorzeichMn speichern
-				istFalsch[x][y] = schutz[x][y] > 0 ? -feld[x][y] : feld[x][y];
+
+				// Fehler markieren (Schreibschutz wird beachtet)
+				if(fehlerMarkieren(feld, schutz, x, y, 0) == 0){
+					// Es gab einen Fehler in den gelockten Feldern, also wird
+					// jetzt der Schreibschutz ignoriert:
+					fehlerMarkieren(feld, schutz, x, y, 1);
+				}
 			}
 		}
 	}
 
-	// Schauen, was markiert und was freigegeben werden muss.
-	int gelockte, wert;
-	for(wert = 1; wert <= MAX_ZAHL; wert++)
-		if(fehlerJeWert[wert]){
-			// Für alle Werte bei denen es fehler gab:
-
-			// Wie viele geblockte gibt es?
-			gelockte = 0;
-			for(x=0; x < BREITE; x++)
-				for(y=0; y < HOEHE; y++)
-					if(istFalsch[x][y] == -wert)
-						gelockte++;
-
-			// TODO: Hier sollte man noch prüfen, ob es Probleme innerhalb der gelockten Felder gibt.
-			// Wenn es weniger gelockte Felder als Fehler gab: Alle nicht gelockten als falsch markieren
-			if(gelockte < fehlerJeWert[wert]){
-				for(x=0; x < BREITE; x++)
-					for(y=0; y < HOEHE; y++)
-						if(istFalsch[x][y] == wert)
-							schutz[x][y] = -wert;
-			}else{
-			// Andernfalls: Auch gelockte Felder als falsch markieren und deren lock aufheben.
-				for(x=0; x < BREITE; x++)
-					for(y=0; y < HOEHE; y++)
-						if(istFalsch[x][y] == wert || istFalsch[x][y] == -wert)
-							schutz[x][y] = wert > 0 ? -wert : wert;
+	// Alle nicht gelockten Felder prüfen
+	// (jetzt sind auf jeden Fall die gelockten Felder alle korrekt):
+	for (x = 0; x < BREITE; x++) {
+		for (y = 0; y < HOEHE; y++) {
+			if (schutz[x][y] <= 0 && feld[x][y] > 0
+					&& pruefePos(feld, x, y, feld[x][y])) {
+				// Fehler gefunden
+				f++;
+				fehlerMarkieren(feld, schutz, x, y, 0);
 			}
 		}
-
-
+	}
 
 	return f;
 }
@@ -284,7 +283,6 @@ int testSudokuFormalALT(int feld[BREITE][HOEHE]) {
 	rh_fehlerZaehler(6, -rh_fehlerZaehler(6, 0));
 	rh_fehlerZaehler(7, -rh_fehlerZaehler(7, 0));
 	rh_fehlerZaehler(8, -rh_fehlerZaehler(8, 0));
-	//printf("Fehlerzaehler zurückgesetzt.\n");
 
 	/* Variablen (akt = aktuelle oder aktiv) */
 	int zaehler[MAX_ZAHL + 1];
@@ -306,13 +304,6 @@ int testSudokuFormalALT(int feld[BREITE][HOEHE]) {
 						schutz[aktSpalte][aktZeile] -= 1;
 					}
 				}
-
-#ifdef NO
-			printf(
-					"Validator: Wert %d kommt in Zeile %d %d mal vor. (%d mal zuviel).\n",
-					aktWert, aktZeile + 1, zaehler[aktWert],
-					zaehler[aktWert] - 1);
-#endif
 		}
 	}
 
@@ -329,12 +320,6 @@ int testSudokuFormalALT(int feld[BREITE][HOEHE]) {
 					}
 				}
 			}
-#ifdef NO
-			printf(
-					"Validator: Wert %d kommt in der Spalte %d %d mal vor (%d mal zuviel).\n",
-					aktWert, aktZeile + 1, zaehler[aktWert],
-					zaehler[aktWert] - 1);
-#endif
 		}
 	}
 
@@ -352,16 +337,6 @@ int testSudokuFormalALT(int feld[BREITE][HOEHE]) {
 			for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
 				if (zaehler[aktWert] > 1) {
 					rh_fehlerZaehler(8, 1);
-#ifdef NO
-					printf(
-							"Validator: Wert %d kommt in Teilfeld zwischen Zeile %d Spalte %d \n"
-							"           und Zeile %d Spalte %d %d mal vor (%d mal zuviel).\n",
-							aktWert, kachelY * KACHELHOEHE,
-							kachelX * KACHELBREITE,
-							(kachelY + 1) * KACHELHOEHE - 1,
-							(kachelX + 1) * KACHELHOEHE - 1, zaehler[aktWert],
-							zaehler[aktWert - 1]);
-#endif
 				}
 		}
 	//printf("Fehlerzaehler=%d\n", rh_fehlerZaehler(6,0)+rh_fehlerZaehler(7,0)+ rh_fehlerZaehler(8,0));
@@ -369,54 +344,37 @@ int testSudokuFormalALT(int feld[BREITE][HOEHE]) {
 			+ rh_fehlerZaehler(8, 0);
 }
 
-
-
 /* 
  * readFile(char *pfad)
  * Liest eine Datei ein, die ein Sudoku-Rätsel enthalten sollte.
  * Ruft Funktionen auf, die die Arbeit machen.
  * Getestet mit Textdateien in utf8-Codierung auf Kubuntu 14.04LTS
- * TODO: Teste mit anderen Dateien
- * TODO: Teste auf anderen Betriebssystemen (insbesondere Windows)
- * TODO: Teste mit MinGW gcc
  * pfad - Pfad zur Datei
  * returns  0 - Wenn keine Fehler aufgetreten sind.
  * returns -1 - Wenn Fehler auftraten, die nicht korrigiert werden konnten oder sollten.
- * returns -2 - Wenn die Datei nicht gefunden wurde oder der Pfad nicht valide ist.
- * returns -3 - Wenn die Datei keine Textdatei ist. TODO: Wie kann man das testen?
- * returns -4 - Wenn der Dateihandle nicht geöffnet werden konnte.
+ * returns -2 - Wenn der Dateihandle nicht geöffnet werden konnte.
  * returns  n - Anzahl der Fehler (n), die korrigiert wurden.
  */
 int leseDatei(char *dateipfad) {
-	/* Dateipfad prüfen */
-	if (rh_dateipfadTester(dateipfad))
-		return -2;
-
 	/* Dateihandle öffnen */
 	FILE *ptr_datei;
 	ptr_datei = fopen(dateipfad, "r");
 	if (!ptr_datei)
-		return -4;
+		return -2;
 
 	/* Datei in array einlesen */
 	int einleseFeld[BREITE][HOEHE];
 	int einleseStatus = rh_leseDateiZeichenweise(einleseFeld, ptr_datei);
 	fclose(ptr_datei);
-	if (einleseStatus) {
-		printf(
-				"Es traten Fehler beim einlesen der Datei auf. Fortfahren? (y/n) ");
-		printf("y\n");
+
+	if (einleseStatus != 0) {
+		return einleseStatus;
 	}
 
 	/* Eingabe validieren */
 	int validierungsStatus = testSudokuFormal(einleseFeld);
 	if (validierungsStatus) {
-		printf(
-				"Das Sudoku beinhaltet formale Fehler. Dennoch fortfahren? (y/n) ");
-		printf("y\n");
-	}
-	if (einleseStatus != 0) {
-		return einleseStatus;
+		// Es gibt formale Fehler
 	}
 
 	/* Feld übertragen */
