@@ -8,17 +8,15 @@
 int zahlen[MAX_ZAHL] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 void initZufall(int *array) {
-	if (MAX_ZAHL > 1)
-	    {
-	        size_t i;
-	        for (i = 0; i < MAX_ZAHL - 1; i++)
-	        {
-	          size_t j = i + rand() / (RAND_MAX / (MAX_ZAHL - i) + 1);
-	          int t = array[j];
-	          array[j] = array[i];
-	          array[i] = t;
-	        }
-	    }
+	if (MAX_ZAHL > 1) {
+		size_t i;
+		for (i = 0; i < MAX_ZAHL - 1; i++) {
+			size_t j = i + rand() / (RAND_MAX / (MAX_ZAHL - i) + 1);
+			int t = array[j];
+			array[j] = array[i];
+			array[i] = t;
+		}
+	}
 }
 
 void fuelleZufall(int feld[BREITE][HOEHE]) {
@@ -53,7 +51,7 @@ void generiereSudoku(int feld[BREITE][HOEHE]) {
 		feld[x][rand() % HOEHE] = 0;
 	}
 
-	for (z = 0; z < MAX_ZAHL*MAX_ZAHL; z++) {
+	for (z = 0; z < MAX_ZAHL * MAX_ZAHL; z++) {
 		do {
 			x = rand() % MAX_ZAHL;
 			y = rand() % MAX_ZAHL;
@@ -62,5 +60,11 @@ void generiereSudoku(int feld[BREITE][HOEHE]) {
 		} while (eindeutig(feld));
 		feld[x][y] = mem;
 	}
-
+	for (x = 0; x < BREITE; x++) {
+		for (y = 0; y < HOEHE; y++) {
+			if (feld[x][y]) {
+				schutz[x][y] = 1;
+			}
+		}
+	}
 }
