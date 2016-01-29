@@ -269,7 +269,11 @@ int eingabeLoop() {
 			break;
 		case 's': // Kästchen nach unten
 		case DOWN:
-			if (y < HOEHE * 2-2)
+			if (y < HOEHE * 2
+#if defined(Win32)
+					-2
+#endif
+					)
 				y += 2;
 			break;
 		case 'd': // Kästchen nach rechts
@@ -308,20 +312,25 @@ int eingabeLoop() {
 		}
 			break;
 		case 'l': // Sudoku lösen
-			printFeld();/*
-			if(!testSudokuFormal(feld)){
-				loeseSudokuMain();
-				printFeld();
-			}else{
-				printFeld();
-				meldungAusgeben("Sudoku hat formale Fehler und kann daher nicht gelöst werden.");
-			}*/
-			loeseSudokuMain();
 			printFeld();
+			if (!loeseSudokuMain()) {
+				meldungAusgeben("Sudoku ist nicht lösbar");
+			} else {
+				printFeld();
+			}
 			break;
 		case 'g': // Sudoku generieren
+		{
 			generiereSudoku(feld);
 			printFeld();
+			break;
+		}
+		case 'e':
+			if (eindeutig(feld)) {
+				meldungAusgeben("Sudoku ist eindeutig");
+			} else {
+				meldungAusgeben("Sudoku ist nicht eindeutig");
+			}
 			break;
 		case 'k': // Sudoku überprüfen (Ist es formal korrekt?)
 			//printFeld();
@@ -357,7 +366,7 @@ int eingabeLoop() {
 			for (i = 0; i < BREITE; i++) {
 				for (j = 0; j < HOEHE; j++) {
 					/* schutz > 0 ist lock, schutz < 0 ist fehler */
-					if(schutz[i][j] > 0)
+					if (schutz[i][j] > 0)
 						schutz[i][j] = 0;
 				}
 			}
@@ -383,7 +392,7 @@ int eingabeLoop() {
 				system(CLEAR);
 				printFeld();
 			}
-			if (tmp == ' ') {
+			if (tmp == ' ' || tmp == '0') {
 				setFeld((y - 2) / 2, (x - 3) / 4, 0, 0);
 				system(CLEAR);
 				printFeld();

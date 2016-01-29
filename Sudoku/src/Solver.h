@@ -49,8 +49,57 @@ int loese(int feld[BREITE][HOEHE], int x, int y) {
 
 			}
 		}
+		return 0;
 	}
-	return 0;
+}
+
+/*
+ * Identisch zu "loese", zählt aber ab- statt aufwärts
+ */
+int loeseAbwaerts(int feld[BREITE][HOEHE], int x, int y) {
+	int test;
+	if (feld[x][y]) {
+		return (y + 1) < HOEHE ? loeseAbwaerts(feld, x, y + 1) :
+				((x + 1) < BREITE) ? loeseAbwaerts(feld, x + 1, 0) : 1;
+	} else {
+		for (test = MAX_ZAHL; test >= 1; test--) {
+			if (pruefe(feld, x, y, test)) {
+				feld[x][y] = test;
+
+				if (loeseAbwaerts(feld, x, y))
+					return 1;
+				else
+					feld[x][y] = 0;
+
+			}
+		}
+		return 0;
+	}
+}
+
+/*
+ * Mehode die ein Sudoku auf Eindeutigkeit testet.
+ * Gibt das Ergebnis zurück
+ */
+int eindeutig(int feld[BREITE][HOEHE]) {
+	int feldh[BREITE][HOEHE];
+	int feldr[BREITE][HOEHE];
+	int i, j;
+	for (i = 0; i < BREITE; i++) {
+		for (j = 0; j < HOEHE; j++) {
+			feldh[i][j] = feld[i][j];
+			feldr[i][j] = feld[i][j];
+		}
+	}
+	loese(feldh, 0, 0);
+	loeseAbwaerts(feldr, 0, 0);
+	for (i = 0; i < BREITE; i++) {
+		for (j = 0; j < HOEHE; j++) {
+			if (feldh[i][j] != feldr[i][j])
+				return 0;
+		}
+	}
+	return 1;
 }
 
 /*
@@ -62,6 +111,6 @@ int loese(int feld[BREITE][HOEHE], int x, int y) {
  * returns 1 - Wenn es eine Lösung gibt.
  */
 int loeseSudoku(int feld[BREITE][HOEHE]) {
-	return loese(feld, 0, 0);
+	return loeseAbwaerts(feld, 0, 0);
 }
 

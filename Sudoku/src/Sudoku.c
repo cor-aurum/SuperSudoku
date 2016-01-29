@@ -87,8 +87,7 @@ int leseFeldAusDatei(char datei[]) {
  * TODO Moritz implementiert hier den Algorithmus für das Lösen des Sudokus. Gibt den Erfolg zurück.
  */
 int loeseSudokuMain() {
-	loeseSudoku(feld);
-	return 1;
+	return loeseSudoku(feld);
 }
 
 /*

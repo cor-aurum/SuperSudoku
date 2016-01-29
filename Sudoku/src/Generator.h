@@ -9,18 +9,18 @@ int zahlen[MAX_ZAHL] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 void initZufall(int *array) {
 	/*
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	int usec = tv.tv_usec;
-	srand48(usec);
-	size_t i;
-	for (i = 8; i > 0; i--) {
-		size_t j = (unsigned int) (drand48() * (i + 1));
-		int t = array[j];
-		array[j] = array[i];
-		array[i] = t;
-	}
-	*/
+	 struct timeval tv;
+	 gettimeofday(&tv, NULL);
+	 int usec = tv.tv_usec;
+	 srand48(usec);
+	 size_t i;
+	 for (i = 8; i > 0; i--) {
+	 size_t j = (unsigned int) (drand48() * (i + 1));
+	 int t = array[j];
+	 array[j] = array[i];
+	 array[i] = t;
+	 }
+	 */
 }
 
 void fuelleZufall(int feld[BREITE][HOEHE]) {
@@ -43,14 +43,26 @@ void fuelleZufall(int feld[BREITE][HOEHE]) {
 	loeseSudoku(feld);
 }
 
-int pruefeMehrdeutigkeit() {
-	return -1;
-}
-
 void generiereSudoku(int feld[BREITE][HOEHE]) {
-	int i;
+
+	int x, y, z, mem;
+
+	// Feld ausfüllen
 	fuelleZufall(feld);
-	for (i = 0; i < MAX_ZAHL; i++) {
-		feld[i][rand() % MAX_ZAHL] = 0;
+
+	// Zufällig ein Wert je Zeile leeren
+	for (x = 0; x < BREITE; x++) {
+		feld[x][rand() % HOEHE] = 0;
 	}
+
+	for (z = 0; z < MAX_ZAHL*MAX_ZAHL; z++) {
+		do {
+			x = rand() % MAX_ZAHL;
+			y = rand() % MAX_ZAHL;
+			mem = feld[x][y];
+			feld[x][y] = 0;
+		} while (eindeutig(feld));
+		feld[x][y] = mem;
+	}
+
 }
