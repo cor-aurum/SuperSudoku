@@ -39,7 +39,7 @@ void fuelleZufall(int feld[BREITE][HOEHE]) {
 	loeseSudoku(feld);
 }
 
-void generiereSudoku(int feld[BREITE][HOEHE]) {
+void generiereSudoku(int feld[BREITE][HOEHE], int schwierigkeit) {
 
 	int x, y, z, mem;
 
@@ -51,7 +51,7 @@ void generiereSudoku(int feld[BREITE][HOEHE]) {
 		feld[x][rand() % HOEHE] = 0;
 	}
 
-	for (z = 0; z < MAX_ZAHL * MAX_ZAHL; z++) {
+	for (z = 0; z < MAX_ZAHL * schwierigkeit; z++) {
 		do {
 			x = rand() % MAX_ZAHL;
 			y = rand() % MAX_ZAHL;

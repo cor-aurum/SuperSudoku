@@ -196,7 +196,8 @@ void printFeld() {
 				"1-9: Zahl eintragen", "Leerzeichen: Zahl löschen",
 				"k: Spiel prüfen", "l: Spiel lösen", "p: Spiel speichern",
 				"o: Spiel laden", "c: Spiel leeren", "m: Seite weiter",
-				"e: Sudoku auf Eindeutigkeit prüfen","x: Schreibschutz aufheben", "g: Sudoku generieren", "u: Über",
+				"e: Sudoku auf Eindeutigkeit prüfen",
+				"x: Schreibschutz aufheben", "g: Sudoku generieren", "u: Über",
 				"q: Programm beenden", "n: Seite zurück" };
 		int nummer = legende * HOEHE + i;
 		if (nummer < LEGENDE && getSpalten() > BREITE * 4 + 40) {
@@ -326,9 +327,16 @@ int eingabeLoop() {
 			break;
 		case 'g': // Sudoku generieren
 		{
+			meldungAusgeben("Schwierigkeitsstufe (1-9) angeben:");
+			fflush(stdout);
+			int t;
+			do {
+				t = getch();
+			} while (t < '1' || t > '9');
+			printFeld();
 			meldungAusgeben("Sudoku wird generiert...");
 			fflush(stdout);
-			generiereSudoku(feld);
+			generiereSudoku(feld,t-'0');
 			printFeld();
 			break;
 		}
