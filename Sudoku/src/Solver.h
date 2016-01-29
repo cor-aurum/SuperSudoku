@@ -5,28 +5,7 @@
  * Version 2 (2016-12-17) Felix Schütze dhbw@felix-schuetze.de               *
  *****************************************************************************/
 
-/*
- * Prüft, ob wert an Punkt x/y eingesetzt werden kann
- * returns 1 - Wert darf eingesetzt werden
- * returns 0 - Wert ist hier nicht zulässig
- */
-int pruefe(int feld[BREITE][HOEHE], int x, int y, int wert) {
-	int i;
 
-	// Gegen Sudoku-Regeln verstoßen ist nicht erlaubt:
-	// TODO: MAX_ZAHL ist hier fehl am Platz! Wenn HOEHE oder BREITE ungleich MAX_ZAHL sind, bekommen wir Probleme mit feld[x][y]!
-	// Siehe Reader.h pruefePos als alternative.
-	for (i = 0; i < MAX_ZAHL; i++) {
-		if (feld[x][i] == wert || feld[i][y] == wert
-				|| feld[(x / KACHELBREITE) * KACHELBREITE + (i % KACHELBREITE)][(y
-						/ KACHELHOEHE) * KACHELHOEHE + (i / KACHELHOEHE)]
-						== wert)
-			return 0;
-	}
-
-	// Wenn kein Verstoß vorliegt, ist der Wert zulässig:
-	return 1;
-}
 
 /*
  * Rekursive Methode zum Lösen des Sudokus, wählt die erste gefundene Lösung aus.
@@ -39,7 +18,7 @@ int loese(int feld[BREITE][HOEHE], int x, int y) {
 				((x + 1) < BREITE) ? loese(feld, x + 1, 0) : 1;
 	} else {
 		for (test = 1; test <= MAX_ZAHL; test++) {
-			if (pruefe(feld, x, y, test)) {
+			if (!pruefePos(feld, x, y, test)) {
 				feld[x][y] = test;
 
 				if (loese(feld, x, y))
@@ -53,6 +32,8 @@ int loese(int feld[BREITE][HOEHE], int x, int y) {
 	}
 }
 
+
+
 /*
  * Identisch zu "loese", zählt aber ab- statt aufwärts
  */
@@ -63,7 +44,7 @@ int loeseAbwaerts(int feld[BREITE][HOEHE], int x, int y) {
 				((x + 1) < BREITE) ? loeseAbwaerts(feld, x + 1, 0) : 1;
 	} else {
 		for (test = MAX_ZAHL; test >= 1; test--) {
-			if (pruefe(feld, x, y, test)) {
+			if (!pruefePos(feld, x, y, test)) {
 				feld[x][y] = test;
 
 				if (loeseAbwaerts(feld, x, y))
@@ -77,11 +58,14 @@ int loeseAbwaerts(int feld[BREITE][HOEHE], int x, int y) {
 	}
 }
 
+
+
 /*
  * Mehode die ein Sudoku auf Eindeutigkeit testet.
  * Gibt das Ergebnis zurück
  * return 0 wenn das Sudoku nicht eindeutig gelöst werden kann.
  * return 1 wenn das Sudoku eindeutig lösbar ist.
+ * TODO: Sagt bei nicht lösbaren Sudokus, dass diese eindeutig seien.
  */
 int eindeutig(int feld[BREITE][HOEHE]) {
 	// 2 Kopien des Feldes anlegen:

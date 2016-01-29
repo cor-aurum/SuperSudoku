@@ -5,55 +5,19 @@
  Version     : 2016-01-29
  ============================================================================
  */
-
-#include <stdio.h>
-#include <stdlib.h>
-
-/* PRÄPROZESSORDIREKTIVEN *****************************************************/
-#define HOEHE 9
-#define BREITE 9
-#define KACHELHOEHE 3
-#define KACHELBREITE 3
-#define MAX_ZAHL 9
+#include "Sudoku.h"
 
 /* GLOBALE ARRAYS ************************************************************/
 int feld[BREITE][HOEHE];
 int schutz[BREITE][HOEHE];
 
-/* HEADERDATEIEN *************************************************************/
-#include "Sudoku.h"
-
+/*****************************************************************************/
+#include "Tester.h"
 #include "GUI.h"
 #include "Reader.h"
+#include "Writer.h"
 #include "Solver.h"
 #include "Generator.h"
-
-/*
- * Diese Methode schreibt ein im RAM gespeichertes Sudoku in die Datei datei[].
- */
-void speichereFeld(char datei[]) {
-	FILE *fp;
-
-	fp = fopen(datei, "w");
-
-	if (fp == NULL) {
-		meldungAusgeben("Datei konnte nicht geöffnet werden.\n");
-	} else {
-		int i, j;
-		for (i = 0; i < HOEHE; i++) {
-			for (j = 0; j < BREITE; j++) {
-				if (feld[i][j] == 0) {
-					fputc(' ', fp);
-				} else {
-					fputc(feld[i][j] + 48, fp);
-				}
-			}
-			fputc(10, fp);
-
-		}
-		fclose(fp);
-	}
-}
 
 
 
