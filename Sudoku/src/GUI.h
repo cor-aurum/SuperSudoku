@@ -76,11 +76,16 @@ void gotoxy(int x, int y) {
  * Printet ein char farbig
  */
 void highlightGrun(char c) {
-	wprintf("\033[32m%c\033[0m", c);
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+	printf("%c", c);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
 void highlightRot(char c) {
-	wprintf("\033[31m%c\033[0m", c);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+	printf("%c", c);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
 /*
