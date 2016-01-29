@@ -104,7 +104,7 @@ int getSpalten() {
 #define RIGHT 77
 #define LEFT 75
 #endif
-#define LEGENDE 14
+#define LEGENDE 16
 int setFeld(int x, int y, int eingabe, int lock);
 int legende = 0;
 
@@ -192,13 +192,23 @@ void printFeld() {
 			}
 		}
 		printf("║     ");
-		char *hilfe[LEGENDE] = { "Pfeiltasten/wasd: Cursor bewegen",
-				"1-9: Zahl eintragen", "Leerzeichen: Zahl löschen",
-				"k: Spiel prüfen", "l: Spiel lösen", "p: Spiel speichern",
-				"o: Spiel laden", "c: Spiel leeren", "m: Seite weiter",
+		char *hilfe[LEGENDE] = {
+				"Pfeiltasten/wasd: Cursor bewegen",
+				"1-9: Zahl eintragen",
+				"Leerzeichen: Zahl löschen",
+				"k: Spiel prüfen",
+				"l: Spiel lösen",
+				"p: Spiel speichern",
+				"o: Spiel laden",
+				"c: Spiel leeren",
+				"m: Seite weiter",
 				"e: Sudoku auf Eindeutigkeit prüfen",
-				"x: Schreibschutz aufheben", "g: Sudoku generieren", "u: Über",
-				"q: Programm beenden", "n: Seite zurück" };
+				"x: Schreibschutz aufheben",
+				"y: Aktuelle Feler schützen",
+				"g: Sudoku generieren",
+				"u: Über",
+				"q: Programm beenden",
+				"n: Seite zurück" };
 		int nummer = legende * HOEHE + i;
 		if (nummer < LEGENDE && getSpalten() > BREITE * 4 + 40) {
 			printf("%s", hilfe[nummer]);
@@ -295,9 +305,9 @@ int eingabeLoop() {
 			printFeld();
 			meldungAusgeben("Speicherort eingeben:");
 			gotoxy(1, HOEHE * 2 + 3);
-			char string[100];
-			scanf("%99s", &string[0]);
-			speichereFeld(string);
+			char pfad[100];
+			scanf("%99s", &pfad[0]);
+			speichereFeld(pfad);
 			printFeld();
 			meldungAusgeben("Gespeichert");
 		}
@@ -308,7 +318,7 @@ int eingabeLoop() {
 			gotoxy(1, HOEHE * 2 + 3);
 			char string[100];
 			scanf("%99s", &string[0]);
-			if (!leseFeldAusDatei(string)) {
+			if (leseDatei(string)) {
 				printFeld();
 				meldungAusgeben("Laden der Datei fehlgeschlagen");
 			} else {
@@ -319,7 +329,7 @@ int eingabeLoop() {
 			break;
 		case 'l': // Sudoku lösen
 			printFeld();
-			if (!loeseSudokuMain()) {
+			if (!loeseSudoku(feld)) {
 				meldungAusgeben("Sudoku ist nicht lösbar");
 			} else {
 				printFeld();
@@ -341,16 +351,22 @@ int eingabeLoop() {
 			break;
 		}
 		case 'e':
-			if (eindeutig(feld)) {
-				meldungAusgeben("Sudoku ist eindeutig");
-			} else {
-				meldungAusgeben("Sudoku ist nicht eindeutig");
+			printFeld();
+			if (!testSudokuFormal(feld)) {
+				if (eindeutig(feld)) {
+					meldungAusgeben("Sudoku ist eindeutig");
+				} else {
+					meldungAusgeben("Sudoku ist nicht eindeutig");
+				}
+			}else{
+				printFeld();
+				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
 			break;
 		case 'k': // Sudoku überprüfen (Ist es formal korrekt?)
 			//printFeld();
 			//gotoxy(1, HOEHE * 2 + 3);
-			if (!checkSudokuFormal()) {
+			if (!testSudokuFormal(feld)) {
 				printFeld();
 				meldungAusgeben("Sudoku ist korrekt");
 			} else {
@@ -385,6 +401,14 @@ int eingabeLoop() {
 						schutz[i][j] = 0;
 				}
 			}
+			printFeld();
+			break;
+		case 'y': // Aktuelle Felder schützen
+			for (i = 0; i < BREITE; i++)
+				for (j = 0; j < HOEHE; j++)
+				/* schutz > 0 ist lock, schutz < 0 ist fehler */
+					if (!(schutz[i][j] < 0))
+						schutz[i][j] = feld[i][j];
 			printFeld();
 			break;
 		case 'u': // Über: Zeigt eine Info über das Programm an

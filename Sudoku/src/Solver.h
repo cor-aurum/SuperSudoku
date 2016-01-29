@@ -80,8 +80,11 @@ int loeseAbwaerts(int feld[BREITE][HOEHE], int x, int y) {
 /*
  * Mehode die ein Sudoku auf Eindeutigkeit testet.
  * Gibt das Ergebnis zurück
+ * return 0 wenn das Sudoku nicht eindeutig gelöst werden kann.
+ * return 1 wenn das Sudoku eindeutig lösbar ist.
  */
 int eindeutig(int feld[BREITE][HOEHE]) {
+	// 2 Kopien des Feldes anlegen:
 	int feldh[BREITE][HOEHE];
 	int feldr[BREITE][HOEHE];
 	int i, j;
@@ -91,8 +94,12 @@ int eindeutig(int feld[BREITE][HOEHE]) {
 			feldr[i][j] = feld[i][j];
 		}
 	}
+
+	// Aus zwei Richtungen lösen und erste Lösung behalten:
 	loese(feldh, 0, 0);
 	loeseAbwaerts(feldr, 0, 0);
+
+	// Wenn die Lösungen identisch sind, ist die Lösung eindeutig
 	for (i = 0; i < BREITE; i++) {
 		for (j = 0; j < HOEHE; j++) {
 			if (feldh[i][j] != feldr[i][j])

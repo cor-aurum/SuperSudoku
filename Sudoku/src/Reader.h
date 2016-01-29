@@ -5,7 +5,7 @@
  * Version 2 (2016-01-29) Sascha Scherrer <dhbw.scherrer@gmail.com>           *
  ******************************************************************************/
 
-int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler);
+//int pruefe(int feld[BREITE][HOEHE], int x, int y, int zaehler);
 
 /* HILFSFUNKTIONEN (Präfix 'rh_' für reader heĺper) ***************************/
 
@@ -160,16 +160,10 @@ int pruefePos(int feld[BREITE][HOEHE], int x, int y, int wert) {
 	for (aktX = 0; aktX < BREITE; aktX++)
 		if (feld[aktX][y] == wert && aktX != x) {
 			fehler++;
-			fprintf(stderr,
-					"   Wert %d in X|Y=%d|%d kommt in Spalte %d mehrmals vor.\n",
-					wert, x, y, aktX);
 		}
 	// In Spalte
 	for (aktY = 0; aktY < BREITE; aktY++)
 		if (feld[x][aktY] == wert && aktY != y) {
-			fprintf(stderr,
-					"   Wert %d in X|Y=%d|%d kommt in Zeile %d mehrmals vor.\n",
-					wert, x, y, aktY);
 			fehler++;
 		}
 
@@ -181,9 +175,6 @@ int pruefePos(int feld[BREITE][HOEHE], int x, int y, int wert) {
 				aktY < (y / KACHELHOEHE + 1) * KACHELHOEHE; aktY++)
 			if (feld[aktX][aktY] == wert && aktX != x && aktY != y) {
 				fehler++;
-				fprintf(stderr,
-						"   Wert %d in X|Y=%d|%d kommt in Kachel mehrmals vor.\n",
-						wert, x, y);
 			}
 
 	return fehler;
@@ -274,74 +265,6 @@ int testSudokuFormal(int feld[BREITE][HOEHE]) {
 	}
 
 	return f;
-}
-
-int testSudokuFormalALT(int feld[BREITE][HOEHE]) {
-	/* Aufbau von feld: feld[x][y], x sind spalten, y sind zeilen*/
-
-	/* Fehlerzähler zurücksetzen*/
-	rh_fehlerZaehler(6, -rh_fehlerZaehler(6, 0));
-	rh_fehlerZaehler(7, -rh_fehlerZaehler(7, 0));
-	rh_fehlerZaehler(8, -rh_fehlerZaehler(8, 0));
-
-	/* Variablen (akt = aktuelle oder aktiv) */
-	int zaehler[MAX_ZAHL + 1];
-	int aktZeile = 0, aktSpalte = 0, aktWert = 0, kachelFeld = 0, kachelX = 0,
-			kachelY = 0;
-
-	/* Prüfe die Anzahl an gleichen Werten je Zeile (von oben nach unten) */
-	for (aktZeile = 0; aktZeile < HOEHE; aktZeile++) {
-		rh_resetZaehler(zaehler);
-		for (aktSpalte = 0; aktSpalte < BREITE; aktSpalte++) {
-			if (!rh_inkrementZaehler(zaehler, feld[aktSpalte][aktZeile])) {
-				printf("Validator: Unerwartes Zeichen in Zeile %d Spalte %d.\n",
-						aktZeile, aktSpalte);
-			}
-			for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
-				if (zaehler[aktWert] > 1) {
-					rh_fehlerZaehler(6, 1);
-					if (!schutz[aktSpalte][aktZeile]) {
-						schutz[aktSpalte][aktZeile] -= 1;
-					}
-				}
-		}
-	}
-
-	/* Prüfe die Anzahl an gleichen Werten je Spalte (von links nach rechts) */
-	for (aktSpalte = 0; aktSpalte < BREITE; aktSpalte++) {
-		rh_resetZaehler(zaehler);
-		for (aktZeile = 0; aktZeile < HOEHE; aktZeile++) {
-			rh_inkrementZaehler(zaehler, feld[aktSpalte][aktZeile]);
-			for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++) {
-				if (zaehler[aktWert] > 1) {
-					rh_fehlerZaehler(7, 1);
-					if (!schutz[aktSpalte][aktZeile]) {
-						schutz[aktSpalte][aktZeile] -= 1;
-					}
-				}
-			}
-		}
-	}
-
-	/* Prüfe die Anzahl an gleichen Werten je Kachel (links nach rechts und oben nach unten) */
-	for (kachelY = 0; kachelY < KACHELHOEHE; kachelY++)
-		for (kachelX = 0; kachelX < KACHELBREITE; kachelX++) {
-			rh_resetZaehler(zaehler);
-			for (kachelFeld = 0; kachelFeld < KACHELBREITE * KACHELHOEHE;
-					kachelFeld++) {
-				aktWert = feld[kachelFeld % KACHELBREITE
-						+ kachelX * KACHELBREITE][kachelFeld / KACHELHOEHE
-						+ kachelY * KACHELHOEHE];
-				rh_inkrementZaehler(zaehler, aktWert);
-			}
-			for (aktWert = 1; aktWert <= MAX_ZAHL; aktWert++)
-				if (zaehler[aktWert] > 1) {
-					rh_fehlerZaehler(8, 1);
-				}
-		}
-	//printf("Fehlerzaehler=%d\n", rh_fehlerZaehler(6,0)+rh_fehlerZaehler(7,0)+ rh_fehlerZaehler(8,0));
-	return rh_fehlerZaehler(6, 0) + rh_fehlerZaehler(7, 0)
-			+ rh_fehlerZaehler(8, 0);
 }
 
 /* 
