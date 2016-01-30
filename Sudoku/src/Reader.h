@@ -98,8 +98,8 @@ int rh_inkrementZaehler(int zaehler[], int wert) {
  */
 int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
 	char zeichen = 0;
-	int posX = 0, posY = 0, anzahlZeichen = 0, erwarteteZeichenzahl = HOEHE
-			* BREITE + HOEHE;
+	int posX = 0, posY = 0, anzahlZeichen = 0;
+//	int erwarteteZeichenzahl = HOEHE * BREITE + HOEHE;
 
 	while ((zeichen = fgetc(ptr_file)) != EOF) {
 		anzahlZeichen++;
@@ -137,8 +137,8 @@ int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
 		}
 	}
 
-	printf("Datei: %d von erwarteten %d Zeichen eingelesen.\n", anzahlZeichen,
-			erwarteteZeichenzahl);
+//	printf("Datei: %d von erwarteten %d Zeichen eingelesen.\n", anzahlZeichen,
+//			erwarteteZeichenzahl);
 
 	return rh_fehlerZaehler(1, 0);
 }
@@ -166,7 +166,7 @@ int leseDatei(char *dateipfad) {
 	int einleseStatus = rh_leseDateiZeichenweise(einleseFeld, ptr_datei);
 	fclose(ptr_datei);
 
-	if (einleseStatus != 0) {
+	if (einleseStatus < 0) {
 		return einleseStatus;
 	}
 

@@ -18,8 +18,7 @@ int schutz[BREITE][HOEHE];
 #include "Writer.h"
 #include "Solver.h"
 #include "Generator.h"
-
-
+#include "CLI.h"
 
 /*
  * Fügt den integer eingabe an die Position x,y im Spielfeld hinzu.
@@ -31,7 +30,7 @@ int schutz[BREITE][HOEHE];
  *  1: Eingabe erfolgreich
  */
 int setFeld(int x, int y, int eingabe, int lock) {
-	if (schutz[x][y]<=0) {
+	if (schutz[x][y] <= 0) {
 		if (!(eingabe >= 0 && eingabe <= MAX_ZAHL)) {
 			return -2;
 		}
@@ -42,12 +41,7 @@ int setFeld(int x, int y, int eingabe, int lock) {
 	return -1;
 }
 
-
-
-/*
- * main Methode, die darf jemand anderes kommentieren
- */
-int main(int argc, char* argv[]) {
+void starteGUI() {
 #if !defined(WIN32)
 	eingabeLoop();
 #else
@@ -59,5 +53,11 @@ int main(int argc, char* argv[]) {
 	eingabeLoop();
 #endif
 	//printFeld();
+}
+/*
+ * main Methode, die darf jemand anderes kommentieren
+ */
+int main(int argc, char* argv[]) {
+	argumentInterpreter(argc, argv);
 	return EXIT_SUCCESS;
 }

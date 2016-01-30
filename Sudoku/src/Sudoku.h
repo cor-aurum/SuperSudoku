@@ -10,6 +10,7 @@
 /* Sudoku.c */
 int main(int argc, char* argv[]); // Main Methode
 int setFeld(int x, int y, int eingabe, int lock); // Position x, y im Feld setzen
+void starteGUI();
 
 /* Writer.c */
 int dateiExistiert(char datei[]); // Prüft ob die Datei existiert (1) oder nicht (0)
@@ -33,11 +34,5 @@ int loeseSudoku(int feld[BREITE][HOEHE]);
 /* Generator.c */
 void generiereSudoku(int feld[BREITE][HOEHE], int schwierigkeit);
 
-/* GUI.c */
-
-
-int checkSudokuFormal();
-void speichereFeld(char datei[]);
-int leseFeldAusDatei(char datei[]);
-int loeseSudokuMain();
+/* GUI */
 

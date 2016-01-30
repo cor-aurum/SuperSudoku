@@ -138,7 +138,7 @@ char* getJoke() {
 	case 4:
 		return "Was hat Windows mit einem U-Boot gemeinsam? Kaum macht man ein Fenster auf, fangen die Probleme an.";
 	case 5:
-		return "Wieviele Programmierer braucht man, um eine Glühbirne zu wechseln? Keinen, ist ein Hardware-Problem!";
+		return "Wieviele Programmierer braucht man, um eine Glühbirne zu wechseln? Keinen, das ist ein Hardware-Problem!";
 	default:
 		return "Wie nennt man ein Rind mit Root-Rechten? Sudo ku";
 	}
@@ -303,7 +303,7 @@ int eingabeLoop() {
 			break;
 		case 'p': { // Speichern
 			printFeld();
-			meldungAusgeben("Speicherort eingeben:");
+			meldungAusgeben("Speichern: Speicherort eingeben:");
 			gotoxy(1, HOEHE * 2 + 3);
 			char pfad[100];
 			scanf("%99s", &pfad[0]);
@@ -314,16 +314,20 @@ int eingabeLoop() {
 			break;
 		case 'o': { // Öffnen
 			printFeld();
-			meldungAusgeben("Speicherort eingeben:");
+			meldungAusgeben("Öffnen: Speicherort eingeben:");
 			gotoxy(1, HOEHE * 2 + 3);
 			char string[100];
 			scanf("%99s", &string[0]);
-			if (leseDatei(string)) {
+			int leseDateiReturn = leseDatei(string);
+			if (leseDateiReturn < 0) {
 				printFeld();
 				meldungAusgeben("Laden der Datei fehlgeschlagen");
 			} else {
 				system(CLEAR);
 				printFeld();
+				char err[150];
+				snprintf(err,150,"Datei geladen laden: %s\nEs wurden %d Fehler gefunden und korrigiert.", string, leseDateiReturn);
+				meldungAusgeben(err);
 			}
 		}
 			break;

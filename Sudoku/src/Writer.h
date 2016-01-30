@@ -7,6 +7,7 @@ void speichereFeld(char datei[]) {
 	fp = fopen(datei, "w");
 
 	if (fp == NULL) {
+		fprintf(stderr, "Datei %s konnte nicht geschrieben werden.\n", datei);
 		meldungAusgeben("Datei konnte nicht geöffnet werden.\n");
 	} else {
 		int i, j;
