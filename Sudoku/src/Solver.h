@@ -9,7 +9,6 @@
 
 /*
  * Rekursive Methode zum Lösen des Sudokus, wählt die erste gefundene Lösung aus.
- * TODO: Probleme treten auf, wenn das Sudoku nicht lösbar ist.
  */
 int loese(int feld[BREITE][HOEHE], int x, int y) {
 	int test;
@@ -86,7 +85,7 @@ int eindeutig(int feld[BREITE][HOEHE]) {
 	// Wenn die Lösungen identisch sind, ist die Lösung eindeutig
 	for (i = 0; i < BREITE; i++) {
 		for (j = 0; j < HOEHE; j++) {
-			if (feldh[i][j] != feldr[i][j])
+			if (feldh[i][j] != feldr[i][j] || feldh[i][j]==0)
 				return 0;
 		}
 	}
