@@ -36,7 +36,6 @@ void generiereSudoku(int feld[BREITE][HOEHE], int schwierigkeit);
 /* GUI.c */
 
 
-int checkSudokuFormal();
 void speichereFeld(char datei[]);
 int leseFeldAusDatei(char datei[]);
 int loeseSudokuMain();
