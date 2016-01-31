@@ -432,7 +432,11 @@ int eingabeLoop() {
 				printFeld();
 			}
 			if (tmp == ' ' || tmp == '0') {
+#if !defined(WIN32)
 				setFeld((y - 2) / 2, (x - 3) / 4, 0, 0);
+#else
+				setFeld((y - 1) / 2, (x - 2) / 4, 0, 0);
+#endif
 				system(CLEAR);
 				printFeld();
 			}
