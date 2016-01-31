@@ -365,7 +365,7 @@ int eingabeLoop() {
 				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
 			break;
-#endif
+
 		case 'n': // Anzeige der Befehlsoptionen: Vor
 			if (legende > 0)
 				legende--;
@@ -376,6 +376,7 @@ int eingabeLoop() {
 				legende++;
 			printFeld();
 			break;
+#endif
 		case 'h': // Anzeige der Befehlsoptionen: Zurück
 			if (legende < (LEGENDE / HOEHE))
 				legende++;
@@ -438,6 +439,7 @@ int eingabeLoop() {
 				setFeld((y - 1) / 2, (x - 2) / 4, 0, 0);
 #endif
 				system(CLEAR);
+				testSudokuFormal(feld);
 				printFeld();
 			}
 		}
