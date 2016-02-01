@@ -41,18 +41,19 @@ int setFeld(int x, int y, int eingabe, int lock) {
 	return -1;
 }
 
-void starteGUI() {
+int starteGUI() {
 #if !defined(WIN32)
 	eingabeLoop();
 #else
 	if(!SetConsoleOutputCP(65001))
 	{
-		printf("Fehler\n");
+		fprintf(stderr,"Konsole konnte nicht initialisiert werden.\n");
 		return 0;
 	}
 	eingabeLoop();
 #endif
 	//printFeld();
+	return 1;
 }
 /*
  * main Methode, die darf jemand anderes kommentieren

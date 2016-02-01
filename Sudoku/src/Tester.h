@@ -61,6 +61,7 @@ int fehlerMarkieren(int feld[BREITE][HOEHE], int schutz[BREITE][HOEHE], int x,
 			if (feld[aktX][aktY] == wert
 					&& (ignSchutz || schutz[aktX][aktY] <= 0)) {
 				schutz[aktX][aktY] = -wert;
+				markiert++;
 			}
 
 	return markiert;

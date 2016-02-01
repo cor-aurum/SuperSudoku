@@ -9,7 +9,7 @@
  ******************************************************************************/
 #if !defined(WIN32)
 int x = 3, y = 2;
-#include <termios.h>
+#include <termios.h> // TODO: Auf Win7 wurde kein Termios.h gefunden.
 #include <sys/ioctl.h>
 /*
  * Erhaelt ein char, ohne, dass man hierfür Enter drücken muss
