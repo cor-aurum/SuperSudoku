@@ -104,7 +104,7 @@ int getSpalten() {
 #define RIGHT 77
 #define LEFT 75
 #endif
-#define LEGENDE 16
+#define LEGENDE 13
 int setFeld(int x, int y, int eingabe, int lock);
 int legende = 0;
 
@@ -192,23 +192,13 @@ void printFeld() {
 			}
 		}
 		printf("║     ");
-		char *hilfe[LEGENDE] = {
-				"Pfeiltasten/wasd: Cursor bewegen",
-				"1-9: Zahl eintragen",
-				"Leerzeichen: Zahl löschen",
-				"k: Spiel prüfen",
-				"l: Spiel lösen",
-				"p: Spiel speichern",
-				"o: Spiel laden",
-				"c: Spiel leeren",
-				"m: Seite weiter",
+		char *hilfe[LEGENDE] = { "Pfeiltasten/wasd: Cursor bewegen",
+				"1-9: Zahl eintragen", "Leerzeichen: Zahl löschen",
+				"l: Spiel lösen", "p: Spiel speichern", "o: Spiel laden",
+				"c: Spiel leeren", "h: Nächste Hilfeseite",
 				"e: Sudoku auf Eindeutigkeit prüfen",
-				"x: Schreibschutz aufheben",
-				"y: Aktuelle Feler schützen",
-				"g: Sudoku generieren",
-				"u: Über",
-				"q: Programm beenden",
-				"n: Seite zurück" };
+				"x: Schreibschutz aufheben", "g: Sudoku generieren", "u: Über",
+				"q: Programm beenden"};
 		int nummer = legende * HOEHE + i;
 		if (nummer < LEGENDE && getSpalten() > BREITE * 4 + 40) {
 			printf("%s", hilfe[nummer]);
@@ -350,7 +340,7 @@ int eingabeLoop() {
 			printFeld();
 			meldungAusgeben("Sudoku wird generiert...");
 			fflush(stdout);
-			generiereSudoku(feld,t-'0');
+			generiereSudoku(feld, t - '0');
 			printFeld();
 			break;
 		}
@@ -367,7 +357,8 @@ int eingabeLoop() {
 				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
 			break;
-		case 'k': // Sudoku überprüfen (Ist es formal korrekt?)
+#ifdef NO
+			case 'k': // Sudoku überprüfen (Ist es formal korrekt?)
 			//printFeld();
 			//gotoxy(1, HOEHE * 2 + 3);
 			if (!testSudokuFormal(feld)) {
@@ -378,6 +369,7 @@ int eingabeLoop() {
 				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
 			break;
+
 		case 'n': // Anzeige der Befehlsoptionen: Vor
 			if (legende > 0)
 				legende--;
@@ -386,6 +378,14 @@ int eingabeLoop() {
 		case 'm': // Anzeige der Befehlsoptionen: Zurück
 			if (legende < (LEGENDE / HOEHE))
 				legende++;
+			printFeld();
+			break;
+#endif
+		case 'h': // Anzeige der Befehlsoptionen: Zurück
+			if (legende < (LEGENDE / HOEHE))
+				legende++;
+			else
+				legende = 0;
 			printFeld();
 			break;
 		case 'c': // Sudoku leeren (Setzt Feld und Schutz zurück)
@@ -433,11 +433,17 @@ int eingabeLoop() {
 				setFeld((y - 1) / 2, (x - 2) / 4, tmp - '0', 0);
 #endif
 				system(CLEAR);
+				testSudokuFormal(feld);
 				printFeld();
 			}
 			if (tmp == ' ' || tmp == '0') {
+#if !defined(WIN32)
 				setFeld((y - 2) / 2, (x - 3) / 4, 0, 0);
+#else
+				setFeld((y - 1) / 2, (x - 2) / 4, 0, 0);
+#endif
 				system(CLEAR);
+				testSudokuFormal(feld);
 				printFeld();
 			}
 		}
