@@ -64,7 +64,6 @@ int loeseAbwaerts(int feld[BREITE][HOEHE], int x, int y) {
  * Gibt das Ergebnis zurück
  * return 0 wenn das Sudoku nicht eindeutig gelöst werden kann.
  * return 1 wenn das Sudoku eindeutig lösbar ist.
- * TODO: Sagt bei nicht lösbaren Sudokus, dass diese eindeutig seien.
  */
 int eindeutig(int feld[BREITE][HOEHE]) {
 	// 2 Kopien des Feldes anlegen:
