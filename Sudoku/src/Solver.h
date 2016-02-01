@@ -100,6 +100,6 @@ int eindeutig(int feld[BREITE][HOEHE]) {
  * returns 1 - Wenn es eine Lösung gibt.
  */
 int loeseSudoku(int feld[BREITE][HOEHE]) {
-	return loeseAbwaerts(feld, 0, 0);
+	return loese(feld, 0, 0);
 }
 
