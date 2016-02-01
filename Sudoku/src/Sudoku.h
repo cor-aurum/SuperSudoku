@@ -14,7 +14,7 @@ void starteGUI();
 
 /* Writer.c */
 int dateiExistiert(char datei[]); // Prüft ob die Datei existiert (1) oder nicht (0)
-void speichereFeld(char datei[]); // Speichert das aktuelle Feld aus dem RAM in eine Datei
+int speichereFeld(char datei[]); // Speichert das aktuelle Feld aus dem RAM in eine Datei
 
 /* Reader.c */
 int leseDatei(char *dateipfad);

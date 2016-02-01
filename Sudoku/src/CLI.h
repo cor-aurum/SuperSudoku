@@ -175,25 +175,82 @@ void argumentInterpreter(int argc, char* argv[]) {
 			} else {
 				if (!testSudokuFormal(feld)) {
 					printf("Sudoku ist formal korrekt.\n");
-				}else{
+				} else {
 					printf("Sudoku hat formale Fehler.\n");
 				}
 			}
 		} else
-			// Sudoku-Datei auf Dateiformatkonvention prüfen:
-			if (optionGesetzt(argv[1], "f")) {
-				int leseReturn = leseDatei(argv[2]);
-				if (leseReturn < 0) {
-					fprintf(stderr, "Laden der Datei %s fehlgeschlagen.\n",
-							argv[2]);
-				} else {
-					printf("Die Datei beinhaltet %d Fehler.\n", leseReturn);
-				}
+		// Sudoku-Datei auf Dateiformatkonvention prüfen:
+		if (optionGesetzt(argv[1], "f")) {
+			int leseReturn = leseDatei(argv[2]);
+			if (leseReturn < 0) {
+				fprintf(stderr, "Laden der Datei %s fehlgeschlagen.\n",
+						argv[2]);
+			} else {
+				printf("Die Datei beinhaltet %d Fehler.\n", leseReturn);
 			}
+		} else
+		// Sudoku aus erster Datei lesen und in zweite Datei lösen
+		if (argv[1][0] != '-') {
+			int leseReturn = leseDatei(argv[1]);
+			if (leseReturn < 0) {
+				fprintf(stderr, "Laden der Datei %s fehlgeschlagen.\n",
+						argv[1]);
+			} else {
+				if (leseReturn > 0) {
+					fprintf(stderr,
+							"Die Datei beinhaltet %d Fehler. Die Fehler wurden automatisch"
+									" korrigiert. \n"
+									"Das kann dazu führen, dass das Soduku nicht so "
+									"interpretiert wird, wie es geadacht war.\n"
+									"Bitte überprüfen Sie die "
+									"Quelldatei und versuchen sie es anschließend erneut.\n",
+							leseReturn);
+				}
+				if (!testSudokuFormal(feld)) {
+					if (!loeseSudoku(feld)) {
+						fprintf(stderr, "Das Sudoku kann nicht gelöst werden.\n   "
+						"Grund: Sudoku ist nicht lösbar.\n");
+					} else
+
+					if (eindeutig(feld)) {
+						printf("Das Sudoku ist eindeutig lösbar. \n");
+						if (speichereFeld(argv[2])) {
+							printf("Die Lösung wurde unter %s gespeichert.\n",
+									argv[2]);
+						} else {
+							fprintf(stderr, "Die angegebene Lösungsdatei %s"
+									"konnte nicht geschrieben werden.\n",
+									argv[2]);
+						}
+					} else {
+						printf("Das Sudoku ist nicht eindeutig lösbar. \n");
+						if (speichereFeld(argv[2])) {
+							printf(
+									"Eine Mögliche Lösung wurde unter %s gespeichert.\n",
+									argv[2]);
+						} else {
+							fprintf(stderr, "Die angegebene Lösungsdatei %s"
+									"konnte nicht geschrieben werden.\n",
+									argv[2]);
+						}
+					}
+				} else {
+					fprintf(stderr,
+							"Das Sudoku kann nicht gelöst werden.\n   "
+									"Grund: Sudoku in Eingabedatei weist formale Fehler auf.\n");
+				}
+
+			}
+		}
+	} else {
+		fprintf(stderr,"Für die angegebenen Argumente konnte keine Interpretation gefunden werden.\n");
+		printf("   Die Interpretation ihrer Eingabe lautet: \n");
+		for (int i = 0; i < argc; i++) {
+			printf("      Argument %d: \"%s\"\n", i, argv[i]);
+		}
+		printf("   Mit dem Schalter \"-h\" erhalten Sie eine Befehlsübersicht.\n");
 	}
 
-	for (int i = 0; i < argc; i++) {
-		printf("Argument %d lautet: \"%s\"\n", i, argv[i]);
-	}
 }
 

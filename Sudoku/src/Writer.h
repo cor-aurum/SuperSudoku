@@ -1,7 +1,7 @@
 /*
  * Diese Methode schreibt ein im RAM gespeichertes Sudoku in die Datei datei[].
  */
-void speichereFeld(char datei[]) {
+int speichereFeld(char datei[]) {
 	FILE *fp;
 
 	fp = fopen(datei, "w");
@@ -9,6 +9,7 @@ void speichereFeld(char datei[]) {
 	if (fp == NULL) {
 		fprintf(stderr, "Datei %s konnte nicht geschrieben werden.\n", datei);
 		meldungAusgeben("Datei konnte nicht geöffnet werden.\n");
+		return 0;
 	} else {
 		int i, j;
 		for (i = 0; i < HOEHE; i++) {
@@ -23,5 +24,6 @@ void speichereFeld(char datei[]) {
 
 		}
 		fclose(fp);
+		return 1;
 	}
 }
