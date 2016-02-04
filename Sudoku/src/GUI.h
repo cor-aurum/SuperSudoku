@@ -107,6 +107,11 @@ int getSpalten() {
 #define LEGENDE 13
 int setFeld(int x, int y, int eingabe, int lock);
 int legende = 0;
+int zeichensatz = 0;
+char *zeichen[2][20] = { { "╔", "╟", "╠", "╬", "╫", "┼", "╪", "\u2564", "╦",
+		"\u2562", "╣", "╗", "║", "│", "╚", "╧", "╩", "╝", "═══", "───" }, { " ",
+		"|", "|", "+", "|", "+", "-", "-", "-", "|", "|", " ", "|",
+		" ", " ", "-", "-", " ", "---", "   " } };
 
 /*
  * Gibt eine Nachricht unterhalb des Spielfeldes aus
@@ -167,18 +172,36 @@ void printFeld() {
 	for (i = 0; i < HOEHE; i++) {
 		for (j = 0; j < BREITE; j++) {
 			printf("%s%s",
-					j == 0 ? i == 0 ? "╔" : i % KACHELHOEHE != 0 ? "╟" : "╠"
+					j == 0 ?
+							i == 0 ? zeichen[zeichensatz][0] :
+							i % KACHELHOEHE != 0 ?
+									zeichen[zeichensatz][1] :
+									zeichen[zeichensatz][2]
 					:
 					(j % KACHELBREITE == 0 && i != 0) ?
-							i % KACHELHOEHE == 0 ? "╬" : "╫"
+							i % KACHELHOEHE == 0 ?
+									zeichen[zeichensatz][3] :
+									zeichen[zeichensatz][4]
 					:
-					(i % KACHELHOEHE != 0) ? "┼" :
-					i != 0 ? "╪" : j % KACHELBREITE != 0 ? "\u2564" : "╦",
-					(i % KACHELHOEHE == 0) ? "═══" : "───");
+					(i % KACHELHOEHE != 0) ? zeichen[zeichensatz][5] :
+					i != 0 ? zeichen[zeichensatz][6] :
+					j % KACHELBREITE != 0 ?
+							zeichen[zeichensatz][7] : zeichen[zeichensatz][8],
+					(i % KACHELHOEHE == 0) ?
+							zeichen[zeichensatz][18] :
+							zeichen[zeichensatz][19]);
 		}
-		printf("%s\n", (i != 0) ? i % KACHELHOEHE != 0 ? "\u2562" : "╣" : "╗");
+		printf("%s\n",
+				(i != 0) ?
+						i % KACHELHOEHE != 0 ?
+								zeichen[zeichensatz][9] :
+								zeichen[zeichensatz][10]
+						:zeichen[zeichensatz][11]);
 		for (j = 0; j < BREITE; j++) {
-			printf("%s ", (j % KACHELBREITE == 0) ? "║" : "│");
+			printf("%s ",
+					(j % KACHELBREITE == 0) ?
+							zeichen[zeichensatz][12] :
+							zeichen[zeichensatz][13]);
 			if (schutz[i][j] <= 0) {
 				if (schutz[i][j] >= 0) {
 					printf("%c ", asFeld(feld[i][j]));
@@ -191,14 +214,15 @@ void printFeld() {
 				printf(" ");
 			}
 		}
-		printf("║     ");
+		printf("%s", zeichen[zeichensatz][12]);
+		printf("    ");
 		char *hilfe[LEGENDE] = { "Pfeiltasten/wasd: Cursor bewegen",
 				"1-9: Zahl eintragen", "Leerzeichen: Zahl löschen",
 				"l: Spiel lösen", "p: Spiel speichern", "o: Spiel laden",
 				"c: Spiel leeren", "h: Nächste Hilfeseite",
 				"e: Sudoku auf Eindeutigkeit prüfen",
 				"x: Schreibschutz aufheben", "g: Sudoku generieren", "u: Über",
-				"q: Programm beenden"};
+				"q: Programm beenden" };
 		int nummer = legende * HOEHE + i;
 		if (nummer < LEGENDE && getSpalten() > BREITE * 4 + 40) {
 			printf("%s", hilfe[nummer]);
@@ -208,10 +232,14 @@ void printFeld() {
 
 	}
 	for (j = 0; j < BREITE; j++) {
-		printf("%s%s", j == 0 ? "╚" : j % KACHELBREITE != 0 ? "╧" : "╩",
-				(i % KACHELHOEHE == 0) ? "═══" : "   ");
+		printf("%s%s",
+				j == 0 ? zeichen[zeichensatz][14] :
+				j % KACHELBREITE != 0 ?
+						zeichen[zeichensatz][15] : zeichen[zeichensatz][16],
+				(i % KACHELHOEHE == 0) ? zeichen[zeichensatz][18] : "   ");
 	}
-	printf("╝\n");
+	printf("%s", zeichen[zeichensatz][17]);
+	printf("\n");
 }
 
 /*
@@ -224,7 +252,8 @@ void printUber(int y) {
 		printFeld();
 	} else {
 		offen = 1;
-		system(CLEAR);
+		if (y)
+			system(CLEAR);
 		printf(" _______           _______  _______  _______ \n");
 		printf("(  ____ \\|\\     /|(  ____ )(  ____ \\(  ____ )\n");
 		printf("| (    \\/| )   ( || (    )|| (    \\/| (    )|\n");
@@ -316,7 +345,9 @@ int eingabeLoop() {
 				system(CLEAR);
 				printFeld();
 				char err[150];
-				snprintf(err,150,"Datei geladen laden: %s\nEs wurden %d Fehler gefunden und korrigiert.", string, leseDateiReturn);
+				snprintf(err, 150,
+						"Datei geladen: %s\nEs wurden %d Fehler gefunden und korrigiert.",
+						string, leseDateiReturn);
 				meldungAusgeben(err);
 			}
 		}
@@ -352,7 +383,7 @@ int eingabeLoop() {
 				} else {
 					meldungAusgeben("Sudoku ist nicht eindeutig");
 				}
-			}else{
+			} else {
 				printFeld();
 				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
@@ -370,14 +401,14 @@ int eingabeLoop() {
 			}
 			break;
 
-		case 'n': // Anzeige der Befehlsoptionen: Vor
+			case 'n': // Anzeige der Befehlsoptionen: Vor
 			if (legende > 0)
-				legende--;
+			legende--;
 			printFeld();
 			break;
-		case 'm': // Anzeige der Befehlsoptionen: Zurück
+			case 'm':// Anzeige der Befehlsoptionen: Zurück
 			if (legende < (LEGENDE / HOEHE))
-				legende++;
+			legende++;
 			printFeld();
 			break;
 #endif
@@ -410,7 +441,7 @@ int eingabeLoop() {
 		case 'y': // Aktuelle Felder schützen
 			for (i = 0; i < BREITE; i++)
 				for (j = 0; j < HOEHE; j++)
-				/* schutz > 0 ist lock, schutz < 0 ist fehler */
+					/* schutz > 0 ist lock, schutz < 0 ist fehler */
 					if (!(schutz[i][j] < 0))
 						schutz[i][j] = feld[i][j];
 			printFeld();
