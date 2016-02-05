@@ -12,6 +12,7 @@ int MAX_ZAHL = 9;
 int main(int argc, char* argv[]); // Main Methode
 int setFeld(int x, int y, int eingabe, int lock); // Position x, y im Feld setzen
 int starteGUI();
+int** allokieren(int y, int x);
 
 /* Writer.c */
 int dateiExistiert(char datei[]); // Prüft ob die Datei existiert (1) oder nicht (0)

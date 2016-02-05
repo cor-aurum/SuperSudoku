@@ -5,8 +5,6 @@
  * Version 2 (2016-12-17) Felix Schütze dhbw@felix-schuetze.de               *
  *****************************************************************************/
 
-
-
 /*
  * Rekursive Methode zum Lösen des Sudokus, wählt die erste gefundene Lösung aus.
  */
@@ -30,8 +28,6 @@ int loese(int **feld, int x, int y) {
 		return 0;
 	}
 }
-
-
 
 /*
  * Identisch zu "loese", zählt aber ab- statt aufwärts
@@ -57,8 +53,6 @@ int loeseAbwaerts(int **feld, int x, int y) {
 	}
 }
 
-
-
 /*
  * Mehode die ein Sudoku auf Eindeutigkeit testet.
  * Gibt das Ergebnis zurück
@@ -67,8 +61,9 @@ int loeseAbwaerts(int **feld, int x, int y) {
  */
 int eindeutig(int **feld) {
 	// 2 Kopien des Feldes anlegen:
-	int feldh[BREITE][HOEHE];
-	int feldr[BREITE][HOEHE];
+	int **feldh = allokieren(BREITE, HOEHE);
+	int **feldr = allokieren(BREITE, HOEHE);
+
 	int i, j;
 	for (i = 0; i < BREITE; i++) {
 		for (j = 0; j < HOEHE; j++) {
@@ -84,10 +79,17 @@ int eindeutig(int **feld) {
 	// Wenn die Lösungen identisch sind, ist die Lösung eindeutig
 	for (i = 0; i < BREITE; i++) {
 		for (j = 0; j < HOEHE; j++) {
-			if (feldh[i][j] != feldr[i][j] || feldh[i][j]==0)
+			if (feldh[i][j] != feldr[i][j] || feldh[i][j] == 0)
 				return 0;
 		}
 	}
+	for (i = 0; i < HOEHE; i++)
+	{
+		free(feldh[i]);
+		free(feldr[i]);
+	}
+	free(feldh);
+	free(feldr);
 	return 1;
 }
 

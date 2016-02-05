@@ -96,7 +96,7 @@ int rh_inkrementZaehler(int zaehler[], int wert) {
  * returns 0 - wenn keine Fehler aufgetreten sind
  * returns n - Anzahl der Fehler, die gefunden und korrigiert wurden.
  */
-int rh_leseDateiZeichenweise(int feld[BREITE][HOEHE], FILE *ptr_file) {
+int rh_leseDateiZeichenweise(int **feld, FILE *ptr_file) {
 	char zeichen = 0;
 	int posX = 0, posY = 0, anzahlZeichen = 0;
 //	int erwarteteZeichenzahl = HOEHE * BREITE + HOEHE;
@@ -162,7 +162,7 @@ int leseDatei(char *dateipfad) {
 		return -2;
 
 	/* Datei in array einlesen */
-	int einleseFeld[BREITE][HOEHE];
+	int **einleseFeld=allokieren(HOEHE,BREITE);
 	int einleseStatus = rh_leseDateiZeichenweise(einleseFeld, ptr_datei);
 	fclose(ptr_datei);
 
@@ -190,6 +190,11 @@ int leseDatei(char *dateipfad) {
 			setFeld(i, j, einleseFeld[j][i], einleseFeld[j][i]);
 		}
 	}
+	for (i = 0; i < HOEHE; i++)
+		{
+			free(einleseFeld[i]);
+		}
+		free(einleseFeld);
 	return einleseStatus;
 }
 
