@@ -108,10 +108,11 @@ int getSpalten() {
 int setFeld(int x, int y, int eingabe, int lock);
 int legende = 0;
 int zeichensatz = 0;
-char *zeichen[2][20] = { { "╔", "╟", "╠", "╬", "╫", "┼", "╪", "\u2564", "╦",
-		"\u2562", "╣", "╗", "║", "│", "╚", "╧", "╩", "╝", "═══", "───" }, { " ",
-		"|", "|", "+", "|", "+", "-", "-", "-", "|", "|", " ", "|",
-		" ", " ", "-", "-", " ", "---", "   " } };
+char *zeichen[3][20] = { { "╔", "╟", "╠", "╬", "╫", "┼", "╪", "\u2564", "╦", "\u2562",
+		"╣", "╗", "║", "│", "╚", "╧", "╩", "╝", "═══", "───" }, { " ", "|", "|", "+", "|",
+		"+", "-", "-", "-", "|", "|", " ", "|", " ", " ", "-", "-", " ", "---", "   " }, {
+		"#", "#", "#", "#", "#", "+", "#", "#", "#", "#", "#", "#", "#", "|", "#", "#",
+		"#", "#", "###", "---" } };
 
 /*
  * Gibt eine Nachricht unterhalb des Spielfeldes aus
@@ -175,33 +176,28 @@ void printFeld() {
 					j == 0 ?
 							i == 0 ? zeichen[zeichensatz][0] :
 							i % KACHELHOEHE != 0 ?
-									zeichen[zeichensatz][1] :
-									zeichen[zeichensatz][2]
+									zeichen[zeichensatz][1] : zeichen[zeichensatz][2]
 					:
 					(j % KACHELBREITE == 0 && i != 0) ?
 							i % KACHELHOEHE == 0 ?
-									zeichen[zeichensatz][3] :
-									zeichen[zeichensatz][4]
+									zeichen[zeichensatz][3] : zeichen[zeichensatz][4]
 					:
 					(i % KACHELHOEHE != 0) ? zeichen[zeichensatz][5] :
 					i != 0 ? zeichen[zeichensatz][6] :
 					j % KACHELBREITE != 0 ?
 							zeichen[zeichensatz][7] : zeichen[zeichensatz][8],
 					(i % KACHELHOEHE == 0) ?
-							zeichen[zeichensatz][18] :
-							zeichen[zeichensatz][19]);
+							zeichen[zeichensatz][18] : zeichen[zeichensatz][19]);
 		}
 		printf("%s\n",
 				(i != 0) ?
 						i % KACHELHOEHE != 0 ?
-								zeichen[zeichensatz][9] :
-								zeichen[zeichensatz][10]
+								zeichen[zeichensatz][9] : zeichen[zeichensatz][10]
 						:zeichen[zeichensatz][11]);
 		for (j = 0; j < BREITE; j++) {
 			printf("%s ",
 					(j % KACHELBREITE == 0) ?
-							zeichen[zeichensatz][12] :
-							zeichen[zeichensatz][13]);
+							zeichen[zeichensatz][12] : zeichen[zeichensatz][13]);
 			if (schutz[i][j] <= 0) {
 				if (schutz[i][j] >= 0) {
 					printf("%c ", asFeld(feld[i][j]));
@@ -217,10 +213,9 @@ void printFeld() {
 		printf("%s", zeichen[zeichensatz][12]);
 		printf("    ");
 		char *hilfe[LEGENDE] = { "Pfeiltasten/wasd: Cursor bewegen",
-				"1-9: Zahl eintragen", "Leerzeichen: Zahl löschen",
-				"l: Spiel lösen", "p: Spiel speichern", "o: Spiel laden",
-				"c: Spiel leeren", "h: Nächste Hilfeseite",
-				"e: Sudoku auf Eindeutigkeit prüfen",
+				"1-9: Zahl eintragen", "Leerzeichen: Zahl löschen", "l: Spiel lösen",
+				"p: Spiel speichern", "o: Spiel laden", "c: Spiel leeren",
+				"h: Nächste Hilfeseite", "e: Sudoku auf Eindeutigkeit prüfen",
 				"x: Schreibschutz aufheben", "g: Sudoku generieren", "u: Über",
 				"q: Programm beenden" };
 		int nummer = legende * HOEHE + i;
@@ -263,15 +258,13 @@ void printUber(int y) {
 		printf("/\\____) || (___) || )      | (____/\\| ) \\ \\__\n");
 		printf("\\_______)(_______)|/       (_______/|/   \\__/\n\n");
 		printf(" _______           ______   _______  _                \n");
-		printf(
-				"(  ____ \\|\\     /|(  __  \\ (  ___  )| \\    /\\|\\     /|\n");
+		printf("(  ____ \\|\\     /|(  __  \\ (  ___  )| \\    /\\|\\     /|\n");
 		printf("| (    \\/| )   ( || (  \\  )| (   ) ||  \\  / /| )   ( |\n");
 		printf("| (_____ | |   | || |   ) || |   | ||  (_/ / | |   | |\n");
 		printf("(_____  )| |   | || |   | || |   | ||   _ (  | |   | |\n");
 		printf("      ) || |   | || |   ) || |   | ||  ( \\ \\ | |   | |\n");
 		printf("/\\____) || (___) || (__/  )| (___) ||  /  \\ \\| (___) |\n");
-		printf(
-				"\\_______)(_______)(______/ (_______)|_/    \\/(_______)\n\n\n");
+		printf("\\_______)(_______)(______/ (_______)|_/    \\/(_______)\n\n\n");
 		printf("Entwickelt von:\n");
 		printf("Koch, Moritz\n");
 		printf("Scherrer, Sascha\n");
@@ -326,7 +319,7 @@ int eingabeLoop() {
 			gotoxy(1, HOEHE * 2 + 3);
 			char pfad[100];
 			scanf("%99s", &pfad[0]);
-			speichereFeld(pfad);
+			speichereFeld(pfad, 1);
 			printFeld();
 			meldungAusgeben("Gespeichert");
 		}

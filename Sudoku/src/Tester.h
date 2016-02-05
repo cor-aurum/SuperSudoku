@@ -4,7 +4,7 @@
  * returns 0 - Wert darf eingesetzt werden
  * returns n - Wert anzahl an Fehlern, die ein einsetzen des Wertes verursachen würde.
  */
-int pruefePos(int feld[BREITE][HOEHE], int x, int y, int wert) {
+int pruefePos(int **feld, int x, int y, int wert) {
 	int fehler = 0, aktX, aktY;
 
 	if (wert == 0)
@@ -33,7 +33,7 @@ int pruefePos(int feld[BREITE][HOEHE], int x, int y, int wert) {
 	return fehler;
 }
 
-int fehlerMarkieren(int feld[BREITE][HOEHE], int schutz[BREITE][HOEHE], int x,
+int fehlerMarkieren(int **feld, int **schutz, int x,
 		int y, int ignSchutz) {
 	int aktX = 0, aktY = 0, wert = feld[x][y], markiert = 0;
 
@@ -74,7 +74,7 @@ int fehlerMarkieren(int feld[BREITE][HOEHE], int schutz[BREITE][HOEHE], int x,
  * returns 0 - wenn das feld formal korrekt ist
  * returns n - die Anzahl der Fehler, die gefunden wurden.
  */
-int testSudokuFormal(int feld[BREITE][HOEHE]) {
+int testSudokuFormal(int **feld) {
 	int x = 0, y = 0, f = 0;
 
 	// Fehlerspeicher zurücksetzen (Schutz > 0 ist gelockt, Schutz < 0 ist Fehler)

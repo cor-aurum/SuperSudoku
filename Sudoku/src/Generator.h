@@ -5,7 +5,7 @@
  * Version 1 (2016-12-19) Felix Schütze, Sascha Scherrer, Moritz Koch        *
  *****************************************************************************/
 
-int zahlen[MAX_ZAHL] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+int *zahlen;
 
 void initZufall(int *array) {
 	if (MAX_ZAHL > 1) {
@@ -19,7 +19,7 @@ void initZufall(int *array) {
 	}
 }
 
-void fuelleZufall(int feld[BREITE][HOEHE]) {
+void fuelleZufall(int **feld) {
 	int i, j, k, l = 0;
 	for (i = 0; i < BREITE; i++) {
 		for (j = 0; j < HOEHE; j++) {
@@ -39,10 +39,12 @@ void fuelleZufall(int feld[BREITE][HOEHE]) {
 	loeseSudoku(feld);
 }
 
-void generiereSudoku(int feld[BREITE][HOEHE], int schwierigkeit) {
-
+void generiereSudoku(int **feld, int schwierigkeit) {
 	int x, y, z, mem;
-
+	for(x=0;x<MAX_ZAHL;x++)
+	{
+		zahlen[x]=x+1;
+	}
 	// Feld ausfüllen
 	fuelleZufall(feld);
 

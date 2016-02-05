@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define HOEHE 9
-#define BREITE 9
-#define KACHELHOEHE 3
-#define KACHELBREITE 3
-#define MAX_ZAHL 9
+int HOEHE = 9;
+int BREITE = 9;
+int KACHELHOEHE = 3;
+int KACHELBREITE = 3;
+int MAX_ZAHL = 9;
 
 /* Sudoku.c */
 int main(int argc, char* argv[]); // Main Methode
@@ -14,25 +15,25 @@ int starteGUI();
 
 /* Writer.c */
 int dateiExistiert(char datei[]); // Prüft ob die Datei existiert (1) oder nicht (0)
-int speichereFeld(char datei[]); // Speichert das aktuelle Feld aus dem RAM in eine Datei
+int speichereFeld(char datei[], int y); // Speichert das aktuelle Feld aus dem RAM in eine Datei
 
 /* Reader.c */
 int leseDatei(char *dateipfad);
 
 /* Tester.c */
-int pruefePos(int feld[BREITE][HOEHE], int x, int y, int wert);
-int testSudokuFormal(int feld[BREITE][HOEHE]);
+int pruefePos(int **feld, int x, int y, int wert);
+int testSudokuFormal(int **feld);
 
 /* Writer.c */
 
 /* Solver.c */
-int loese(int feld[BREITE][HOEHE], int x, int y);
-int loeseAbwaerts(int feld[BREITE][HOEHE], int x, int y);
-int eindeutig(int feld[BREITE][HOEHE]);
-int loeseSudoku(int feld[BREITE][HOEHE]);
+int loese(int **feld, int x, int y);
+int loeseAbwaerts(int **feld, int x, int y);
+int eindeutig(int **feld);
+int loeseSudoku(int **feld);
 
 /* Generator.c */
-void generiereSudoku(int feld[BREITE][HOEHE], int schwierigkeit);
+void generiereSudoku(int **feld, int schwierigkeit);
 
 /* GUI */
 

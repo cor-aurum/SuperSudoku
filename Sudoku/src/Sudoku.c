@@ -8,8 +8,7 @@
 #include "Sudoku.h"
 
 /* GLOBALE ARRAYS ************************************************************/
-int feld[BREITE][HOEHE];
-int schutz[BREITE][HOEHE];
+int **feld, **schutz;
 
 /*****************************************************************************/
 #include "Tester.h"
@@ -55,10 +54,36 @@ int starteGUI() {
 	//printFeld();
 	return 1;
 }
+
+int** allokieren(int zeile, int spalte) {
+	int i, j, **matrix;
+	matrix = malloc(zeile * sizeof(int *));
+	if (NULL == matrix) {
+		printf("Kein virtueller RAM mehr vorhanden ... !");
+	}
+	for (i = 0; i < zeile; i++) {
+		matrix[i] = malloc(spalte * sizeof(int));
+		if (NULL == matrix[i]) {
+			printf("Kein Speicher mehr fuer Zeile %d\n", i);
+		}
+	}
+	for (i = 0; i < zeile; i++)
+		for (j = 0; j < spalte; j++)
+			matrix[i][j] = 0;
+	return matrix;
+}
+
 /*
  * main Methode, die darf jemand anderes kommentieren
  */
 int main(int argc, char* argv[]) {
+	feld = allokieren(BREITE, HOEHE);
+	schutz = allokieren(BREITE, HOEHE);
+	zahlen = malloc(MAX_ZAHL * sizeof(int *));
+	if (NULL == zahlen) {
+		printf("Kein virtueller RAM mehr vorhanden ... !");
+	}
+	printf("Speicher allokiert");
 	argumentInterpreter(argc, argv);
 	return EXIT_SUCCESS;
 }

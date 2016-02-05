@@ -10,7 +10,7 @@
 /*
  * Rekursive Methode zum Lösen des Sudokus, wählt die erste gefundene Lösung aus.
  */
-int loese(int feld[BREITE][HOEHE], int x, int y) {
+int loese(int **feld, int x, int y) {
 	int test;
 	if (feld[x][y]) {
 		return (y + 1) < HOEHE ? loese(feld, x, y + 1) :
@@ -36,7 +36,7 @@ int loese(int feld[BREITE][HOEHE], int x, int y) {
 /*
  * Identisch zu "loese", zählt aber ab- statt aufwärts
  */
-int loeseAbwaerts(int feld[BREITE][HOEHE], int x, int y) {
+int loeseAbwaerts(int **feld, int x, int y) {
 	int test;
 	if (feld[x][y]) {
 		return (y + 1) < HOEHE ? loeseAbwaerts(feld, x, y + 1) :
@@ -65,7 +65,7 @@ int loeseAbwaerts(int feld[BREITE][HOEHE], int x, int y) {
  * return 0 wenn das Sudoku nicht eindeutig gelöst werden kann.
  * return 1 wenn das Sudoku eindeutig lösbar ist.
  */
-int eindeutig(int feld[BREITE][HOEHE]) {
+int eindeutig(int **feld) {
 	// 2 Kopien des Feldes anlegen:
 	int feldh[BREITE][HOEHE];
 	int feldr[BREITE][HOEHE];
@@ -99,7 +99,7 @@ int eindeutig(int feld[BREITE][HOEHE]) {
  * returns 0 - Wenn es keine Lösung gibt.
  * returns 1 - Wenn es eine Lösung gibt.
  */
-int loeseSudoku(int feld[BREITE][HOEHE]) {
+int loeseSudoku(int **feld) {
 	return loese(feld, 0, 0);
 }
 
