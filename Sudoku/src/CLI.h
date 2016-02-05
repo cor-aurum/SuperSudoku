@@ -150,11 +150,17 @@ void argumentInterpreter(int argc, char* argv[]) {
 				if (argv[i][2] >= '1' && argv[i][2] <= '9') {
 					wert = argv[i][2] - '0';
 				}
-				KACHELBREITE=wert;
-				KACHELHOEHE=wert;
-				HOEHE=wert*wert;
-				BREITE=wert*wert;
-				MAX_ZAHL=wert*wert;
+				KACHELBREITE = wert;
+				KACHELHOEHE = wert;
+				HOEHE = wert * wert;
+				BREITE = wert * wert;
+				MAX_ZAHL = wert * wert;
+				feld = allokieren(BREITE, HOEHE);
+				schutz = allokieren(BREITE, HOEHE);
+				zahlen = malloc(MAX_ZAHL * sizeof(int *));
+				if (NULL == zahlen) {
+					printf("Kein virtueller RAM mehr vorhanden ... !");
+				}
 				break;
 			}
 			default:

@@ -83,7 +83,6 @@ int main(int argc, char* argv[]) {
 	if (NULL == zahlen) {
 		printf("Kein virtueller RAM mehr vorhanden ... !");
 	}
-	printf("Speicher allokiert");
 	argumentInterpreter(argc, argv);
 	return EXIT_SUCCESS;
 }
