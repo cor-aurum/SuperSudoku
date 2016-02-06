@@ -161,6 +161,51 @@ char asFeld(char c) {
 }
 
 /*
+ * Diese Methode gibt ein Feuerwerk in der Konsole aus
+ */
+void printFeuerwerk() {
+	printf("                                               ####         \n");
+	printf("    #                          #         ####### #######    \n");
+	printf("  ######         ##          ######      #####     #####    \n");
+	printf(" #######        ####         ######       ##         ##     \n");
+	printf("  #####     #####  #####      ####       #######  ######    \n");
+	printf("  ## ##      ##      ##       #  #            ######        \n");
+	printf("       ##    ##      ##           ##            ##          \n");
+	printf("       ###  #####  #####          ###                       \n");
+	printf("      ####      #####            ####                       \n");
+	printf("    ###  ###     ##            ########                     \n");
+	printf("######    #######          #################                \n");
+	printf("######    ########         #################         ###    \n");
+	printf("    ###  ###                    #######         ############\n");
+	printf("      ####                       ####           #####   ####\n");
+	printf("       ###          ##            ###            ##       # \n");
+	printf("        #         ######          ##            #####   ####\n");
+	printf("             ##    ####                         ############\n");
+	printf("            ####   ####                              ##     \n");
+	printf("        ##### #####                           #             \n");
+	printf("         ##      ##             ##         # ### #          \n");
+	printf("         ##     ##            #####        #######          \n");
+	printf("        ####    ###       ######  ######    #####           \n");
+	printf("        ##### #####       ##         ##     #####           \n");
+	printf("            ####           ##       ##                      \n");
+	printf("             ##           ###        ##                     \n");
+	printf("                          ######  ######                    \n");
+	printf("             ##               #####               ##        \n");
+	printf("         ##########             ##                ##        \n");
+	printf("          ########                             ########     \n");
+	printf("           ######              #######          ######      \n");
+	printf("                     ##       ########          ######      \n");
+	printf("                    ####        #####                       \n");
+	printf("                    ####                                    \n");
+	printf("              ################                              \n");
+	printf("              ################                              \n");
+	printf("                    ####                                    \n");
+	printf("                    ####                                    \n");
+	printf("                     ##                                     \n");
+	printf("g für ein neues Sudoku                                      \n");
+}
+
+/*
  * Diese Methode schreibt in den standartout eine gut lesbare Darstellung des Sudokus
  */
 void printFeld() {
@@ -355,6 +400,7 @@ int eingabeLoop() {
 			break;
 		case 'g': // Sudoku generieren
 		{
+			printFeld();
 			meldungAusgeben("Schwierigkeitsstufe (1-9) angeben:");
 			fflush(stdout);
 			int t;
@@ -458,7 +504,10 @@ int eingabeLoop() {
 #endif
 				system(CLEAR);
 				testSudokuFormal(feld);
-				printFeld();
+				if (!pruefeVollstaendig(feld))
+					printFeld();
+				else
+					printFeuerwerk();
 			}
 			if (tmp == ' ' || tmp == '0') {
 #if !defined(WIN32)

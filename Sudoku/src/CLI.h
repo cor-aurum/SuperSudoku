@@ -24,6 +24,9 @@ void o_help() {
 	printf("      -h       Hilfe ausgeben.                                          \n");
 	printf("      -u       About-Page ausgeben.                                     \n");
 	printf("      -k       Gibt an, ob das Sudoku formale Fehler hat.               \n");
+	printf("      -b<N>[M] Initialisiert das Sudoku mit der Kachelbreite N          \n");
+	printf("                     und N*N oder, wenn angegeben M Kacheln             \n");
+	printf("                     Achtung: Große Sudokus können SEHR langsam sein    \n");
 	printf("      -o       Öffnet ein Sudoku in der Oberfläche.                     \n");
 	printf("               Erlaubt die Zusätzlich Parameter l,y,x,a,b\n             \n");
 	printf("      -l|l     Löst das Sudoku, wenn es lösbar ist.                     \n");
@@ -147,14 +150,20 @@ void argumentInterpreter(int argc, char* argv[]) {
 			}
 			case 'b': {
 				int wert = 3;
+				int seite = wert * wert;
 				if (argv[i][2] >= '1' && argv[i][2] <= '9') {
 					wert = argv[i][2] - '0';
+					seite = wert * wert;
+					if (argv[i][3] >= wert + '0' && argv[i][3] <= '9') {
+						seite = wert * (argv[i][3] - '0');
+					}
 				}
+
 				KACHELBREITE = wert;
 				KACHELHOEHE = wert;
-				HOEHE = wert * wert;
-				BREITE = wert * wert;
-				MAX_ZAHL = wert * wert;
+				HOEHE = seite;
+				BREITE = seite;
+				MAX_ZAHL = seite;
 				feld = allokieren(BREITE, HOEHE);
 				schutz = allokieren(BREITE, HOEHE);
 				zahlen = malloc(MAX_ZAHL * sizeof(int *));

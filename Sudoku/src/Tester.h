@@ -33,6 +33,25 @@ int pruefePos(int **feld, int x, int y, int wert) {
 	return fehler;
 }
 
+/*
+ * Gibt wahr zurück, wenn alle Felder des Sudokus korrekt ausgefüllt sind
+ */
+int pruefeVollstaendig(int **feld)
+{
+	int i,j;
+	if(testSudokuFormal(feld))
+		return 0;
+	for(i=0;i<BREITE;i++)
+	{
+		for(j=0;j<HOEHE;j++)
+		{
+			if(!feld[i][j])
+				return 0;
+		}
+	}
+	return 1;
+}
+
 int fehlerMarkieren(int **feld, int **schutz, int x,
 		int y, int ignSchutz) {
 	int aktX = 0, aktY = 0, wert = feld[x][y], markiert = 0;

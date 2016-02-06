@@ -24,6 +24,7 @@ int leseDatei(char *dateipfad);
 /* Tester.c */
 int pruefePos(int **feld, int x, int y, int wert);
 int testSudokuFormal(int **feld);
+int pruefeVollstaendig(int **feld);
 
 /* Writer.c */
 
