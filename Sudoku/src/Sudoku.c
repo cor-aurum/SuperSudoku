@@ -59,12 +59,12 @@ int** allokieren(int zeile, int spalte) {
 	int i, j, **matrix;
 	matrix = malloc(zeile * sizeof(int *));
 	if (NULL == matrix) {
-		printf("Kein virtueller RAM mehr vorhanden ... !");
+		fprintf(stderr,"Nicht genügend Speicher vorhanden\n");
 	}
 	for (i = 0; i < zeile; i++) {
 		matrix[i] = malloc(spalte * sizeof(int));
 		if (NULL == matrix[i]) {
-			printf("Kein Speicher mehr fuer Zeile %d\n", i);
+			fprintf(stderr,"Nicht genügend Speicher vorhanden\n");
 		}
 	}
 	for (i = 0; i < zeile; i++)
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 	schutz = allokieren(BREITE, HOEHE);
 	zahlen = malloc(MAX_ZAHL * sizeof(int *));
 	if (NULL == zahlen) {
-		printf("Kein virtueller RAM mehr vorhanden ... !");
+		fprintf(stderr,"Nicht genügend Speicher vorhanden\n");
 	}
 	argumentInterpreter(argc, argv);
 	return EXIT_SUCCESS;

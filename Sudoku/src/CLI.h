@@ -24,7 +24,7 @@ void o_help() {
 	printf("      -h       Hilfe ausgeben.                                          \n");
 	printf("      -u       About-Page ausgeben.                                     \n");
 	printf("      -k       Gibt an, ob das Sudoku formale Fehler hat.               \n");
-	printf("      -b<N>[M] Initialisiert das Sudoku mit der Kachelbreite N          \n");
+	printf("      -bN[M]   Initialisiert das Sudoku mit der Kachelbreite N,         \n");
 	printf("                     und N*N oder, wenn angegeben M Kacheln             \n");
 	printf("                     Achtung: Große Sudokus können SEHR langsam sein    \n");
 	printf("      -o       Öffnet ein Sudoku in der Oberfläche.                     \n");
@@ -41,7 +41,7 @@ void o_help() {
 void argumentInterpreter(int argc, char* argv[]) {
 	char *datei = "";
 	char *datei2 = "";
-	int i, j, k, l;
+	int i, j, k;
 	if (argc == 1) {
 		starteGUI();
 	}

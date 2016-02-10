@@ -104,7 +104,7 @@ int getSpalten() {
 #define RIGHT 77
 #define LEFT 75
 #endif
-#define LEGENDE 13
+#define LEGENDE 15
 int setFeld(int x, int y, int eingabe, int lock);
 int legende = 0;
 int zeichensatz = 0;
@@ -138,7 +138,7 @@ char* getJoke() {
 	case 1:
 		return "Um Rekursion zu verstehen, muss man zunächst Rekursion verstehen.";
 	case 2:
-		return "w.z.b.w. := was zu bezweifeln wäre";
+		return "Fragt ein Physiker einen Mathematiker:\nWas ist eigentlich ein 11-Dimensionaler Raum? Ich kann mir darunter nichts vorstellen.\nDer Mathematiker antwortet:\nGanz einfach, stell dir einen n-Dimensionalen Raum vor, und setze für n 11 ein. ";
 	case 3:
 		return "Die meisten Menschen haben überdurchschnittlich viele Beine!";
 	case 4:
@@ -154,9 +154,10 @@ char* getJoke() {
  * Diese Methode gibt einen Wert im Sudoku als Druckbares Zeichen zurück.
  */
 char asFeld(char c) {
-	if (c == 0) {
+	if (c == 0)
 		return ' ';
-	}
+	if (c > 9)
+		return c - 10 + 'A';
 	return c + 48;
 }
 
@@ -257,17 +258,21 @@ void printFeld() {
 		}
 		printf("%s", zeichen[zeichensatz][12]);
 		printf("    ");
-		char *hilfe[LEGENDE] = { "Pfeiltasten/wasd: Cursor bewegen",
-				"1-9: Zahl eintragen", "Leerzeichen: Zahl löschen", "l: Spiel lösen",
-				"p: Spiel speichern", "o: Spiel laden", "c: Spiel leeren",
-				"h: Nächste Hilfeseite", "e: Sudoku auf Eindeutigkeit prüfen",
-				"x: Schreibschutz aufheben", "g: Sudoku generieren", "u: Über",
-				"q: Programm beenden" };
+		char *hilfe[LEGENDE] = { "Pfeiltasten/wasd: Cursor bewegen", "DUMMY",
+				"Leerzeichen: Zahl löschen", "l: Spiel lösen", "p: Spiel speichern",
+				"o: Spiel laden", "c: Spiel leeren", "h: Nächste Hilfeseite",
+				"e: Sudoku auf Eindeutigkeit prüfen", "t: Zeichentabelle aufrufen",
+				"y: Schreibschutz setzen", "x: Schreibschutz aufheben",
+				"g: Sudoku generieren", "u: Über", "q: Programm beenden" };
 		int nummer = legende * HOEHE + i;
 		if (nummer < LEGENDE && getSpalten() > BREITE * 4 + 40) {
-			printf("%s", hilfe[nummer]);
+			if (nummer != 1) {
+				printf("%s", hilfe[nummer]);
+			} else {
+				printf("1-%c: Zahl eintragen",
+						MAX_ZAHL < 10 ? MAX_ZAHL + '0' : MAX_ZAHL - 10 + 'A');
+			}
 		}
-
 		printf("\n");
 
 	}
@@ -369,6 +374,58 @@ int eingabeLoop() {
 			meldungAusgeben("Gespeichert");
 		}
 			break;
+		case 't': {
+			//printFeld();
+			//fflush(stdout);
+			int i;
+			printf("%s", zeichen[zeichensatz][0]);
+			for (i = 0; i < MAX_ZAHL; i++) {
+				printf("%s", zeichen[zeichensatz][18]);
+			}
+			printf("%s", zeichen[zeichensatz][11]);
+			gotoxy(x, y + 1);
+			printf("%s", zeichen[zeichensatz][12]);
+			for (i = 0; i < MAX_ZAHL; i++) {
+				printf(" %c ", asFeld(i + 1));
+			}
+			printf("%s", zeichen[zeichensatz][12]);
+			gotoxy(x, y + 2);
+			printf("%s", zeichen[zeichensatz][14]);
+			for (i = 0; i < MAX_ZAHL; i++) {
+				printf("%s", zeichen[zeichensatz][18]);
+			}
+			printf("%s", zeichen[zeichensatz][17]);
+			gotoxy(x + 2, y + 1);
+			int pos = 0, weiter = 1;
+			while (weiter) {
+				char tmp2 = getch();
+				switch (tmp2) {
+				case LEFT:
+					if (pos > 0) {
+						pos--;
+						gotoxy(x + 2 + pos * 3, y + 1);
+					}
+					break;
+				case RIGHT:
+					if (pos < MAX_ZAHL - 1) {
+						pos++;
+						gotoxy(x + 2 + pos * 3, y + 1);
+					}
+					break;
+				case ' ':
+#if !defined(WIN32)
+					setFeld((y - 2) / 2, (x - 3) / 4, pos + 1, 0);
+#else
+					setFeld((y - 1) / 2, (x - 2) / 4, pos+1, 0);
+#endif
+					testSudokuFormal(feld);
+					weiter = 0;
+					break;
+				}
+			}
+			printFeld();
+		}
+			break;
 		case 'o': { // Öffnen
 			printFeld();
 			meldungAusgeben("Öffnen: Speicherort eingeben:");
@@ -427,30 +484,6 @@ int eingabeLoop() {
 				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
 			break;
-#ifdef NO
-			case 'k': // Sudoku überprüfen (Ist es formal korrekt?)
-			//printFeld();
-			//gotoxy(1, HOEHE * 2 + 3);
-			if (!testSudokuFormal(feld)) {
-				printFeld();
-				meldungAusgeben("Sudoku ist korrekt");
-			} else {
-				printFeld();
-				meldungAusgeben("Sudoku ist nicht korrekt");
-			}
-			break;
-
-			case 'n': // Anzeige der Befehlsoptionen: Vor
-			if (legende > 0)
-			legende--;
-			printFeld();
-			break;
-			case 'm':// Anzeige der Befehlsoptionen: Zurück
-			if (legende < (LEGENDE / HOEHE))
-			legende++;
-			printFeld();
-			break;
-#endif
 		case 'h': // Anzeige der Befehlsoptionen: Zurück
 			if (legende < (LEGENDE / HOEHE))
 				legende++;
