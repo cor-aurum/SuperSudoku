@@ -15,11 +15,7 @@ int speichereFeld(char datei[], int y) {
 		int i, j;
 		for (i = 0; i < HOEHE; i++) {
 			for (j = 0; j < BREITE; j++) {
-				if (feld[i][j] == 0) {
-					fputc(' ', fp);
-				} else {
-					fputc(feld[i][j] + 48, fp);
-				}
+				fputc(asFeld(feld[i][j]), fp);
 			}
 			fputc(10, fp);
 

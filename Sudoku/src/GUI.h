@@ -167,6 +167,7 @@ char asFeld(int c) {
  * Diese Methode gibt ein Feuerwerk in der Konsole aus
  */
 void printFeuerwerk() {
+	system(CLEAR);
 	printf("                                               ####         \n");
 	printf("    #                          #         ####### #######    \n");
 	printf("  ######         ##          ######      #####     #####    \n");
@@ -425,7 +426,10 @@ int eingabeLoop() {
 					break;
 				}
 			}
-			printFeld();
+			if (!pruefeVollstaendig(feld))
+				printFeld();
+			else
+				printFeuerwerk();
 		}
 			break;
 		case 'o': { // Öffnen
@@ -537,7 +541,7 @@ int eingabeLoop() {
 #else
 				setFeld((y - 1) / 2, (x - 2) / 4, tmp - '0', 0);
 #endif
-				system(CLEAR);
+
 				testSudokuFormal(feld);
 				if (!pruefeVollstaendig(feld))
 					printFeld();
