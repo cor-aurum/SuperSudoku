@@ -8,24 +8,12 @@
 /* HILFSFUNKTIONEN (Präfix 'rh_' für reader heĺper) ***************************/
 
 /*
- * Hilfsfunktion rh_zaehlerReset(int[] array, int laenge, int wert)
- * Setzt alle elemente des int-arrays auf den angegebenen Wert
- * int[] array - das array (nur eindimensionale arrays)
- * laenge - die anzahl der Elemente in dem Array
- * wert - der Wert, auf den jedes Feld gesetzt wird
- */
-void rh_resetArray1D(int array[], int laenge, int wert) {
-	int i = 0;
-	for (i = 0; i < laenge; i++)
-		array[i] = wert;
-}
-
-/*
  * Hilfsfunktion rh_resetZaehler(int zaehler[]);
  * Setzt alle Werte von zaehler (muss übergeben werden) auf 0.
  */
 void rh_resetZaehler(int zaehler[]) {
-	rh_resetArray1D(zaehler, MAX_ZAHL + 1, 0);
+	for (int i = 0; i <= MAX_ZAHL; i++)
+		zaehler[i] = 0;
 }
 
 /*
@@ -69,23 +57,35 @@ int rh_inkrementZaehler(int zaehler[], int wert) {
  * returns n - Anzahl der Fehler, die gefunden und korrigiert wurden.
  */
 int rh_leseDateiZeichenweise(int **feld, FILE *ptr_file) {
-	int posX = 0, posY = 0, anzahlZeichen = 0, zeichen = 0, fehler = 0;
+	int posX = 0, posY = 0, anzahlZeichen = 0, zeichen = 0, fehler = 0,
+			zahl = 0;
 
 	while ((zeichen = fgetc(ptr_file)) != EOF) {
 		anzahlZeichen++;
 
 		if (posX < BREITE && posY < HOEHE) {
 			/* Zeichen aus Datei in feld übersetzen */
-			if (zeichen == ' ') feld[posX++][posY] = 0; // Lerrzeichen -> 0
-			else if (zeichen >= '0' && zeichen <= '9') feld[posX++][posY] = zeichen - '0'; // Ziffer -> Ziffer
-			else if(MAX_ZAHL >= 10){	// Buchstaben (Basis MAX_ZAHL) -> Zahl (Basis 10)
+			if (zeichen == ' ')
+				zahl = 0; // Lerrzeichen -> 0
+			else if (zeichen >= '0' && zeichen <= '9')
+				zahl = zeichen - '0'; // Ziffer -> Ziffer
+			else if (MAX_ZAHL >= 10) {
+				// Buchstaben (Basis MAX_ZAHL) -> Zahl (Basis 10)
 				if (zeichen >= 'A' && zeichen <= 'Z')
-					feld[posX++][posY] = zeichen - 'A' + 10;
-				else if(zeichen >= 'a' && zeichen <= 'z')
-					feld[posX++][posY] = zeichen - 'a' + 10;
+					zahl = zeichen - 'A' + 10;
+				else if (zeichen >= 'a' && zeichen <= 'z')
+					zahl = zeichen - 'a' + 10;
 				else
 					fehler++;
 			}
+
+			// an richtige Feldposition setzen
+			feld[posX++][posY] = fehler ? 0 : zahl;
+
+			// Fehler, wenn Zahl größer als maximal erlaubte Zahl ist
+			if (zahl > MAX_ZAHL)
+				fehler++;
+
 		} else if (zeichen == '\n') {
 			/* Zeilenumbrüche behandeln */
 			if (posX < 1) {
@@ -131,7 +131,7 @@ int leseDatei(char *dateipfad) {
 		return -2;
 
 	/* Datei in array einlesen */
-	int **einleseFeld=allokieren(HOEHE,BREITE);
+	int **einleseFeld = allokieren(HOEHE, BREITE);
 	int einleseStatus = rh_leseDateiZeichenweise(einleseFeld, ptr_datei);
 	fclose(ptr_datei);
 
@@ -159,11 +159,13 @@ int leseDatei(char *dateipfad) {
 			setFeld(i, j, einleseFeld[j][i], einleseFeld[j][i]);
 		}
 	}
-	for (i = 0; i < HOEHE; i++)
-		{
-			free(einleseFeld[i]);
-		}
-		free(einleseFeld);
+
+	/* Speicher freigeben */
+	for (i = 0; i < HOEHE; i++) {
+		free(einleseFeld[i]);
+	}
+	free(einleseFeld);
+
 	return einleseStatus;
 }
 

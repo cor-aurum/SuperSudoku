@@ -67,7 +67,7 @@ void argumentInterpreter(int argc, char* argv[]) {
 				break;
 			case 'o':
 				leseDatei(datei);
-				for (j = 1; j < strlen(argv[i]); j++) {
+				for (j = 1; j < (int) strlen(argv[i]); j++) {
 					if (argv[i][j] == ' ')
 						break;
 					if (argv[i][j] == 'x') {
