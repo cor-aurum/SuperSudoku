@@ -1,14 +1,18 @@
 
 /*
  * Prüft für die durch x und y gegebene Position, ob der wert hier eingesetzt werden darf
- * returns 0 - Wert darf eingesetzt werden
- * returns n - Wert anzahl an Fehlern, die ein einsetzen des Wertes verursachen würde.
+ * returns -1 - Wert liegt nicht im zugelassenen Bereich
+ * returns  0 - Wert darf eingesetzt werden
+ * returns  n - Wert anzahl an Fehlern, die ein einsetzen des Wertes verursachen würde.
  */
 int pruefePos(int **feld, int x, int y, int wert) {
 	int fehler = 0, aktX, aktY;
 
 	if (wert == 0)
 		return 0; // 0 darf immer eingesetzt werden.
+
+	if (wert > MAX_ZAHL)
+		return -1; // Der Wert liegt nicht imzugelassenen Bereich
 
 	// In Zeile
 	for (aktX = 0; aktX < BREITE; aktX++)
