@@ -8,33 +8,6 @@
 /* HILFSFUNKTIONEN (Präfix 'rh_' für reader heĺper) ***************************/
 
 /*
- * Hilfsfunktion rh_fehlerZaehler(int typ, anzahlNeueFehler)
- * Zählt die Anzahl an Fehlern, die während des Einlesens gefunden werden.
- * return -1 - wenn der Typ nicht im zugelassenen Wertebereich ist.
- * return n - die aktuelle anzahl an Fehlern des angegebenen Typ
- */
-int rh_fehlerZaehler(int typ, int anzahlNeueFehler) {
-	static int anzahlFehler[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	//printf("Fehlerzaehler Typ=%d, Inkrement=%d \n", typ, anzahlNeueFehler);
-	if (typ >= 0 && typ <= 8) {
-		anzahlFehler[typ] += anzahlNeueFehler;
-		return anzahlFehler[typ];
-	}
-	return -1;
-}
-
-/*
- * Hilfsfunktion rh_fehlerZaehlerReset()
- * Setzt den fehlerZaehler zurück.
- * Siehe rh_fehlerZaehler. 
- */
-void rh_fehlerZaehlerReset() {
-	int typ;
-	for (typ = 0; typ < 8; typ++)
-		rh_fehlerZaehler(typ, -rh_fehlerZaehler(typ, 0));
-}
-
-/*
  * Hilfsfunktion rh_zaehlerReset(int[] array, int laenge, int wert)
  * Setzt alle elemente des int-arrays auf den angegebenen Wert
  * int[] array - das array (nur eindimensionale arrays)
@@ -69,7 +42,6 @@ int rh_inkrementZaehler(int zaehler[], int wert) {
 		return ++zaehler[wert];
 	else {
 		/* Unerwartetes Zeichen */
-		rh_fehlerZaehler(6, 1);
 		return 0;
 	}
 }
@@ -97,33 +69,34 @@ int rh_inkrementZaehler(int zaehler[], int wert) {
  * returns n - Anzahl der Fehler, die gefunden und korrigiert wurden.
  */
 int rh_leseDateiZeichenweise(int **feld, FILE *ptr_file) {
-	char zeichen = 0;
-	int posX = 0, posY = 0, anzahlZeichen = 0;
-//	int erwarteteZeichenzahl = HOEHE * BREITE + HOEHE;
+	int posX = 0, posY = 0, anzahlZeichen = 0, zeichen = 0, fehler = 0;
 
 	while ((zeichen = fgetc(ptr_file)) != EOF) {
 		anzahlZeichen++;
 
 		if (posX < BREITE && posY < HOEHE) {
 			/* Zeichen aus Datei in feld übersetzen */
-			if (zeichen == ' ')
-				feld[posX++][posY] = 0;
-			else if (zeichen >= '0' && zeichen <= '9')
-				feld[posX++][posY] = zeichen - '0';
+			if (zeichen == ' ') feld[posX++][posY] = 0; // Lerrzeichen -> 0
+			else if (zeichen >= '0' && zeichen <= '9') feld[posX++][posY] = zeichen - '0'; // Ziffer -> Ziffer
+			else if(MAX_ZAHL >= 10){	// Buchstaben (Basis MAX_ZAHL) -> Zahl (Basis 10)
+				if (zeichen >= 'A' && zeichen <= 'Z')
+					feld[posX++][posY] = zeichen - 'A' + 10;
+				else if(zeichen >= 'a' && zeichen <= 'z')
+					feld[posX++][posY] = zeichen - 'a' + 10;
+				else
+					fehler++;
+			}
 		} else if (zeichen == '\n') {
 			/* Zeilenumbrüche behandeln */
 			if (posX < 1) {
 				/* Zeile wird als irrelevant betrachtet, da sie keine gültigen Zeichen enthält */
-				rh_fehlerZaehler(1, 1); // korrigierteFehler++
-				rh_fehlerZaehler(2, 1); // irrelevanteZeilen++
+				fehler++;
 			} else {
 				if (posX != BREITE) {
-					rh_fehlerZaehler(1, 1); // korrigierteFehler++
-					rh_fehlerZaehler(3, 1); // unpassendeZeichenzahl++
+					fehler++;
 					/* Falsche Anzahl an zeichen korrigieren */
 					while (posX < BREITE && posY < HOEHE) {
 						feld[posX++][posY] = 0;
-						rh_fehlerZaehler(4, 1); // ersetzteZeichen++
 					}
 				}
 
@@ -132,15 +105,11 @@ int rh_leseDateiZeichenweise(int **feld, FILE *ptr_file) {
 				posX = 0;
 			}
 		} else {
-			rh_fehlerZaehler(1, 1); // korrigierteFehler++
-			rh_fehlerZaehler(5, 1); // ignorierteZeichen++
+			fehler++;
 		}
 	}
 
-//	printf("Datei: %d von erwarteten %d Zeichen eingelesen.\n", anzahlZeichen,
-//			erwarteteZeichenzahl);
-
-	return rh_fehlerZaehler(1, 0);
+	return fehler;
 }
 
 /* 
