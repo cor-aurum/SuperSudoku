@@ -451,7 +451,8 @@ int eingabeLoop() {
 			}
 		}
 			break;
-		case 'l': // Sudoku lösen
+		case 'l':
+			// Sudoku lösen
 			printFeld();
 			if (!loeseSudoku(feld)) {
 				meldungAusgeben("Sudoku ist nicht lösbar");
@@ -459,7 +460,8 @@ int eingabeLoop() {
 				printFeld();
 			}
 			break;
-		case 'g': // Sudoku generieren
+		case 'g':
+			// Sudoku generieren
 		{
 			printFeld();
 			meldungAusgeben("Schwierigkeitsstufe (1-9) angeben:");
@@ -488,14 +490,16 @@ int eingabeLoop() {
 				meldungAusgeben("Sudoku ist nicht korrekt");
 			}
 			break;
-		case 'h': // Anzeige der Befehlsoptionen: Zurück
+		case 'h':
+			// Anzeige der Befehlsoptionen: Zurück
 			if (legende < (LEGENDE / HOEHE))
 				legende++;
 			else
 				legende = 0;
 			printFeld();
 			break;
-		case 'c': // Sudoku leeren (Setzt Feld und Schutz zurück)
+		case 'c':
+			// Sudoku leeren (Setzt Feld und Schutz zurück)
 			for (i = 0; i < BREITE; i++) {
 				for (j = 0; j < HOEHE; j++) {
 					feld[i][j] = 0;
@@ -504,7 +508,8 @@ int eingabeLoop() {
 			}
 			printFeld();
 			break;
-		case 'x': // Schutz aufheben
+		case 'x':
+			// Schutz aufheben
 			for (i = 0; i < BREITE; i++) {
 				for (j = 0; j < HOEHE; j++) {
 					/* schutz > 0 ist lock, schutz < 0 ist fehler */
@@ -514,7 +519,8 @@ int eingabeLoop() {
 			}
 			printFeld();
 			break;
-		case 'y': // Aktuelle Felder schützen
+		case 'y':
+			// Aktuelle Felder schützen
 			for (i = 0; i < BREITE; i++)
 				for (j = 0; j < HOEHE; j++)
 					/* schutz > 0 ist lock, schutz < 0 ist fehler */
@@ -522,10 +528,12 @@ int eingabeLoop() {
 						schutz[i][j] = feld[i][j];
 			printFeld();
 			break;
-		case 'u': // Über: Zeigt eine Info über das Programm an
+		case 'u':
+			// Über: Zeigt eine Info über das Programm an
 			printUber(1);
 			break;
-		case 'j': // Macht nichts besonderese :)
+		case 'j':
+			// Macht nichts besonderese :)
 			printFeld();
 			meldungAusgeben(getJoke());
 			break;
