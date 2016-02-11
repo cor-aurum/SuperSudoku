@@ -132,7 +132,7 @@ char* getJoke() {
 	time_t t;
 	time(&t);
 	srand((unsigned int) t);
-	switch (rand() % 7) {
+	switch (rand() % 8) {
 	case 0:
 		return "Welches Tier kann addieren? -- Ein Oktoplus.";
 	case 1:
@@ -145,6 +145,8 @@ char* getJoke() {
 		return "Was hat Windows mit einem U-Boot gemeinsam? Kaum macht man ein Fenster auf, fangen die Probleme an.";
 	case 5:
 		return "Wieviele Programmierer braucht man, um eine Glühbirne zu wechseln? Keinen, das ist ein Hardware-Problem!";
+	case 6:
+		return "42 ist die größte Primzahl mit mehr als zwei Teilern.";
 	default:
 		return "Wie nennt man ein Rind mit Root-Rechten? Sudo ku";
 	}
@@ -153,12 +155,12 @@ char* getJoke() {
 /*
  * Diese Methode gibt einen Wert im Sudoku als Druckbares Zeichen zurück.
  */
-char asFeld(char c) {
+char asFeld(int c) {
 	if (c == 0)
 		return ' ';
 	if (c > 9)
-		return c - 10 + 'A';
-	return c + 48;
+		return (char)(c - 10 + 'A');
+	return (char)(c + 48);
 }
 
 /*
@@ -334,7 +336,7 @@ int eingabeLoop() {
 	printFeld();
 	gotoxy(x, y);
 	while (1) {
-		char tmp = getch();
+		char tmp = (char) getch();
 		switch (tmp) {
 		case 'w': // Kästchen hoch
 		case UP:
@@ -375,7 +377,7 @@ int eingabeLoop() {
 			meldungAusgeben("Gespeichert");
 		}
 			break;
-		case 't': {
+		case 't': { // Zeichentabelle an aktueller Posiiton anzeigen
 			//printFeld();
 			//fflush(stdout);
 			int i;
@@ -399,7 +401,7 @@ int eingabeLoop() {
 			gotoxy(x + 2, y + 1);
 			int pos = 0, weiter = 1;
 			while (weiter) {
-				char tmp2 = getch();
+				char tmp2 = (char) getch();
 				switch (tmp2) {
 				case LEFT:
 					if (pos > 0) {
@@ -477,7 +479,7 @@ int eingabeLoop() {
 			printFeld();
 			break;
 		}
-		case 'e':
+		case 'e': // Eindeutigkeit prüfen
 			printFeld();
 			if (!testSudokuFormal(feld)) {
 				if (eindeutig(feld)) {
