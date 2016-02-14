@@ -108,11 +108,11 @@ int getSpalten() {
 int setFeld(int x, int y, int eingabe, int lock);
 int legende = 0;
 int zeichensatz = 0;
-char *zeichen[3][20] = { { "╔", "╟", "╠", "╬", "╫", "┼", "╪", "\u2564", "╦", "\u2562",
-		"╣", "╗", "║", "│", "╚", "╧", "╩", "╝", "═══", "───" }, { " ", "|", "|", "+", "|",
-		"+", "-", "-", "-", "|", "|", " ", "|", " ", " ", "-", "-", " ", "---", "   " }, {
-		"#", "#", "#", "#", "#", "+", "#", "#", "#", "#", "#", "#", "#", "|", "#", "#",
-		"#", "#", "###", "---" } };
+char *zeichen[3][20] = {
+		{ "╔", "╟", "╠", "╬", "╫", "┼", "╪", "\u2564", "╦", "\u2562", "╣", "╗", "║", "│", "╚", "╧", "╩", "╝", "═══", "───" },
+		{ " ", "|", "|", "+", "|", "+", "-", "-", "-", "|", "|", " ", "|", " ", " ", "-", "-", " ", "---", "   " },
+		{ "#", "#", "#", "#", "#", "+", "#", "#", "#", "#", "#", "#", "#", "|", "#", "#", "#", "#", "###", "---" }
+};
 
 /*
  * Gibt eine Nachricht unterhalb des Spielfeldes aus
@@ -215,8 +215,10 @@ void printFeuerwerk() {
 void printFeld() {
 	system(CLEAR);
 	if (getSpalten() < BREITE * 4 + 1) {
-		printf("Nicht genug Platz vorhanden, das ist ein Fehler!");
-		return;
+		fprintf(stderr, "Das Konsolenfenster ist schmaler als das Sudokufeld. "
+				"Daher kann das Feld nicht angezeigt werden. "
+				"Wählen sie ein größeres Konsolenfenster oder eine kleinere Kachelgröße.");
+		exit(EXIT_FAILURE);
 	}
 	int i, j;
 	for (i = 0; i < HOEHE; i++) {
