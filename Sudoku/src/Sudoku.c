@@ -25,7 +25,6 @@ int **feld, **schutz;
  * Gibt folgende Werte zurück:
  * -1: Eingabe nicht erfolgreich, da Schreiblock vorliegt.
  * -2: Eingabe nicht erfolgreich, da eingabe zu groß
- * -3: Eingabe widerspricht Sudokuregeln (TODO)
  *  1: Eingabe erfolgreich
  */
 int setFeld(int x, int y, int eingabe, int lock) {
@@ -59,12 +58,12 @@ int** allokieren(int zeile, int spalte) {
 	int i, j, **matrix;
 	matrix = malloc(zeile * sizeof(int *));
 	if (NULL == matrix) {
-		fprintf(stderr,"Nicht genügend Speicher vorhanden\n");
+		fprintf(stderr, "Nicht genügend Speicher vorhanden\n");
 	}
 	for (i = 0; i < zeile; i++) {
 		matrix[i] = malloc(spalte * sizeof(int));
 		if (NULL == matrix[i]) {
-			fprintf(stderr,"Nicht genügend Speicher vorhanden\n");
+			fprintf(stderr, "Nicht genügend Speicher vorhanden\n");
 		}
 	}
 	for (i = 0; i < zeile; i++)
@@ -74,14 +73,15 @@ int** allokieren(int zeile, int spalte) {
 }
 
 /*
- * main Methode, die darf jemand anderes kommentieren
+ * main Methode, allokiert Speicher für das Feld, für den Schutzspeicher und für das Zahlenarray,
+ * welches beim Generieren benötigt wird. Anschließend wird das Command Line Interface gestartet.
  */
 int main(int argc, char* argv[]) {
 	feld = allokieren(BREITE, HOEHE);
 	schutz = allokieren(BREITE, HOEHE);
 	zahlen = malloc(MAX_ZAHL * sizeof(int *));
 	if (NULL == zahlen) {
-		fprintf(stderr,"Nicht genügend Speicher vorhanden\n");
+		fprintf(stderr, "Nicht genügend Speicher vorhanden\n");
 	}
 	argumentInterpreter(argc, argv);
 	return EXIT_SUCCESS;
