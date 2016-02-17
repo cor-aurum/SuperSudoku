@@ -215,9 +215,9 @@ void printFeuerwerk() {
 void printFeld() {
 	system(CLEAR);
 	if (getSpalten() < BREITE * 4 + 1) {
-		fprintf(stderr, "Das Konsolenfenster ist schmaler als das Sudokufeld. "
-				"Daher kann das Feld nicht angezeigt werden. "
-				"Wählen sie ein größeres Konsolenfenster oder eine kleinere Kachelgröße.");
+		fprintf(stderr, "Das Konsolenfenster ist schmaler als das Sudokufeld. \n"
+				"Daher kann das Feld nicht angezeigt werden. \n"
+				"Wählen sie ein größeres Konsolenfenster oder eine kleinere Kachelgröße.\n");
 		exit(EXIT_FAILURE);
 	}
 	int i, j;
