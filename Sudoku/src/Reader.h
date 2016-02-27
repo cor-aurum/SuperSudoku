@@ -1,18 +1,17 @@
 /******************************************************************************
  * SUDOKU ./reader.c                                                          *
- * Einlesefunktion für Textdateien mit Sudoku Rätzeln gemäß der Vorgaben      *
- * Ungetestet nicht  produktionsreif, Fehlerkorrektur noch verbessbar         *
+ * Einlesefunktion für Textdateien mit Sudoku Rätseln gemäß der Vorgaben      *
  * Version 2 (2016-01-29) Sascha Scherrer <dhbw.scherrer@gmail.com>           *
  ******************************************************************************/
 
-/* HILFSFUNKTIONEN (Präfix 'rh_' für reader heĺper) ***************************/
 
 /*
  * Hilfsfunktion rh_resetZaehler(int zaehler[]);
- * Setzt alle Werte von zaehler (muss übergeben werden) auf 0.
+ * Setzt alle Werte von zaehler (muss Übergeben werden) auf 0.
  */
 void rh_resetZaehler(int zaehler[]) {
-	for (int i = 0; i <= MAX_ZAHL; i++)
+	int i;
+	for (i = 0; i <= MAX_ZAHL; i++)
 		zaehler[i] = 0;
 }
 
@@ -45,10 +44,10 @@ int rh_inkrementZaehler(int zaehler[], int wert) {
  *    spürbaren verzögerungen zu erwarten sind.
  * Funktionen:
  * - Leerzeichen werden durch "0" (Null) repräsentiert.
- * - Fehlen Zeichen für eine vollständige Reihe, wird die Reihe mit Nullen aufgefüllt.
+ * - Fehlen Zeichen für eine vollständige Reihe, wird die Reihe mit Nullen aufgefÃ¼llt.
  * - Alle Zeichen, die keine gültiges Zeichen sind, werden ignoriert.
  *   Gültige Zeichen sind die Ziffern 0 bis 9 und das Leerzeichen. 0 und Leerzeichen sind synonym.
- * - Alle Zeichen, die über die erwartete Zeilenlänge hinausgehen werden ignoriert.
+ * - Alle Zeichen, die Über die erwartete Zeilenlänge hinausgehen werden ignoriert.
  * - Alle Zeilen, die nach der erwarteten Zeilenzahl folgen, werden ignoriert.
  * - Unerwartete Zeichen im Sudoku werden als unbekannte Ziffer (0 oder Leerzeichen) behandelt.
  * - Leerzeilen werden ignoriert
@@ -64,7 +63,7 @@ int rh_leseDateiZeichenweise(int **feld, FILE *ptr_file) {
 		anzahlZeichen++;
 
 		if (posX < BREITE && posY < HOEHE) {
-			/* Zeichen aus Datei in feld übersetzen */
+			/* Zeichen aus Datei in feld Übersetzen */
 			if (zeichen == ' ')
 				zahl = 0; // Lerrzeichen -> 0
 			else if (zeichen >= '0' && zeichen <= '9')
@@ -124,7 +123,7 @@ int rh_leseDateiZeichenweise(int **feld, FILE *ptr_file) {
  * returns  n - Anzahl der Fehler (n), die korrigiert wurden.
  */
 int leseDatei(char *dateipfad) {
-	/* Dateihandle öffnen */
+	/* Dateihandle Öffnen */
 	FILE *ptr_datei;
 	ptr_datei = fopen(dateipfad, "r");
 	if (!ptr_datei)

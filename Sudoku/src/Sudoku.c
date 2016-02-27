@@ -40,12 +40,11 @@ int setFeld(int x, int y, int eingabe, int lock) {
 }
 
 int starteGUI() {
-#if !defined(WIN32)
+#ifdef __linux__
 	eingabeLoop();
 #else
-	if(!SetConsoleOutputCP(65001))
-	{
-		fprintf(stderr,"Konsole konnte nicht initialisiert werden.\n");
+	if (!SetConsoleOutputCP(65001)) {
+		fprintf(stderr, "Konsole konnte nicht initialisiert werden.\n");
 		return 0;
 	}
 	eingabeLoop();
@@ -75,6 +74,8 @@ int** allokieren(int zeile, int spalte) {
 /*
  * main Methode, allokiert Speicher für das Feld, für den Schutzspeicher und für das Zahlenarray,
  * welches beim Generieren benötigt wird. Anschließend wird das Command Line Interface gestartet.
+ *
+ * WICHTIG: zum reibungslosen Ablauf empfehlen wir ein GNU/Linux Betriebssystem. Getestet unter Kubuntu
  */
 int main(int argc, char* argv[]) {
 	feld = allokieren(BREITE, HOEHE);

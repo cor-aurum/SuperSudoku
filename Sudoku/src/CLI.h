@@ -41,7 +41,7 @@ void o_help() {
 void argumentInterpreter(int argc, char* argv[]) {
 	char *datei = "";
 	char *datei2 = "";
-	int i, j, k;
+	int i, j, k,l;
 	if (argc == 1) {
 		starteGUI();
 	}
@@ -72,7 +72,7 @@ void argumentInterpreter(int argc, char* argv[]) {
 						break;
 					if (argv[i][j] == 'x') {
 						for (k = 0; k < BREITE; k++) {
-							for (int l = 0; l < HOEHE; l++) {
+							for (l = 0; l < HOEHE; l++) {
 								/* schutz > 0 ist lock, schutz < 0 ist fehler */
 								if (schutz[k][l] > 0)
 									schutz[k][l] = 0;
@@ -81,7 +81,7 @@ void argumentInterpreter(int argc, char* argv[]) {
 					}
 					if (argv[i][j] == 'y') {
 						for (k = 0; k < BREITE; k++) {
-							for (int l = 0; l < HOEHE; l++) {
+							for (l = 0; l < HOEHE; l++) {
 								/* schutz > 0 ist lock, schutz < 0 ist fehler */
 								if (schutz[k][l] == 0)
 									schutz[k][l] = 1;
@@ -168,7 +168,7 @@ void argumentInterpreter(int argc, char* argv[]) {
 				schutz = allokieren(BREITE, HOEHE);
 				zahlen = malloc(MAX_ZAHL * sizeof(int *));
 				if (NULL == zahlen) {
-					printf("Kein virtueller RAM mehr vorhanden ... !");
+					printf("Zu wenig Speicher");
 				}
 				break;
 			}
