@@ -12,7 +12,8 @@
  * Setzt alle Werte von zaehler (muss übergeben werden) auf 0.
  */
 void rh_resetZaehler(int zaehler[]) {
-	for (int i = 0; i <= MAX_ZAHL; i++)
+	int i;
+	for (i = 0; i <= MAX_ZAHL; i++)
 		zaehler[i] = 0;
 }
 
