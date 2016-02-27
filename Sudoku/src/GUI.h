@@ -7,9 +7,9 @@
  * Steuerung für die Händische Manipulation von Sudokus.
  * @author Felix Schütze, dhbw@felix-schuetze.de
  ******************************************************************************/
-#if !defined(WIN32)
+#ifdef __linux__
 int x = 3, y = 2;
-#include <termios.h> // TODO: Auf Win7 wurde kein Termios.h gefunden.
+#include <termios.h>
 #include <sys/ioctl.h>
 /*
  * Erhaelt ein char, ohne, dass man hierfür Enter drücken muss
@@ -28,7 +28,7 @@ int getch() {
 }
 
 /*
- * Prüft, wie viele Konsolenspalten zur Verfügung stehen
+ * Prüft, wie viele Konsolenspalten zur VerfÃ¼gung stehen
  */
 int getSpalten() {
 	struct winsize max;
@@ -110,8 +110,8 @@ int legende = 0;
 int zeichensatz = 0;
 char *zeichen[3][20] = {
 		{ "╔", "╟", "╠", "╬", "╫", "┼", "╪", "\u2564", "╦", "\u2562", "╣", "╗", "║", "│", "╚", "╧", "╩", "╝", "═══", "───" },
-		{ " ", "|", "|", "+", "|", "+", "-", "-", "-", "|", "|", " ", "|", " ", " ", "-", "-", " ", "---", "   " },
-		{ "#", "#", "#", "#", "#", "+", "#", "#", "#", "#", "#", "#", "#", "|", "#", "#", "#", "#", "###", "---" }
+				{ " ", "|", "|", "+", "|", "+", "-", "-", "-", "|", "|", " ", "|", " ", " ", "-", "-", " ", "---", "   " },
+				{ "#", "#", "#", "#", "#", "+", "#", "#", "#", "#", "#", "#", "#", "|", "#", "#", "#", "#", "###", "---" }
 };
 
 /*
@@ -140,7 +140,7 @@ char* getJoke() {
 	case 2:
 		return "Fragt ein Physiker einen Mathematiker:\nWas ist eigentlich ein 11-Dimensionaler Raum? Ich kann mir darunter nichts vorstellen.\nDer Mathematiker antwortet:\nGanz einfach, stell dir einen n-Dimensionalen Raum vor, und setze für n 11 ein. ";
 	case 3:
-		return "Die meisten Menschen haben überdurchschnittlich viele Beine!";
+		return "Die meisten Menschen haben Überdurchschnittlich viele Beine!";
 	case 4:
 		return "Was hat Windows mit einem U-Boot gemeinsam? Kaum macht man ein Fenster auf, fangen die Probleme an.";
 	case 5:
@@ -353,7 +353,7 @@ int eingabeLoop() {
 		case 's': // Kästchen nach unten
 		case DOWN:
 			if (y < HOEHE * 2
-#if defined(Win32)
+#ifdef _WIN32
 					-2
 #endif
 					)
@@ -379,7 +379,7 @@ int eingabeLoop() {
 			meldungAusgeben("Gespeichert");
 		}
 			break;
-		case 't': { // Zeichentabelle an aktueller Posiiton anzeigen
+		case 't': { // Zeichentabelle an aktueller Position anzeigen
 			//printFeld();
 			//fflush(stdout);
 			int i;
@@ -418,7 +418,7 @@ int eingabeLoop() {
 					}
 					break;
 				case ' ':
-#if !defined(WIN32)
+#ifdef __linux__
 					setFeld((y - 2) / 2, (x - 3) / 4, pos + 1, 0);
 #else
 					setFeld((y - 1) / 2, (x - 2) / 4, pos+1, 0);
@@ -533,11 +533,11 @@ int eingabeLoop() {
 			printFeld();
 			break;
 		case 'u':
-			// Über: Zeigt eine Info über das Programm an
+			// Über: Zeigt eine Info Über das Programm an
 			printUber(1);
 			break;
 		case 'j':
-			// Macht nichts besonderese :)
+			// Macht nichts besonderes :)
 			printFeld();
 			meldungAusgeben(getJoke());
 			break;
@@ -546,7 +546,7 @@ int eingabeLoop() {
 				/*
 				 * Die Zählung der Position beginnt bei Windows anders
 				 */
-#if !defined(WIN32)
+#ifdef __linux__
 				setFeld((y - 2) / 2, (x - 3) / 4, tmp - '0', 0);
 #else
 				setFeld((y - 1) / 2, (x - 2) / 4, tmp - '0', 0);
@@ -559,7 +559,7 @@ int eingabeLoop() {
 					printFeuerwerk();
 			}
 			if (tmp == ' ' || tmp == '0') {
-#if !defined(WIN32)
+#ifdef __linux__
 				setFeld((y - 2) / 2, (x - 3) / 4, 0, 0);
 #else
 				setFeld((y - 1) / 2, (x - 2) / 4, 0, 0);

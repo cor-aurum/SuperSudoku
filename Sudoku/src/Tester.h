@@ -93,7 +93,7 @@ int fehlerMarkieren(int **feld, int **schutz, int x,
 
 /*
  * testSudokuFormal(int feld[][])
- * Prüft das Sudoku auf Formale korrektheit und setzt fehlermarkierungen in schutz.
+ * Prüft das Sudoku auf Formale korrektheit und setzt Fehlermarkierungen in schutz.
  * returns 0 - wenn das feld formal korrekt ist
  * returns n - die Anzahl der Fehler, die gefunden wurden.
  */

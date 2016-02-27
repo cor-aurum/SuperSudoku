@@ -168,7 +168,7 @@ void argumentInterpreter(int argc, char* argv[]) {
 				schutz = allokieren(BREITE, HOEHE);
 				zahlen = malloc(MAX_ZAHL * sizeof(int *));
 				if (NULL == zahlen) {
-					printf("Kein virtueller RAM mehr vorhanden ... !");
+					printf("Zu wenig Speicher");
 				}
 				break;
 			}
