@@ -95,7 +95,7 @@ int eindeutig(int **feld) {
 
 /*
  * loeseSudoku(feld)
- * Sucht nach einer Lösung für das durch "feld" gegebene Sudoku, indem "feld"
+ * Sucht nach einer Lösung fÃ¼r das durch "feld" gegebene Sudoku, indem "feld"
  * ausgefüllt wird.
  *
  * returns 0 - Wenn es keine Lösung gibt.
