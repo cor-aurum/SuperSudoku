@@ -7,7 +7,7 @@
  * Steuerung für die Händische Manipulation von Sudokus.
  * @author Felix Schütze, dhbw@felix-schuetze.de
  ******************************************************************************/
-#ifdef __linux__
+#ifndef _WIN32
 int x = 3, y = 2;
 #include <termios.h>
 #include <sys/ioctl.h>
@@ -418,7 +418,7 @@ int eingabeLoop() {
 					}
 					break;
 				case ' ':
-#ifdef __linux__
+#ifndef _WIN32
 					setFeld((y - 2) / 2, (x - 3) / 4, pos + 1, 0);
 #else
 					setFeld((y - 1) / 2, (x - 2) / 4, pos+1, 0);
@@ -546,7 +546,7 @@ int eingabeLoop() {
 				/*
 				 * Die Zählung der Position beginnt bei Windows anders
 				 */
-#ifdef __linux__
+#ifndef _WIN32
 				setFeld((y - 2) / 2, (x - 3) / 4, tmp - '0', 0);
 #else
 				setFeld((y - 1) / 2, (x - 2) / 4, tmp - '0', 0);
@@ -559,7 +559,7 @@ int eingabeLoop() {
 					printFeuerwerk();
 			}
 			if (tmp == ' ' || tmp == '0') {
-#ifdef __linux__
+#ifndef _WIN32
 				setFeld((y - 2) / 2, (x - 3) / 4, 0, 0);
 #else
 				setFeld((y - 1) / 2, (x - 2) / 4, 0, 0);

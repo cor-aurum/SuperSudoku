@@ -40,7 +40,7 @@ int setFeld(int x, int y, int eingabe, int lock) {
 }
 
 int starteGUI() {
-#ifdef __linux__
+#ifndef _WIN32
 	eingabeLoop();
 #else
 	if (!SetConsoleOutputCP(65001)) {

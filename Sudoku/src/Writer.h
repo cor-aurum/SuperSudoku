@@ -13,10 +13,19 @@ int speichereFeld(char datei[], int y) {
 		return 0;
 	} else {
 		int i, j;
+		/*
+		 * Das Sudoku wird Zeilenweise bearbeitet
+		 */
 		for (i = 0; i < HOEHE; i++) {
+			/*
+			 * Sudokuzeile wird Zeichen für Zeichen in die Datei übertragen
+			 */
 			for (j = 0; j < BREITE; j++) {
 				fputc(asFeld(feld[i][j]), fp);
 			}
+			/*
+			 * Am Ende der Zeile wird ein Leerzeichen geschrieben
+			 */
 			fputc(10, fp);
 
 		}

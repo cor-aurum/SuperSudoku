@@ -29,7 +29,7 @@ int pruefeVollstaendig(int **feld);
 /* Writer.c */
 
 /* Solver.c */
-int loese(int **feld, int x, int y);
+int loese(int **feld, int x, int y, int start, int ende);
 int loeseAbwaerts(int **feld, int x, int y);
 int eindeutig(int **feld);
 int loeseSudoku(int **feld);

@@ -7,48 +7,41 @@
 
 /*
  * Rekursive Methode zum Lösen des Sudokus, wählt die erste gefundene Lösung aus.
+ * @params:
+ * **feld, das zu lösende Feld
+ * x, die aktuelle x-Position
+ * y, die aktuelle y-Position
+ * start, die kleinste, bzw. größte Mögliche Einsetzbare Zahl
+ * ende, die größte+1, bzw. kleinste-1 mögliche Einsetzbare Zahl
  */
-int loese(int **feld, int x, int y) {
+int loese(int **feld, int x, int y, int start, int ende) {
 	int test;
+	/*
+	 * Prüft, ob ein Feld schon belegt ist und ruft die Methode in diesem Fall mit dem nächsten Feld auf
+	 */
 	if (feld[x][y]) {
-		return (y + 1) < HOEHE ? loese(feld, x, y + 1) :
-				((x + 1) < BREITE) ? loese(feld, x + 1, 0) : 1;
+		return (y + 1) < HOEHE ? loese(feld, x, y + 1, start, ende) :
+				((x + 1) < BREITE) ? loese(feld, x + 1, 0, start, ende) : 1;
 	} else {
-		for (test = 1; test <= MAX_ZAHL; test++) {
+		/*
+		 * Probiert rekursiv alle Zahlen zwischen "start" und "ende" durch
+		 */
+		for (test = start; test != ende; test++) {
 			if (!pruefePos(feld, x, y, test)) {
 				feld[x][y] = test;
-
-				if (loese(feld, x, y))
+				/*
+				 * Wenn das Ergebnis an dieser Stelle stimmen kann, so wird 1 zurückgegeben, wenn nicht, wird das Feld wieder gelöscht und die nächste Zahl wird probiert
+				 */
+				if (loese(feld, x, y, start, ende))
 					return 1;
 				else
 					feld[x][y] = 0;
 
 			}
 		}
-		return 0;
-	}
-}
-
-/*
- * Identisch zu "loese", zählt aber ab- statt aufwärts
- */
-int loeseAbwaerts(int **feld, int x, int y) {
-	int test;
-	if (feld[x][y]) {
-		return (y + 1) < HOEHE ? loeseAbwaerts(feld, x, y + 1) :
-				((x + 1) < BREITE) ? loeseAbwaerts(feld, x + 1, 0) : 1;
-	} else {
-		for (test = MAX_ZAHL; test >= 1; test--) {
-			if (!pruefePos(feld, x, y, test)) {
-				feld[x][y] = test;
-
-				if (loeseAbwaerts(feld, x, y))
-					return 1;
-				else
-					feld[x][y] = 0;
-
-			}
-		}
+		/*
+		 * Wenn keine einsetzbare Zahl gefunden wurde ist das Sudoku an dieser Stelle nicht lösbar. Es wird 0 zurückgegeben.
+		 */
 		return 0;
 	}
 }
@@ -73,18 +66,20 @@ int eindeutig(int **feld) {
 	}
 
 	// Aus zwei Richtungen lösen und erste Lösung behalten:
-	loese(feldh, 0, 0);
-	loeseAbwaerts(feldr, 0, 0);
+	return loese(feld, 0, 0, 1, MAX_ZAHL);
+	return loese(feld, 0, 0, MAX_ZAHL, 0);
 
-	// Wenn die Lösungen identisch sind, ist die Lösung eindeutig
+	// Wenn die Lösungen identisch sind, ist die Lösung eindeutig...
 	for (i = 0; i < BREITE; i++) {
 		for (j = 0; j < HOEHE; j++) {
+			/*
+			 * ....wenn sie sich an nur einem Punkt unterscheiden nicht mehr
+			 */
 			if (feldh[i][j] != feldr[i][j] || feldh[i][j] == 0)
 				return 0;
 		}
 	}
-	for (i = 0; i < HOEHE; i++)
-	{
+	for (i = 0; i < HOEHE; i++) {
 		free(feldh[i]);
 		free(feldr[i]);
 	}
@@ -102,6 +97,5 @@ int eindeutig(int **feld) {
  * returns 1 - Wenn es eine Lösung gibt.
  */
 int loeseSudoku(int **feld) {
-	return loese(feld, 0, 0);
+	return loese(feld, 0, 0, 1, MAX_ZAHL + 1);
 }
-
