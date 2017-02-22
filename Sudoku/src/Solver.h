@@ -14,25 +14,25 @@
  * start, die kleinste, bzw. größte Mögliche Einsetzbare Zahl
  * ende, die größte+1, bzw. kleinste-1 mögliche Einsetzbare Zahl
  */
-int loese(int **feld, int x, int y, int start, int ende) {
+int loese(int **feld, int x, int y, int start, int ende, int schritt) {
 	int test;
 	/*
 	 * Prüft, ob ein Feld schon belegt ist und ruft die Methode in diesem Fall mit dem nächsten Feld auf
 	 */
 	if (feld[x][y]) {
-		return (y + 1) < HOEHE ? loese(feld, x, y + 1, start, ende) :
-				((x + 1) < BREITE) ? loese(feld, x + 1, 0, start, ende) : 1;
+		return (y + 1) < HOEHE ? loese(feld, x, y + 1, start, ende,schritt) :
+				((x + 1) < BREITE) ? loese(feld, x + 1, 0, start, ende,schritt) : 1;
 	} else {
 		/*
 		 * Probiert rekursiv alle Zahlen zwischen "start" und "ende" durch
 		 */
-		for (test = start; test != ende; test++) {
+		for (test = start; test != ende; test+=schritt) {
 			if (!pruefePos(feld, x, y, test)) {
 				feld[x][y] = test;
 				/*
 				 * Wenn das Ergebnis an dieser Stelle stimmen kann, so wird 1 zurückgegeben, wenn nicht, wird das Feld wieder gelöscht und die nächste Zahl wird probiert
 				 */
-				if (loese(feld, x, y, start, ende))
+				if (loese(feld, x, y, start, ende,schritt))
 					return 1;
 				else
 					feld[x][y] = 0;
@@ -66,8 +66,8 @@ int eindeutig(int **feld) {
 	}
 
 	// Aus zwei Richtungen lösen und erste Lösung behalten:
-	return loese(feld, 0, 0, 1, MAX_ZAHL);
-	return loese(feld, 0, 0, MAX_ZAHL, 0);
+	loese(feldh, 0, 0, 1, MAX_ZAHL+1,1);
+	loese(feldr, 0, 0, MAX_ZAHL+1, 1,-1);
 
 	// Wenn die Lösungen identisch sind, ist die Lösung eindeutig...
 	for (i = 0; i < BREITE; i++) {
@@ -97,5 +97,5 @@ int eindeutig(int **feld) {
  * returns 1 - Wenn es eine Lösung gibt.
  */
 int loeseSudoku(int **feld) {
-	return loese(feld, 0, 0, 1, MAX_ZAHL + 1);
+	return loese(feld, 0, 0, 1, MAX_ZAHL + 1,1);
 }
