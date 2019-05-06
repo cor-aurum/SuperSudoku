@@ -8,6 +8,7 @@
 int *zahlen;
 
 void initZufall(int *array) {
+    srand((unsigned int)time(NULL));
 	if (MAX_ZAHL > 1) {
 		size_t i;
 		for (i = 0; i < MAX_ZAHL - 1; i++) {
