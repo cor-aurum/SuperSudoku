@@ -67,7 +67,7 @@ int eindeutig(int **feld) {
 
 	// Aus zwei Richtungen lösen und erste Lösung behalten:
 	loese(feldh, 0, 0, 1, MAX_ZAHL+1,1);
-	loese(feldr, 0, 0, MAX_ZAHL+1, 1,-1);
+	loese(feldr, 0, 0, MAX_ZAHL+1, 0,-1);
 
 	// Wenn die Lösungen identisch sind, ist die Lösung eindeutig...
 	for (i = 0; i < BREITE; i++) {
